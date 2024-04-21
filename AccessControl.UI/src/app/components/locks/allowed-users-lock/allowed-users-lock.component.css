@@ -1,0 +1,14 @@
+.labelFirst{
+    font-size: large;
+    font-weight: bold;
+}
+ul{
+    padding: 10 !important;
+    list-style-type:circle;
+}
+li{
+    font-size: medium;
+}
+.template{
+    font-size: small;
+}

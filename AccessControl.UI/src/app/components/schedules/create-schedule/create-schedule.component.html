@@ -1,0 +1,33 @@
+<kendo-dialog title="Create Schedule" (close)="closeCreateDialog()" class="kendo-dialog">
+    <form [formGroup]="formGroup">
+        <div class="form-row">
+            <div class="form-group col-5">
+                <label>Schedule Name</label>
+                <kendo-textbox  placeholder="LockSchedule"
+                    formControlName="displayName" class="form-control custom-fill-mode" required>
+                </kendo-textbox><br>
+                <label>Days in Week</label>
+                <ul *ngFor="let day of daysInWeek">
+                    <input (click)="getDays(day)" type="checkbox" value="{{day}}" #notification kendoCheckBox required>
+                    <kendo-label class="k-checkbox-label" [for]="notification" [text]="day"></kendo-label>
+                </ul>
+                <kendo-dialog-actions></kendo-dialog-actions>
+                <div class="wrap-date1">
+                    <label>Start Time</label>
+                    <kendo-datetimepicker [fillMode]="fillMode" [format]="dateFormat" [(value)]="dateStartValue" required>
+                    </kendo-datetimepicker>
+                </div>
+                <div class="wrap-date2">
+                    <label>End Time</label>
+                    <kendo-datetimepicker [fillMode]="fillMode" [format]="dateFormat" [(value)]="dateEndValue" required>
+                    </kendo-datetimepicker>
+                </div>
+            </div>
+        </div>
+        <br>
+        <kendo-dialog-actions>
+            <button kendoButton (click)="closeCreateDialog()">Back</button>
+            <button kendoButton (click)="createSchedule()" themeColor="primary">Create</button>
+        </kendo-dialog-actions>
+    </form>
+</kendo-dialog>

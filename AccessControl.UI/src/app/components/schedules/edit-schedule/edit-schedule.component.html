@@ -1,0 +1,32 @@
+<kendo-dialog title="Edit {{schedule.displayName}} from {{site.displayName}}" (close)="closeEditDialog()">
+    <p style="display:flex; ">Last Modified: <strong style="color: green;">{{schedule.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
+    <form>
+        <div class="form-row">
+            <label>Schedule Name</label>
+            <kendo-textbox placeholder="{{schedule.displayName}}" [(value)]="nameValue"
+                class="form-control custom-fill-mode">
+            </kendo-textbox><br>
+            <label>Days in Week</label>
+            <ul *ngFor="let day of daysInWeek">
+                <input (click)="getDays(day)" type="checkbox" value="{{day}}" #notification kendoCheckBox>
+                <kendo-label class="k-checkbox-label" [for]="notification" [text]="day"></kendo-label>
+            </ul>
+            <kendo-dialog-actions></kendo-dialog-actions>
+            <div class="wrap-date1">
+                <label>Start Time</label>
+                <kendo-datetimepicker [format]="dateFormat" [(value)]="dateStartValue">
+                </kendo-datetimepicker>
+            </div>
+            <div class="wrap-date2">
+                <label>End Time</label>
+                <kendo-datetimepicker [format]="dateFormat" [(value)]="dateEndValue">
+                </kendo-datetimepicker>
+            </div>
+        </div>
+        <br>
+        <kendo-dialog-actions>
+            <button kendoButton (click)=" closeEditDialog()">Back</button>
+            <button kendoButton (click)="editSchedule()" themeColor="primary">Update</button>
+        </kendo-dialog-actions>
+    </form>
+</kendo-dialog>

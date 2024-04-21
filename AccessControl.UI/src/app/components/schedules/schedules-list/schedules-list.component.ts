@@ -1,0 +1,107 @@
+import { Component, OnInit } from '@angular/core';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { AddEvent, RemoveEvent } from '@progress/kendo-angular-grid';
+import { AccessControlService } from 'src/app/services/access-control.service';
+import { CreateScheduleComponent } from '../create-schedule/create-schedule.component';
+import { DeleteScheduleComponent } from '../delete-schedule/delete-schedule.component';
+import { EditScheduleComponent } from '../edit-schedule/edit-schedule.component';
+import {MatIconModule} from '@angular/material/icon'
+
+@Component({
+  selector: 'app-schedules-list',
+  templateUrl: './schedules-list.component.html',
+  styleUrls: ['./schedules-list.component.css']
+})
+export class SchedulesListComponent implements OnInit {
+  sites: any[] = []
+  schedules: any[] = []
+  scheduleIsPresent: boolean = false;
+  siteId: any = localStorage.getItem("selectedSiteId") 
+  siteName: any = localStorage.getItem("selectedSiteName") 
+
+  constructor(private accessService: AccessControlService, private dialog: DialogService) { }
+
+  ngOnInit(): void {
+    this.accessService.get('api/sites').subscribe({
+      next: (response) => {
+        this.sites = response.data;
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    })
+
+    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
+      next: (response) => {
+        this.schedules = response.data;
+        this.scheduleIsPresent = true;
+      },
+      error: (response) => {
+        this.scheduleIsPresent = false;
+      }
+    })
+  }
+
+  showSchedules(siteId: any,siteName: any) {
+    localStorage.setItem("selectedSiteName",siteName);
+    localStorage.setItem("selectedSiteId",siteId);
+    this.siteName = siteName 
+    this.siteId = siteId;
+    this.accessService.get(`api/schedules/site/${siteId}`).subscribe({
+      next: (response) => {
+        this.schedules = response.data;
+        this.scheduleIsPresent = true;
+      },
+      error: (response) => {
+        this.scheduleIsPresent = false;
+      }
+    })
+  }
+
+  onCreate() {
+    const dialogRef = this.dialog.open({
+      content: CreateScheduleComponent
+    });
+    dialogRef.content.instance.siteId = this.siteId;
+    dialogRef.result.subscribe(() => {
+      this.ngOnInit();
+    });
+  }
+
+  onEdit(args: AddEvent) {
+    this.accessService.getById('api/sites', this.siteId).subscribe({
+      next: (response) => {
+        dialogRef.content.instance.site = response.data
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    })
+    const dialogRef = this.dialog.open({
+      content: EditScheduleComponent
+    });
+    dialogRef.content.instance.schedule = args.dataItem;
+    dialogRef.result.subscribe(() => {
+      this.ngOnInit();
+    });
+  }
+
+  onDelete(args: RemoveEvent) {
+    this.accessService.getById('api/sites', this.siteId).subscribe({
+      next: (response) => {
+        dialogRef.content.instance.site = response.data
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    })
+    const dialogRef = this.dialog.open({
+      content: DeleteScheduleComponent,
+    });
+    dialogRef.content.instance.schedule = args.dataItem;
+    dialogRef.result.subscribe(() => {
+      this.ngOnInit();
+    });
+  }
+
+}

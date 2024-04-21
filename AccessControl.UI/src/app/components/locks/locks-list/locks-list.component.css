@@ -1,0 +1,59 @@
+.title {
+    color: rgb(255, 255, 255);
+}
+.icon{
+    float: left;
+    padding: 5px;
+    color: white;
+}
+button:hover {
+    background-color: gray;
+}
+.grid{
+    position: absolute;
+    margin-left: 200px;  
+    margin-top: 22px;
+    padding-right: 30px;
+}
+.vertical-menu {
+    float: left;
+    width: 150px;
+    /* Set a width if you like */
+}
+.vertical-menu h3{
+    color: #37b400;
+}
+.vertical-menu a {
+    background-color: #eee;
+    /* Grey background color */
+    color: black;
+    /* Black text color */
+    display: block;
+    /* Make the links appear below each other */
+    padding: 12px;
+    /* Add some padding */
+    text-decoration: none;
+    /* Remove underline from links */
+}
+
+.vertical-menu a:hover {
+    background-color: rgb(22, 18, 247);
+    color: white;
+    /* Dark grey background on mouse-over */
+}
+
+.vertical-menu a:focus{
+    background-color: #37b400;
+    /* Add a green color to the "active/current" link */
+}
+h2{
+    color: white;
+}
+h3{
+    color: whitesmoke
+}
+label{
+    font-size:large;
+    color: #04AA6D;
+
+}

@@ -1,0 +1,17 @@
+<kendo-dialog title="Edit Lock from {{site.displayName}}" (close)="closeEditDialog()">
+    <p>Last Modified: <strong style="color: green;">{{lock.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-5">
+                <label>Lock Name</label>
+                <kendo-textbox [(value)]="nameValue" class="form-control custom-fill-mode">
+                </kendo-textbox>
+            </div>
+        </div>
+        <br>
+        <kendo-dialog-actions>
+            <button kendoButton (click)=" closeEditDialog()">Back</button>
+            <button kendoButton (click)="editLock()" themeColor="primary">Update</button>
+        </kendo-dialog-actions>
+    </form>
+</kendo-dialog>

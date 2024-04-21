@@ -1,0 +1,41 @@
+label{
+    font-size: medium;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+    margin-top: 7px;
+}
+kendo-textbox{
+    width: 300px;
+}
+kendo-datetimepicker{
+    float: right;
+    margin-right: 250px;
+    width: auto;
+}
+.form-control{
+    font-weight:normal; 
+}
+p{
+    font-size:x-small;
+}
+ul{
+    display: inline;
+    margin-left: 5px;
+    font-size: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+ul kendo-label{
+    font-size: small;
+}
+.custom-fill-mode{
+    border-color: #006eff;
+}
+.wrap-date1{
+    margin-bottom: 40px;
+}
+.wrap-date2{
+    margin-bottom: 70px;
+}

@@ -1,0 +1,42 @@
+body {
+    background: #34568B;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.title {
+    font-size: 28px;
+    margin: 0;
+}
+
+.navbar {
+    font-size: 20px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+li {
+    margin: 0 9px;
+}
+
+li:hover {
+    cursor: pointer;
+    color: #d6002f;
+}
+
+.actions .k-button {
+    padding: 0;
+}
+a{
+    text-decoration: none;
+    color: white
+}
+a:hover{
+    cursor: pointer;
+    color: #ff0000;
+}
+a:active{
+    background-color: #d6002f;
+    color: white;
+}

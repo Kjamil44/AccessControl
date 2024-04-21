@@ -1,0 +1,27 @@
+<kendo-dialog title="Create Cardholder" (close)="closeCreateDialog()" class="kendo-dialog">
+    <form [formGroup]="formGroup">
+        <div class="form-row">
+            <div class="wrapper1">
+                <label>First Name</label>
+                <kendo-textbox placeholder="John" formControlName="firstName" class="form-control custom-fill-mode">
+                </kendo-textbox>
+            </div>
+            <div class="wrapper2">
+                <label>Last Name</label>
+                <kendo-textbox placeholder="Smith" formControlName="lastName" class="form-control custom-fill-mode">
+                </kendo-textbox>
+            </div>
+            <div class="wrapper3">
+                <label>Card Number</label>
+                <kendo-textbox placeholder="1234" formControlName="cardNumber" class="form-control custom-fill-mode"
+                    required>
+                </kendo-textbox>
+            </div>
+        </div>
+        <br>
+        <kendo-dialog-actions>
+            <button kendoButton (click)="closeCreateDialog()">Back</button>
+            <button kendoButton (click)="createCardholder()" themeColor="primary">Create</button>
+        </kendo-dialog-actions>
+    </form>
+</kendo-dialog>

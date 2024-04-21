@@ -1,0 +1,31 @@
+label{
+    font-size: medium;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+    margin-top: 5px;
+}
+p{
+    font-size:x-small;
+}
+kendo-textbox{
+    float: right;
+    margin-left: 20px;
+    margin-right: 60px;
+    width: 180px;
+}
+.form-control{
+    font-weight:normal; 
+    font-size: medium; 
+}
+.custom-fill-mode{
+    border-color: #006eff;
+}
+.wrapper2{
+    padding-top: 40px;
+}
+.wrapper3{
+    padding-top: 40px;
+    padding-bottom: 40px;
+}

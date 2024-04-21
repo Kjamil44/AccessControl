@@ -1,0 +1,7 @@
+<kendo-dialog title="Delete Site" (close)="closeDeleteDialog()">
+    <label>Are you sure you want to delete {{site.displayName}}?</label>
+    <kendo-dialog-actions>
+        <button kendoButton (click)=" closeDeleteDialog()">Back</button>
+        <button kendoButton routerLink="sites" (click)="deleteSite()" themeColor="error">Delete</button>
+    </kendo-dialog-actions>
+</kendo-dialog>

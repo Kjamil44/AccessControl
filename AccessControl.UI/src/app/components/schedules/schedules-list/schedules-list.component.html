@@ -1,0 +1,52 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<h3>Site selected: <strong>{{siteName}}</strong></h3>
+<div>
+    <div class="vertical-menu">
+        <h3>Choose new Site</h3>
+        <a *ngFor="let site of sites" [routerLink]="[]"
+            (click)="showSchedules(site.siteId,site.displayName)">{{site.displayName}}</a>
+    </div>
+    <div class="grid">
+        <div *ngIf="scheduleIsPresent">
+            <div class="k-d-flex k-align-items-center">
+                <mat-icon class="icon">event</mat-icon>
+                <h2 class="title">Schedules</h2>
+                <div style="margin-left:auto; padding-bottom: 15px;">
+                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
+                        Schedule</button>
+                </div>
+            </div>
+            <kendo-grid [data]="schedules" (edit)="onEdit($event);" (remove)="onDelete($event)">
+                <kendo-grid-column field="displayName" title="Schedule Name" [width]="20"></kendo-grid-column>
+                <kendo-grid-column field="listOfDays" title="Days in week" [width]="30"> </kendo-grid-column>
+                <kendo-grid-column field="startTime" title="Start Time" [width]="30">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.startTime | date:'dd MMMM YYYY, HH:mm:ss'}}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="endTime" title="End Time" [width]="30">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.endTime | date:'dd MMMM YYYY, HH:mm:ss'}}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column title="Actions" [width]="13">
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                        <button kendoGridEditCommand themeColor="tertiary" style="margin-left: 5px;">Edit</button>
+                        <button kendoGridRemoveCommand themeColor="error" style="margin-left: 5px;">Delete</button>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </div>
+        <div *ngIf="!scheduleIsPresent">
+            <div class="k-d-flex k-align-items-center">
+                <mat-icon class="icon">event</mat-icon>
+                <h2 class="title">Schedules</h2>
+                <div style="margin-left: 10px;">
+                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
+                        Schedule</button>
+                </div>
+            </div>
+            <h3 style="color: red;">No Schedules avalabile for {{siteName}}</h3>
+        </div>
+    </div>
+</div>

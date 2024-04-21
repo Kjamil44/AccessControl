@@ -1,0 +1,27 @@
+<kendo-dialog title="Edit Cardholder from {{site.displayName}}" (close)="closeEditDialog()" [width]="400" height="auto">
+    <p style="display:flex; ">Last Modified:  <strong style="color: green;">{{cardholder.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-5">
+                <label>First Name</label>
+                <kendo-textbox  placeholder="John" [(value)]="firstValue" class="custom-fill-mode">
+                </kendo-textbox>
+            </div>
+            <div class="wrapper2">
+                <label>Last Name</label>
+                <kendo-textbox  placeholder="Smith" [(value)]="lastValue" class="custom-fill-mode">
+                </kendo-textbox>
+            </div>
+            <div class="wrapper3">
+                <label>Card Number</label>
+                <kendo-textbox placeholder="1234" [(value)]="cardValue" class="form-control custom-fill-mode" >
+                </kendo-textbox>
+            </div>
+        </div>
+        <br>
+        <kendo-dialog-actions>
+            <button kendoButton (click)=" closeEditDialog()">Back</button>
+            <button kendoButton (click)="editCardholder()" themeColor="primary">Update</button>
+        </kendo-dialog-actions>
+    </form>
+</kendo-dialog>

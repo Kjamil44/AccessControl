@@ -1,0 +1,24 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<h3 >Select a Site | Site selected: <strong>{{selectedSiteName}}</strong></h3>
+<div class="k-d-flex k-align-items-center">
+    <mat-icon class="icon">location_city</mat-icon>
+    <h2 class="title">Sites</h2>
+    <div style="margin-left:auto; padding-bottom: 15px;">
+        <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
+            Site</button>
+    </div>
+</div>
+<kendo-grid [data]="sites" (cellClick)="setSiteId($event)" (edit)="onEdit($event)" (remove)="onDelete($event)">
+    <kendo-grid-column field="displayName" title="Site Name"> </kendo-grid-column>
+    <kendo-grid-column field="dateCreated" title="Date Created"> 
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.dateCreated | date:'dd MMMM YYYY'}}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="Actions" [width]="130">
+        <ng-template kendoGridCellTemplate>
+            <button kendoGridEditCommand themeColor="tertiary">Edit</button>
+            <button kendoGridRemoveCommand themeColor="error" style="margin-left: 5px;">Delete</button>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

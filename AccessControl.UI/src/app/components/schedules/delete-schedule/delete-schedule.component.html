@@ -1,0 +1,7 @@
+<kendo-dialog title="Delete {{schedule.displayName}}" (close)="closeDeleteDialog()">
+    <label>Are you sure you want to delete {{schedule.displayName}} from {{site.displayName}}?</label>
+    <kendo-dialog-actions>
+        <button kendoButton (click)=" closeDeleteDialog()">Back</button>
+        <button kendoButton routerLink="locks" (click)="deleteSchedule()" themeColor="error">Delete</button>
+    </kendo-dialog-actions>
+</kendo-dialog>
