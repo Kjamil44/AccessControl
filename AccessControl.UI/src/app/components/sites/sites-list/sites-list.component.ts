@@ -38,8 +38,9 @@ export class SitesListComponent implements OnInit {
     });
   }
 
-  onEdit(args: AddEvent) {
-    this.accessService.getById('api/sites', args.dataItem.siteId).subscribe({
+  onEdit(site: any) {
+    console.log(site)
+    this.accessService.getById('api/sites', site.siteId).subscribe({
       next: (response) => {
         dialogRef.content.instance.site = response.data
       },
@@ -50,14 +51,14 @@ export class SitesListComponent implements OnInit {
     const dialogRef = this.dialog.open({
       content: EditSiteComponent     
     });
-    dialogRef.content.instance.site = args.dataItem;
+    dialogRef.content.instance.site = site;
     dialogRef.result.subscribe(() => {
       this.ngOnInit();
     });
   }
 
-  onDelete(args: RemoveEvent) {
-    this.accessService.getById('api/sites', args.dataItem.siteId).subscribe({
+  onDelete(site: any) {
+    this.accessService.getById('api/sites', site.siteId).subscribe({
       next: (response) => {
         dialogRef.content.instance.site = response.data
       },
@@ -74,8 +75,8 @@ export class SitesListComponent implements OnInit {
   }
 
   setSiteId(args: any){
-    this.selectedSiteId = args.dataItem.siteId;
-    this.selectedSiteName = args.dataItem.displayName;
+    this.selectedSiteId = args.data.siteId;
+    this.selectedSiteName = args.data.displayName;
     localStorage.setItem("selectedSiteId",this.selectedSiteId )
     localStorage.setItem("selectedSiteName", this.selectedSiteName)
   }

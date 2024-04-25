@@ -1,24 +1,34 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<h3 >Select a Site | Site selected: <strong>{{selectedSiteName}}</strong></h3>
+<h3>Select a Site | Site selected: <strong>{{selectedSiteName}}</strong></h3>
 <div class="k-d-flex k-align-items-center">
     <mat-icon class="icon">location_city</mat-icon>
     <h2 class="title">Sites</h2>
     <div style="margin-left:auto; padding-bottom: 15px;">
-        <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
-            Site</button>
+        <p-button size="large" (click)="onCreate()" routerLink="create" class="p-button-success">Create
+            Site</p-button>
     </div>
 </div>
-<kendo-grid [data]="sites" (cellClick)="setSiteId($event)" (edit)="onEdit($event)" (remove)="onDelete($event)">
-    <kendo-grid-column field="displayName" title="Site Name"> </kendo-grid-column>
-    <kendo-grid-column field="dateCreated" title="Date Created"> 
-        <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.dateCreated | date:'dd MMMM YYYY'}}
-        </ng-template>
-    </kendo-grid-column>
-    <kendo-grid-column title="Actions" [width]="130">
-        <ng-template kendoGridCellTemplate>
-            <button kendoGridEditCommand themeColor="tertiary">Edit</button>
-            <button kendoGridRemoveCommand themeColor="error" style="margin-left: 5px;">Delete</button>
-        </ng-template>
-    </kendo-grid-column>
-</kendo-grid>
+<p-table [value]="sites" 
+         styleClass="p-datatable-gridlines p-datatable-striped" 
+         [tableStyle]="{ 'min-width': '50rem' }"
+         (onRowSelect)="setSiteId($event)"
+         (onRowUnselect)="setSiteId($event)"
+         selectionMode="single">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Site Name</th>
+            <th>Date Created</th>
+            <th  style="width: 11.5rem;">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-site>
+        <tr [pSelectableRow]="site">
+            <td>{{ site.displayName }}</td>
+            <td>{{ site.dateCreated | date:'dd MMMM YYYY' }}</td>
+            <td>
+                <p-button label="Edit"  size="small" (click)="onEdit(site)"></p-button>
+                <p-button label="Delete" size="small" (click)="onDelete(site)" severity="danger"></p-button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

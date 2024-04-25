@@ -35,6 +35,8 @@ import { DeleteScheduleComponent } from './components/schedules/delete-schedule/
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { MatIconModule } from '@angular/material/icon';
 import { NotificationModule } from '@progress/kendo-angular-notification';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,7 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     SchedulesListComponent,
     CreateScheduleComponent,
     EditScheduleComponent,
-    DeleteScheduleComponent
+    DeleteScheduleComponent,
   ],
   imports: [
     BrowserModule, 
@@ -77,7 +79,9 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     MatSelectModule,
     DateInputsModule,
     MatIconModule,
-    NotificationModule
+    NotificationModule,
+    ButtonModule,
+    TableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
