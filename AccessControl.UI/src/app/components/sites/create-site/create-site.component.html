@@ -1,16 +1,15 @@
-<kendo-dialog title="Create Site" (close)="closeCreateDialog()" class="kendo-dialog">
+<div class="surface-border">
     <form [formGroup]="formGroup">
         <div class="form-row">
-            <div class="form-group col-5">
-                <label>Site Name</label>
-                <kendo-textbox [style.width.px]="250" [style.height.px]="40" placeholder="Site Name" formControlName="displayName"  class="form-control custom-fill-mode" >
-                </kendo-textbox>
+            <div class="form-group">
+                <label for="siteName">Site Name</label>
+                <input id="siteName" type="text" pInputText formControlName="displayName" class="form-control"
+                    placeholder="Site Name">
             </div>
         </div>
-        <br>
-        <kendo-dialog-actions>
-            <button kendoButton (click)=" closeCreateDialog()">Back</button>
-                            <button kendoButton (click)="createSite()" themeColor="primary">Create</button>
-        </kendo-dialog-actions>
-    </form> 
-</kendo-dialog>
+    </form>
+</div>
+<div class="p-dialog-footer">
+    <button pButton type="button" (click)="closeCreateDialog()" label="Back" class="p-button-secondary"></button>
+    <button pButton type="button" (click)="createSite()" label="Create" class="p-button-primary"></button>
+</div>

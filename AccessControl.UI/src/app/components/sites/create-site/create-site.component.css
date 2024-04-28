@@ -1,18 +1,1 @@
-label{
-    font-size: medium;
-    text-align: right;
-    clear: both;
-    float:left;
-    margin-right:15px;
-    margin-top: 7px;
-}
-kendo-textbox{
-  width: auto;
-}
-.form-control{
-    font-weight:normal; 
-    font-size: medium; 
-}
-.custom-fill-mode{
-    border-color: #006eff;
-}
+

@@ -1,3 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+/* dialog form styles */
+
+.form-row {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items vertically */
+    /* Ensure items are spaced evenly */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-group label {
+    margin-right: 1rem;
+    font-size: medium;
+}
+
+.form-group input {
+ /* Push the input to the far right */
+    width: 350px; /* Set width for the input */
+    margin-left: 106px;
+}
+
+.form-control {
+    font-weight: normal;
+    font-size: medium;
+}
+
+/* dialog styles */
+
+.p-dialog-footer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 1rem;
+    width: 100%;
+    border-top: 1px solid #ccc;
+}
+
+.p-dialog .p-dialog-header{
+    background-color: rgb(0, 0, 0);
+    color: white
+}

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
-import { delay } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -10,23 +8,29 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './edit-site.component.html',
   styleUrls: ['./edit-site.component.css']
 })
-export class EditSiteComponent extends DialogContentBase implements OnInit {
+export class EditSiteComponent implements OnInit {
   site: any;
   submitted = false;
   nameValue: any
+  formGroup: FormGroup;
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
-
+  constructor(private fb: FormBuilder,
+    private dialogref: DynamicDialogRef,
+    private accessService: AccessControlService,
+    private config: DynamicDialogConfig) {
+    this.formGroup = this.fb.group({
+      displayName: ['']
+    });
   }
 
   ngOnInit(): void {
-    this.nameValue = this.site.displayName;
+    this.site = this.config.data.site;
+    this.formGroup.controls['displayName'].setValue(this.site.displayName);
   }
 
   editSite() {
     const data = {
-      "displayName": this.nameValue
+      "displayName": this.formGroup.value.displayName
     }
 
     this.accessService.update('api/sites/update', this.site.siteId, data).subscribe({
@@ -42,7 +46,7 @@ export class EditSiteComponent extends DialogContentBase implements OnInit {
   }
 
   closeCreateDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 
 }

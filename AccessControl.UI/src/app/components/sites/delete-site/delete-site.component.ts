@@ -1,19 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { DialogContentBase, DialogRef, DialogService } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-delete-site',
   templateUrl: './delete-site.component.html',
-  styleUrls: ['./delete-site.component.css']
+  styleUrls: ['./delete-site.component.css'],
+  providers: [ConfirmationService, MessageService]
 })
-export class DeleteSiteComponent extends DialogContentBase {
+export class DeleteSiteComponent implements OnInit{
 
   site: any;
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  constructor(private dialogref: DynamicDialogRef, 
+    private config: DynamicDialogConfig, 
+    private accessService: AccessControlService) {
+  }
+
+  ngOnInit(): void {
+      this.site = this.config.data.site;
   }
 
   deleteSite() {
@@ -30,7 +36,7 @@ export class DeleteSiteComponent extends DialogContentBase {
   }
 
   closeDeleteDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 
 }

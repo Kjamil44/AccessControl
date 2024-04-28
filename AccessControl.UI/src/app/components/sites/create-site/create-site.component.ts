@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -8,15 +8,19 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './create-site.component.html',
   styleUrls: ['./create-site.component.css']
 })
-export class CreateSiteComponent extends DialogContentBase {
+export class CreateSiteComponent implements OnInit {
+  displayCreateDialog: boolean = false;
   formGroup: FormGroup;
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
-    this.formGroup = new FormGroup({
-      displayName: new FormControl(),
+  constructor(private fb: FormBuilder, private accessService: AccessControlService, private dialogref: DynamicDialogRef) {
+    this.formGroup = this.fb.group({
+      displayName: ['']
     });
   }
+
+  ngOnInit(): void {
+  }
+
   createSite() {
     const data = {
       "displayName": this.formGroup.value.displayName,
@@ -26,16 +30,16 @@ export class CreateSiteComponent extends DialogContentBase {
       .subscribe({
         next: data => {
           this.accessService.createSuccessNotification("Site created successfully!")
-          this.closeCreateDialog()
+          this.closeCreateDialog();
         },
         error: error => {
-          this.accessService.createErrorNotification(`Failed to Create Site: ${error.message}`)
-          this.closeCreateDialog()
+          this.accessService.createErrorNotification(`Failed to Create Site: ${error.message}`);
+          this.closeCreateDialog();
         }
       })
   }
 
   closeCreateDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

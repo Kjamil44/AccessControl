@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogRef, DialogService } from '@progress/kendo-angular-dialog';
-import { AddEvent, EditEvent, RemoveEvent } from '@progress/kendo-angular-grid';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateSiteComponent } from '../create-site/create-site.component';
 import { DeleteSiteComponent } from '../delete-site/delete-site.component';
 import { EditSiteComponent } from '../edit-site/edit-site.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-sites-list',
   templateUrl: './sites-list.component.html',
-  styleUrls: ['./sites-list.component.css']
+  styleUrls: ['./sites-list.component.css'],
+  providers: [DialogService]
 })
 export class SitesListComponent implements OnInit {
   sites: any[] = [];
@@ -30,46 +30,46 @@ export class SitesListComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open({
-      content: CreateSiteComponent
+    const ref = this.dialog.open(CreateSiteComponent, {
+      header: 'Create Site',
+      width: '600px',
+      height: '250px',
+      baseZIndex: 10000
     });
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
 
   onEdit(site: any) {
-    console.log(site)
-    this.accessService.getById('api/sites', site.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        console.log(response)
+    const ref = this.dialog.open(EditSiteComponent, {
+      header: 'Edit Site',
+      width: '600px',
+      height: '250px',
+      baseZIndex: 10000,
+      data: {
+        site: site
       }
-    })
-    const dialogRef = this.dialog.open({
-      content: EditSiteComponent     
     });
-    dialogRef.content.instance.site = site;
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
 
   onDelete(site: any) {
-    this.accessService.getById('api/sites', site.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        console.log(response)
+    const ref = this.dialog.open(DeleteSiteComponent, {
+      header: 'Delete Site',
+      width: '450px',
+      height: '200px',
+      baseZIndex: 10000,
+      data: {
+        site: site
       }
-    })
-    const dialogRef = this.dialog.open({
-      content: DeleteSiteComponent,     
     });
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }

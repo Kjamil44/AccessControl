@@ -1,7 +1,7 @@
-<kendo-dialog title="Delete Site" (close)="closeDeleteDialog()">
+<div class="justify-content-center" style="margin-top: 10px;">
+    <i class="pi pi-exclamation-circle" style="font-size: 1.0rem;"></i>
     <label>Are you sure you want to delete {{site.displayName}}?</label>
-    <kendo-dialog-actions>
-        <button kendoButton (click)=" closeDeleteDialog()">Back</button>
-        <button kendoButton routerLink="sites" (click)="deleteSite()" themeColor="error">Delete</button>
-    </kendo-dialog-actions>
-</kendo-dialog>
+</div>
+<div class="p-dialog-footer">
+    <p-button (click)="deleteSite()" label="Delete" severity="danger" />
+</div>

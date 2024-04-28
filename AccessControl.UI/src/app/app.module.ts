@@ -37,6 +37,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -81,7 +86,12 @@ import { TableModule } from 'primeng/table';
     MatIconModule,
     NotificationModule,
     ButtonModule,
-    TableModule
+    TableModule,
+    DynamicDialogModule,
+    DialogModule,
+    InputTextModule,
+    ConfirmDialogModule,
+    ToastModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
