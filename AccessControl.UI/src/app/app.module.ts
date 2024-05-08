@@ -42,6 +42,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { TabMenuComponent } from './components/common/tab-menu/tab-menu.component';
+import { MenubarModule } from 'primeng/menubar';
 
 @NgModule({
   declarations: [
@@ -63,6 +66,7 @@ import { ToastModule } from 'primeng/toast';
     CreateScheduleComponent,
     EditScheduleComponent,
     DeleteScheduleComponent,
+    TabMenuComponent
   ],
   imports: [
     BrowserModule, 
@@ -92,6 +96,8 @@ import { ToastModule } from 'primeng/toast';
     InputTextModule,
     ConfirmDialogModule,
     ToastModule,
+    TabMenuModule,
+    MenubarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

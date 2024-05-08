@@ -1,5 +1,5 @@
 body {
-    background: #34568B;
+    background: #039b87;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
@@ -8,7 +8,7 @@ body {
     margin: 0;
 }
 
-.navbar {
+/* .navbar {
     font-size: 20px;
     list-style-type: none;
     padding: 0;
@@ -39,4 +39,4 @@ a:hover{
 a:active{
     background-color: #d6002f;
     color: white;
-}
+} */
