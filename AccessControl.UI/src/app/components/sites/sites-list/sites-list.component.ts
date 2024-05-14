@@ -75,8 +75,8 @@ export class SitesListComponent implements OnInit {
   }
 
   setSiteId(args: any){
-    this.selectedSiteId = args.data.siteId;
-    this.selectedSiteName = args.data.displayName;
+    this.selectedSiteId = args.value.siteId;
+    this.selectedSiteName = args.value.displayName;
     localStorage.setItem("selectedSiteId",this.selectedSiteId )
     localStorage.setItem("selectedSiteName", this.selectedSiteName)
   }

@@ -1,5 +1,10 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <h3>Select a Site | Site selected: <strong>{{selectedSiteName}}</strong></h3>
+<p-dropdown 
+    [options]="sites" 
+    [(ngModel)]="selectedSiteName" 
+    (onChange)="setSiteId($event)"
+    optionLabel="displayName" 
+    placeholder="Select a Site"/>
 <div class="k-d-flex k-align-items-center">
     <i class="pi pi-home icon"></i>
     <h2 class="title">Sites</h2>

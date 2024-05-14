@@ -45,6 +45,7 @@ import { ToastModule } from 'primeng/toast';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TabMenuComponent } from './components/common/tab-menu/tab-menu.component';
 import { MenubarModule } from 'primeng/menubar';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { MenubarModule } from 'primeng/menubar';
     ConfirmDialogModule,
     ToastModule,
     TabMenuModule,
-    MenubarModule
+    MenubarModule,
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]
