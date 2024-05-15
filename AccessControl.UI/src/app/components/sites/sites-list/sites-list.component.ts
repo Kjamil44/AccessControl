@@ -14,7 +14,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 export class SitesListComponent implements OnInit {
   sites: any[] = [];
   selectedSiteId: any;
-  selectedSiteName: any = "None";
+  selectedSite: any;
 
   constructor(private accessService: AccessControlService, private dialog: DialogService) { }
 
@@ -76,8 +76,7 @@ export class SitesListComponent implements OnInit {
 
   setSiteId(args: any){
     this.selectedSiteId = args.value.siteId;
-    this.selectedSiteName = args.value.displayName;
     localStorage.setItem("selectedSiteId",this.selectedSiteId )
-    localStorage.setItem("selectedSiteName", this.selectedSiteName)
+    localStorage.setItem("selectedSiteName", this.selectedSite.displayName)
   }
 }

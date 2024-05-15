@@ -1,48 +1,35 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <h3>Site selected: <strong>{{siteName}}</strong></h3>
-<div>
-    <div class="vertical-menu">
-        <h3>Choose new Site</h3>
-        <a *ngFor="let site of sites" [routerLink]="[]"
-            (click)="showLocks(site.siteId,site.displayName)">{{site.displayName}}</a>
-    </div>
-    <div class="grid">
-        <div *ngIf="lockIsPresent">
-            <div class="k-d-flex k-align-items-center">
-                <mat-icon class="icon">lock</mat-icon>
-                <h2 class="title">Locks</h2>
-                <div style="margin-left:auto; padding-bottom: 15px;">
-                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
-                        Lock</button>
-                </div>
-            </div>
-            <kendo-grid [data]="locks" (edit)="onEdit($event);" (remove)="onDelete($event)">
-                <kendo-grid-column field="displayName" title="Lock Name" [width]="20"></kendo-grid-column>
-                <kendo-grid-column field="dateCreated" title="Date Created" [width]="30">
-                    <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.dateCreated | date:'dd MMMM YYYY'}}
-                    </ng-template>
-                </kendo-grid-column>
-                <kendo-grid-column title="Actions" [width]="13">
-                    <ng-template kendoGridCellTemplate let-dataItem>
-                        <button kendoButton (click)="onEditAccess(dataItem)" themeColor="light"
-                            style="margin-left: 5px;">EditAccess</button>
-                        <button kendoGridEditCommand themeColor="tertiary" style="margin-left: 5px;">Edit</button>
-                        <button kendoGridRemoveCommand themeColor="error" style="margin-left: 5px;">Delete</button>
-                    </ng-template>
-                </kendo-grid-column>
-            </kendo-grid>
-        </div>
-        <div *ngIf="!lockIsPresent">
-            <div class="k-d-flex k-align-items-center">
-                <mat-icon class="icon">lock</mat-icon>
-                <h2 class="title">Locks</h2>
-                <div style="margin-left: 10px;">
-                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
-                        Lock</button>
-                </div>
-            </div>
-            <h3 style="color: red;">No Locks avalabile for Site</h3>
-        </div>
+
+<div class="k-d-flex k-align-items-center">
+    <i class="pi pi-lock icon"></i>
+    <h2 class="title">Locks</h2>
+    <div style="margin-left:auto; padding-bottom: 15px;">
+        <p-button size="large" (click)="onCreate()" severity="success">Create
+            Lock</p-button>
     </div>
 </div>
+<p-table [value]="locks" 
+         styleClass="p-datatable-gridlines p-datatable-striped" 
+         [tableStyle]="{ 'min-width': '50rem' }"
+         selectionMode="single">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Lock Name</th>
+            <th>Date Created</th>
+            <th>Date Modified</th>
+            <th  style="width: 12.5rem;">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-lock>
+        <tr [pSelectableRow]="lock">
+            <td>{{ lock.displayName }}</td>
+            <td>{{ lock.dateCreated | date:'dd MMMM YYYY' }}</td>
+            <td>{{ lock.dateModified | date:'dd MMMM YYYY' }}</td>
+            <td>
+                <p-button label="Edit Access"  size="small" (click)="onEditAccess(lock)" severity="secondary"></p-button>
+                <p-button label="Edit"  size="small" (click)="onEdit(lock)"></p-button>
+                <p-button label="Delete" size="small" (click)="onDelete(lock)" severity="danger" class="delete-button"></p-button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
