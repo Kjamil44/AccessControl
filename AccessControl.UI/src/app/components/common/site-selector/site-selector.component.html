@@ -1,0 +1,7 @@
+<p-dropdown 
+    [options]="sites" 
+    [(ngModel)]="selectedSite" 
+    (onChange)="setSiteId($event)"
+    optionLabel="displayName" 
+    placeholder="Select a Site"/>
+

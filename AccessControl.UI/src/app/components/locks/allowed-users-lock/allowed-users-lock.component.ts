@@ -1,31 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-allowed-users-lock',
   templateUrl: './allowed-users-lock.component.html',
   styleUrls: ['./allowed-users-lock.component.css']
 })
-export class AllowedUsersLockComponent extends DialogContentBase implements OnInit {
-  site: any
-  lock: any
+export class AllowedUsersLockComponent implements OnInit {
+  site: any;
+  lock: any;
+
   users: any[] = []
   cardholders: any[] = []
   schedules: any[] = []
-  userIsPresent: boolean = false
-  show: boolean = false
-  remove: boolean = false
-  edit: boolean = false
+
+  userIsPresent: boolean = false;
+  show: boolean = false;
+  remove: boolean = false;
+  edit: boolean = false;
+
   selectedValue: any
   editCardholder: any
   clicked = false;
   formGroup: FormGroup;
 
-
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  constructor(private dialogref: DynamicDialogRef,
+    private accessService: AccessControlService,
+    private config: DynamicDialogConfig) {
     this.formGroup = new FormGroup({
       cardholderId: new FormControl(),
       scheduleId: new FormControl(),
@@ -33,15 +36,27 @@ export class AllowedUsersLockComponent extends DialogContentBase implements OnIn
   }
 
   ngOnInit(): void {
-    this.users = this.lock.assignedUsers;
-    this.users.forEach(element => {
-      if (element.cardholderName == null || element.scheduleName == null){
-        this.userIsPresent = false;
+    this.accessService.getById('api/sites', this.config.data.siteId).subscribe({
+      next: (response) => {
+        this.site = response.data;
+        this.lock = this.config.data.lock;
+
+        this.users = this.lock.assignedUsers;
+        this.users.forEach(element => {
+          if (element.cardholderName == null || element.scheduleName == null) {
+            this.userIsPresent = false;
+          }
+          else {
+            this.userIsPresent = true;
+          }
+        });
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification("Incorrect api endpoint");
       }
-      else{
-        this.userIsPresent = true;
-      }
-    });
+    })
+   
+  
   }
 
   ChooseNewUser() {
@@ -97,7 +112,7 @@ export class AllowedUsersLockComponent extends DialogContentBase implements OnIn
     const data = {
       "scheduleId": this.formGroup.value.scheduleId
     }
-    this.accessService.update(`api/lockS/${this.lock.lockId}/edit`,cardholderId, data)
+    this.accessService.update(`api/lockS/${this.lock.lockId}/edit`, cardholderId, data)
       .subscribe({
         next: data => {
           this.accessService.createSuccessNotification("Allowed User's Schedule updated successfully!")
@@ -126,6 +141,6 @@ export class AllowedUsersLockComponent extends DialogContentBase implements OnIn
   }
 
   closeDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

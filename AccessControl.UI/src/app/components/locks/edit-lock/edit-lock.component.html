@@ -1,17 +1,14 @@
-<kendo-dialog title="Edit Lock from {{site.displayName}}" (close)="closeEditDialog()">
-    <p>Last Modified: <strong style="color: green;">{{lock.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
-    <form>
-        <div class="form-row">
-            <div class="form-group col-5">
-                <label>Lock Name</label>
-                <kendo-textbox [(value)]="nameValue" class="form-control custom-fill-mode">
-                </kendo-textbox>
-            </div>
+<form [formGroup]="formGroup">
+    <p style="display:flex; ">Last Modified:  <strong style="color: green;">{{lock.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="lockName">Lock Name</label>
+            <input id="lockName" type="text" pInputText formControlName="displayName" class="form-control"
+                placeholder="Lock Name">
         </div>
-        <br>
-        <kendo-dialog-actions>
-            <button kendoButton (click)=" closeEditDialog()">Back</button>
-            <button kendoButton (click)="editLock()" themeColor="primary">Update</button>
-        </kendo-dialog-actions>
-    </form>
-</kendo-dialog>
+    </div>
+</form>
+<div class="p-dialog-footer">
+    <button pButton type="button" (click)="closeEditDialog()" label="Back" class="p-button-secondary"></button>
+    <button pButton type="button" (click)="editLock()" label="Update" class="p-button-primary"></button>
+</div>

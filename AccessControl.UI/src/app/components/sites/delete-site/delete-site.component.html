@@ -3,5 +3,6 @@
     <label>Are you sure you want to delete {{site.displayName}}?</label>
 </div>
 <div class="p-dialog-footer">
+    <button pButton type="button" (click)="closeDeleteDialog()" label="Back" class="p-button-secondary"></button>
     <p-button (click)="deleteSite()" label="Delete" severity="danger" />
 </div>

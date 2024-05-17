@@ -13,8 +13,6 @@ import { DialogService } from 'primeng/dynamicdialog';
 })
 export class SitesListComponent implements OnInit {
   sites: any[] = [];
-  selectedSiteId: any;
-  selectedSite: any;
 
   constructor(private accessService: AccessControlService, private dialog: DialogService) { }
 
@@ -72,11 +70,5 @@ export class SitesListComponent implements OnInit {
     ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
-  }
-
-  setSiteId(args: any){
-    this.selectedSiteId = args.value.siteId;
-    localStorage.setItem("selectedSiteId",this.selectedSiteId )
-    localStorage.setItem("selectedSiteName", this.selectedSite.displayName)
   }
 }

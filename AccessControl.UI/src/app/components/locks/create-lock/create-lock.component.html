@@ -1,16 +1,15 @@
-<kendo-dialog title="Create Lock" (close)="closeCreateDialog()" class="kendo-dialog">
+<div class="surface-border">
     <form [formGroup]="formGroup">
         <div class="form-row">
-            <div class="form-group col-5">
-                <label>Lock Name</label>
-                <kendo-textbox placeholder="Lock Name" formControlName="displayName"  class="form-control custom-fill-mode" >
-                </kendo-textbox>
+            <div class="form-group">
+                <label for="lockName">Lock Name</label>
+                <input id="lockName" type="text" pInputText formControlName="displayName" class="form-control"
+                    placeholder="Lock Name">
             </div>
         </div>
-        <br>
-        <kendo-dialog-actions>
-            <button kendoButton (click)="closeCreateDialog()">Back</button>
-                            <button kendoButton (click)="createLock()" themeColor="primary">Create</button>
-        </kendo-dialog-actions>
-    </form> 
-</kendo-dialog>
+    </form>
+</div>
+<div class="p-dialog-footer">
+    <button pButton type="button" (click)="closeCreateDialog()" label="Back" class="p-button-secondary"></button>
+    <button pButton type="button" (click)="createLock()" label="Create" class="p-button-primary"></button>
+</div>

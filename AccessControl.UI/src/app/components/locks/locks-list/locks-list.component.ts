@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { AddEvent, RemoveEvent } from '@progress/kendo-angular-grid';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { AllowedUsersLockComponent } from '../allowed-users-lock/allowed-users-lock.component';
 import { CreateLockComponent } from '../create-lock/create-lock.component';
 import { DeleteLockComponent } from '../delete-lock/delete-lock.component';
 import { EditLockComponent } from '../edit-lock/edit-lock.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-locks-list',
   templateUrl: './locks-list.component.html',
-  styleUrls: ['./locks-list.component.css']
+  styleUrls: ['./locks-list.component.css'],
+  providers: [DialogService]
 })
 export class LocksListComponent implements OnInit {
   sites: any[] = []
   locks: any[] = []
   lockIsPresent: boolean = false;
-  siteId: any = localStorage.getItem("selectedSiteId") 
-  siteName: any = localStorage.getItem("selectedSiteName") 
+  siteId: any = localStorage.getItem("selectedSiteId"); 
+  siteName: any = localStorage.getItem("selectedSiteName"); 
+  site: any;
 
 
   constructor(private accessService: AccessControlService, private dialog: DialogService) { }
@@ -43,83 +44,86 @@ export class LocksListComponent implements OnInit {
     })
   }
 
-  showLocks(siteId: any, siteName: any) {
-    localStorage.setItem("selectedSiteName",siteName);
-    localStorage.setItem("selectedSiteId",siteId);
-    this.siteName = siteName 
-    this.siteId = siteId;
-    this.accessService.get(`api/locks/site/${siteId}`).subscribe({
+  showLocks(site: any) {
+    this.siteName = site.displayName; 
+    this.siteId = site.siteId;
+    this.site = site;
+    this.accessService.get(`api/locks/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
       },
       error: (response) => {
+        this.locks = []
         this.lockIsPresent = false;
       }
     })
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open({
-      content: CreateLockComponent
+    const ref = this.dialog.open(CreateLockComponent, {
+      header: 'Create Lock',
+      width: '610px',
+      height: '250px',
+      baseZIndex: 10000,
+      data: {
+        siteId: this.siteId
+      }
     });
-    dialogRef.content.instance.siteId = this.siteId;
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
 
-  onEdit(args: AddEvent) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
+  onEdit(lock: any) {
+    const ref = this.dialog.open(EditLockComponent, {
+      header: `Edit Lock from ${this.siteName}`,
+      width: '610px',
+      height: '250px',
+      baseZIndex: 10000,
+      data: {
+        lock: lock
       }
-    })
-    const dialogRef = this.dialog.open({
-      content: EditLockComponent
     });
-    dialogRef.content.instance.lock = args.dataItem;
-    dialogRef.result.subscribe(() => {
-      this.ngOnInit();
-    });
-  }
 
-  onDelete(args: RemoveEvent) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-    const dialogRef = this.dialog.open({
-      content: DeleteLockComponent,
-    });
-    dialogRef.content.instance.lock = args.dataItem;
-    dialogRef.result.subscribe(() => {
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
 
   onEditAccess(lock: any) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
+    const ref = this.dialog.open(AllowedUsersLockComponent, {
+      header: `Assigned Users from ${lock.displayName}`,
+      width: '610px',
+      height: '250px',
+      baseZIndex: 10000,
+      data: {
+        lock: lock,
+        siteId: this.siteId ?? this.site.siteId
       }
-    })
-    const dialogRef = this.dialog.open({
-      content: AllowedUsersLockComponent
     });
-    dialogRef.content.instance.lock = lock
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
+
+  onDelete(lock: any) {
+    const ref = this.dialog.open(DeleteLockComponent, {
+      header: 'Delete Lock',
+      width: '470px',
+      height: '250px',
+      baseZIndex: 10000,
+      data: {
+        lock: lock,
+        siteName: this.siteName
+      }
+    });
+
+    ref.onClose.subscribe(() => {
+      this.ngOnInit();
+    });
+  }
+
 }

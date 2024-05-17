@@ -1,12 +1,4 @@
 <!-- TODO: Temporary added, remove after creatig list/all in every other page -->
-<p-dropdown 
-    [options]="sites" 
-    [(ngModel)]="selectedSite" 
-    (onChange)="setSiteId($event)"
-    optionLabel="displayName" 
-    placeholder="Select a Site"/>
-
-
 <div class="k-d-flex k-align-items-center">
     <i class="pi pi-home icon"></i>
     <h2 class="title">Sites</h2>
@@ -18,8 +10,6 @@
 <p-table [value]="sites" 
          styleClass="p-datatable-gridlines p-datatable-striped" 
          [tableStyle]="{ 'min-width': '50rem' }"
-         (onRowSelect)="setSiteId($event)"
-         (onRowUnselect)="setSiteId($event)"
          selectionMode="single">
     <ng-template pTemplate="header">
         <tr>

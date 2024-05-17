@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -7,11 +7,18 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './delete-lock.component.html',
   styleUrls: ['./delete-lock.component.css']
 })
-export class DeleteLockComponent extends DialogContentBase{
-  site: any
-  lock: any
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+export class DeleteLockComponent implements OnInit {
+  lock: any;
+  siteName: any;
+
+  constructor(private dialogref: DynamicDialogRef,
+    private config: DynamicDialogConfig,
+    private accessService: AccessControlService) {
+  }
+
+  ngOnInit(): void {
+    this.lock = this.config.data.lock;
+    this.siteName = this.config.data.siteName;
   }
 
   deleteLock() {
@@ -28,7 +35,7 @@ export class DeleteLockComponent extends DialogContentBase{
   }
 
   closeDeleteDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 
 }

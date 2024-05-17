@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -8,22 +8,28 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './create-lock.component.html',
   styleUrls: ['./create-lock.component.css']
 })
-export class CreateLockComponent extends DialogContentBase {
+export class CreateLockComponent implements OnInit {
   siteId: any
   formGroup: FormGroup;
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  constructor(private accessService: AccessControlService,
+    private dialogref: DynamicDialogRef,
+    private config: DynamicDialogConfig) {
     this.formGroup = new FormGroup({
       displayName: new FormControl(),
     });
   }
+
+  ngOnInit(): void {
+    this.siteId = this.config.data.siteId;
+  }
+
   createLock() {
     const data = {
       "siteId": this.siteId,
       "displayName": this.formGroup.value.displayName,
     }
-    console.log(data)
+
     this.accessService.create(`api/locks/create`, data)
       .subscribe({
         next: data => {
@@ -38,7 +44,6 @@ export class CreateLockComponent extends DialogContentBase {
   }
 
   closeCreateDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
-
 }

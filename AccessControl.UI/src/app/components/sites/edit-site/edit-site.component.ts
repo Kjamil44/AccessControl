@@ -11,7 +11,6 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 export class EditSiteComponent implements OnInit {
   site: any;
   submitted = false;
-  nameValue: any
   formGroup: FormGroup;
 
   constructor(private fb: FormBuilder,

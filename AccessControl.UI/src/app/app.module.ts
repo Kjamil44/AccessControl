@@ -46,6 +46,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { TabMenuComponent } from './components/common/tab-menu/tab-menu.component';
 import { MenubarModule } from 'primeng/menubar';
 import { DropdownModule } from 'primeng/dropdown';
+import { SiteSelectorComponent } from './components/common/site-selector/site-selector.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CreateScheduleComponent,
     EditScheduleComponent,
     DeleteScheduleComponent,
-    TabMenuComponent
+    TabMenuComponent,
+    SiteSelectorComponent
   ],
   imports: [
     BrowserModule, 

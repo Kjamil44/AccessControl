@@ -1,80 +1,71 @@
-<kendo-dialog title="Assigned Users from {{lock.displayName}}" (close)="closeDialog()">
-    <form [formGroup]="formGroup">
-        <div class="form-row">
-            <div class="form-group col-5">
-                <label class="labelFirst">Assigned Users</label>
-                <br>
-                <div *ngIf="userIsPresent">
-                    <ul *ngFor="let user of users">
-                        <li (click)="remove = true; editCardholder = user; edit = false;" value="{{user.cardholderId}}">
-                            {{user.cardholderName}},
-                            Schedule: {{user.scheduleName}}</li>
-                        <div *ngIf="remove && editCardholder.cardholderId==user.cardholderId">
-                            <button kendoButton themeColor="error" size="small"
-                                (click)="RemoveUserFromLock(user.cardholderId)">Remove User</button>
-                            <button kendoButton themeColor="tertiary" size="small"
-                                (click)="EditUser(); edit = true; show = false; clicked = false; editCardholder = user; ">Edit
-                                User</button>
-                        </div>
-                    </ul>
-                </div>
-                <div *ngIf="!userIsPresent">
-                    <h3>No users have been assigned</h3>
-                </div>
-                <button kendoButton [disabled]="clicked"
-                    (click)="ChooseNewUser(); clicked = true; edit = false; show = true; remove = false;">Choose
-                    New Users</button>
-                <br>
-                <div *ngIf="show">
-                    <div>
-                        <kendo-dialog-actions>
-                            <label class="labelFirst">Choose a Cardholder from
-                                <strong>{{site.displayName}}</strong></label>
-                            <select class="custom-select mb-3" formControlName="cardholderId">
-                                <option *ngFor="let cardholder of cardholders" [ngValue]="cardholder.cardholderId">
-                                    {{ cardholder.firstName }} {{cardholder.lastName}}
-                                </option>
-                            </select>
-                        </kendo-dialog-actions>
-                        <br>
-                        <kendo-dialog-actions>
-                            <label class="labelFirst">Choose a Schedule from
-                                <strong>{{site.displayName}}</strong></label>
-                            <select class="custom-select mb-3" formControlName="scheduleId">
-                                <option *ngFor="let schedule of schedules" [ngValue]="schedule.scheduleId">
-                                    {{ schedule.displayName }}, Days in week: {{schedule.listOfDays}}
-                                </option>
-                            </select>
-                        </kendo-dialog-actions>
-                    </div><br>
-                    <kendo-dialog-actions>
-                        <button kendoButton (click)="AssignUserToLock()">Assign New User</button>
-                    </kendo-dialog-actions>
-                </div>
-                <div *ngIf="edit">
-                    <div>
-                        <label class="labelFirst">Edit <strong>{{editCardholder.cardholderName}}</strong></label>
-                        <br>
-                        <kendo-dialog-actions>
-                            <label class="labelFirst">Choose a new Schedule from
-                                <strong>{{site.displayName}}</strong></label>
-                            <select class="custom-select mb-3" formControlName="scheduleId">
-                                <option *ngFor="let schedule of schedules" [ngValue]="schedule.scheduleId">
-                                    {{ schedule.displayName }}, Days in week: {{schedule.listOfDays}}
-                                </option>
-                            </select>
-                        </kendo-dialog-actions>
-                    </div><br>
-                    <kendo-dialog-actions>
-                        <button kendoButton (click)="EditUserToLock(editCardholder.cardholderId)">Update User:
-                            <strong>{{editCardholder.cardholderName}}</strong></button>
-                    </kendo-dialog-actions>
-                </div>
+<form [formGroup]="formGroup">
+    <div class="form-row">
+        <div class="form-group col-5">
+            <label class="labelFirst">Assigned Users</label>
+            <br>
+            <div *ngIf="userIsPresent">
+                <ul *ngFor="let user of users">
+                    <li (click)="remove = true; editCardholder = user; edit = false;" value="{{user.cardholderId}}">
+                        {{user.cardholderName}},
+                        Schedule: {{user.scheduleName}}</li>
+                    <div *ngIf="remove && editCardholder.cardholderId==user.cardholderId">
+                        <button pButton themeColor="error" size="small"
+                            (click)="RemoveUserFromLock(user.cardholderId)">Remove User</button>
+                        <button pButton themeColor="tertiary" size="small"
+                            (click)="EditUser(); edit = true; show = false; clicked = false; editCardholder = user; ">Edit
+                            User</button>
+                    </div>
+                </ul>
+            </div>
+            <div *ngIf="!userIsPresent">
+                <h3>No users have been assigned</h3>
+            </div>
+            <button pButton [disabled]="clicked"
+                (click)="ChooseNewUser(); clicked = true; edit = false; show = true; remove = false;">Choose
+                New Users</button>
+            <br>
+            <div *ngIf="show">
+                <div>
+                    <label class="labelFirst">Choose a Cardholder from
+                        <strong>{{site.displayName}}</strong></label>
+                    <select class="custom-select mb-3" formControlName="cardholderId">
+                        <option *ngFor="let cardholder of cardholders" [ngValue]="cardholder.cardholderId">
+                            {{ cardholder.firstName }} {{cardholder.lastName}}
+                        </option>
+                    </select>
+                    <br>
+                    <label class="labelFirst">Choose a Schedule from
+                        <strong>{{site.displayName}}</strong></label>
+                    <select class="custom-select mb-3" formControlName="scheduleId">
+                        <option *ngFor="let schedule of schedules" [ngValue]="schedule.scheduleId">
+                            {{ schedule.displayName }}, Days in week: {{schedule.listOfDays}}
+                        </option>
+                    </select>
+
+                </div><br>
+
+                <button pButton (click)="AssignUserToLock()">Assign New User</button>
+
+            </div>
+            <div *ngIf="edit">
+                <div>
+                    <label class="labelFirst">Edit <strong>{{editCardholder.cardholderName}}</strong></label>
+                    <br>
+                    <label class="labelFirst">Choose a new Schedule from
+                        <strong>{{site.displayName}}</strong></label>
+                    <select class="custom-select mb-3" formControlName="scheduleId">
+                        <option *ngFor="let schedule of schedules" [ngValue]="schedule.scheduleId">
+                            {{ schedule.displayName }}, Days in week: {{schedule.listOfDays}}
+                        </option>
+                    </select>
+                </div><br>
+                <button pButton (click)="EditUserToLock(editCardholder.cardholderId)">Update User:
+                    <strong>{{editCardholder.cardholderName}}</strong></button>
             </div>
         </div>
-        <br>
-        <kendo-dialog-actions>
-            <button kendoButton themeColor="info" (click)=" closeDialog()">Close</button>
-        </kendo-dialog-actions>
-    </form>
-</kendo-dialog>
+    </div>
+    <br>
+</form>
+<div class="p-dialog-footer">
+    <p-button (click)="closeDialog()">Close</p-button>
+</div>
