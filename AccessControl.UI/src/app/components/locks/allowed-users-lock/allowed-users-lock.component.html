@@ -1,71 +1,50 @@
-<form [formGroup]="formGroup">
-    <div class="form-row">
-        <div class="form-group col-5">
-            <label class="labelFirst">Assigned Users</label>
-            <br>
-            <div *ngIf="userIsPresent">
-                <ul *ngFor="let user of users">
-                    <li (click)="remove = true; editCardholder = user; edit = false;" value="{{user.cardholderId}}">
-                        {{user.cardholderName}},
-                        Schedule: {{user.scheduleName}}</li>
-                    <div *ngIf="remove && editCardholder.cardholderId==user.cardholderId">
-                        <button pButton themeColor="error" size="small"
-                            (click)="RemoveUserFromLock(user.cardholderId)">Remove User</button>
-                        <button pButton themeColor="tertiary" size="small"
-                            (click)="EditUser(); edit = true; show = false; clicked = false; editCardholder = user; ">Edit
-                            User</button>
-                    </div>
-                </ul>
+<div class="card flex justify-content-center">
+    <p-card header="Edit Access to Lock - {{lock?.displayName}}">
+        <form [formGroup]="formGroup" class="p-fluid" style="max-height: 500px; overflow-y: auto;">
+            <div class="p-field">
+                <label class="labelFirst">Assigned Users</label>
+                <div *ngIf="userIsPresent">
+                    <ol class="p-list">
+                        <li *ngFor="let user of users" (click)="remove = true; editCardholder = user; edit = false;"
+                            value="{{user.cardholderId}}">
+                            {{user.cardholderName}}, Schedule: {{user.scheduleName}}
+                            <div *ngIf="remove && editCardholder.cardholderId == user.cardholderId">
+                                <p-button label="Remove User" themeColor="error" size="small"
+                                    (click)="RemoveUserFromLock(user.cardholderId)"></p-button>
+                                <p-button label="Edit User" themeColor="tertiary" size="small"
+                                    (click)="EditUser(); edit = true; show = false; clicked = false; editCardholder = user;"></p-button>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <div *ngIf="!userIsPresent">
+                    <h3>No users have been assigned</h3>
+                </div>
             </div>
-            <div *ngIf="!userIsPresent">
-                <h3>No users have been assigned</h3>
+            <hr />
+            <div class="p-field">
+                <p-button [disabled]="clicked" label="Choose New Users"
+                    (click)="ChooseNewUser(); clicked = true; edit = false; show = true; remove = false;"></p-button>
+                <div *ngIf="show">
+                    <label>Choose a Cardholder from <strong>{{siteDisplayName}}</strong></label>
+                    <p-dropdown [options]="cardholders" formControlName="cardholder" optionLabel="fullName"
+                        placeholder="Select a Cardholder"></p-dropdown>
+                    <label>Choose a Schedule from <strong>{{siteDisplayName}}</strong></label>
+                    <p-dropdown [options]="schedules" formControlName="schedule" optionLabel="displayName"
+                        placeholder="Select a Schedule"></p-dropdown>
+                    <p-button label="Assign New User" (click)="AssignUserToLock()"></p-button>
+                </div>
             </div>
-            <button pButton [disabled]="clicked"
-                (click)="ChooseNewUser(); clicked = true; edit = false; show = true; remove = false;">Choose
-                New Users</button>
-            <br>
-            <div *ngIf="show">
-                <div>
-                    <label class="labelFirst">Choose a Cardholder from
-                        <strong>{{site.displayName}}</strong></label>
-                    <select class="custom-select mb-3" formControlName="cardholderId">
-                        <option *ngFor="let cardholder of cardholders" [ngValue]="cardholder.cardholderId">
-                            {{ cardholder.firstName }} {{cardholder.lastName}}
-                        </option>
-                    </select>
-                    <br>
-                    <label class="labelFirst">Choose a Schedule from
-                        <strong>{{site.displayName}}</strong></label>
-                    <select class="custom-select mb-3" formControlName="scheduleId">
-                        <option *ngFor="let schedule of schedules" [ngValue]="schedule.scheduleId">
-                            {{ schedule.displayName }}, Days in week: {{schedule.listOfDays}}
-                        </option>
-                    </select>
-
-                </div><br>
-
-                <button pButton (click)="AssignUserToLock()">Assign New User</button>
-
+            <hr />
+            <div *ngIf="edit" class="p-field">
+                <label>Edit <strong>{{editCardholder.cardholderName}}</strong></label>
+                <label>Choose a new Schedule from <strong>{{siteDisplayName}}</strong></label>
+                <p-dropdown [options]="schedules" formControlName="scheduleId" optionLabel="displayName"
+                    placeholder="Select a Schedule"></p-dropdown>
+                <p-button label="Update User: {{editCardholder.cardholderName}}"
+                    (click)="EditUserToLock(editCardholder.cardholderId)"></p-button>
             </div>
-            <div *ngIf="edit">
-                <div>
-                    <label class="labelFirst">Edit <strong>{{editCardholder.cardholderName}}</strong></label>
-                    <br>
-                    <label class="labelFirst">Choose a new Schedule from
-                        <strong>{{site.displayName}}</strong></label>
-                    <select class="custom-select mb-3" formControlName="scheduleId">
-                        <option *ngFor="let schedule of schedules" [ngValue]="schedule.scheduleId">
-                            {{ schedule.displayName }}, Days in week: {{schedule.listOfDays}}
-                        </option>
-                    </select>
-                </div><br>
-                <button pButton (click)="EditUserToLock(editCardholder.cardholderId)">Update User:
-                    <strong>{{editCardholder.cardholderName}}</strong></button>
-            </div>
-        </div>
-    </div>
-    <br>
-</form>
-<div class="p-dialog-footer">
-    <p-button (click)="closeDialog()">Close</p-button>
+            <p-button label="Back" (click)="closeDialog()"></p-button>
+        </form>
+    </p-card>
 </div>

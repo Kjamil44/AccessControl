@@ -5,6 +5,7 @@ import { LocksListComponent } from './components/locks/locks-list/locks-list.com
 import { SchedulesListComponent } from './components/schedules/schedules-list/schedules-list.component';
 import { CreateSiteComponent } from './components/sites/create-site/create-site.component';
 import { SitesListComponent } from './components/sites/sites-list/sites-list.component';
+import { AllowedUsersLockComponent } from './components/locks/allowed-users-lock/allowed-users-lock.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'locks',
     component: LocksListComponent
+  },
+  {
+    path: 'locks/edit-access/:id',
+    component: AllowedUsersLockComponent
   },
   {
     path: 'cardholders',

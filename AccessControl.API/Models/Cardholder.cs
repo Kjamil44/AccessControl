@@ -13,6 +13,7 @@ namespace AccessControl.API.Models
         public Guid CardholderId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName => $"{FirstName.Trim()} {LastName.Trim()}";
         public int CardNumber { get; set; }
         public DateTime ActivationDate { get; set; }
         public DateTime ExpirationDate { get; set; }

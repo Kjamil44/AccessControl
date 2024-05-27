@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Location } from '@angular/common';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-allowed-users-lock',
@@ -9,7 +11,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
   styleUrls: ['./allowed-users-lock.component.css']
 })
 export class AllowedUsersLockComponent implements OnInit {
-  site: any;
+  siteId: any;
+  siteDisplayName: any;
   lock: any;
 
   users: any[] = []
@@ -26,41 +29,42 @@ export class AllowedUsersLockComponent implements OnInit {
   clicked = false;
   formGroup: FormGroup;
 
-  constructor(private dialogref: DynamicDialogRef,
-    private accessService: AccessControlService,
-    private config: DynamicDialogConfig) {
+  constructor(private accessService: AccessControlService, private route: ActivatedRoute, private location: Location) {
     this.formGroup = new FormGroup({
-      cardholderId: new FormControl(),
-      scheduleId: new FormControl(),
+      cardholder: new FormControl(),
+      schedule: new FormControl(),
     })
   }
 
   ngOnInit(): void {
-    this.accessService.getById('api/sites', this.config.data.siteId).subscribe({
-      next: (response) => {
-        this.site = response.data;
-        this.lock = this.config.data.lock;
+    this.route.params.subscribe(params => {
+      let lockId = params['id'];
 
-        this.users = this.lock.assignedUsers;
-        this.users.forEach(element => {
-          if (element.cardholderName == null || element.scheduleName == null) {
-            this.userIsPresent = false;
-          }
-          else {
-            this.userIsPresent = true;
-          }
-        });
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification("Incorrect api endpoint");
-      }
-    })
-   
-  
+      this.accessService.getById('api/locks', lockId).subscribe({
+        next: (response) => {
+          this.lock = response.data;
+          this.siteId = this.lock.siteId;
+          this.siteDisplayName = this.lock.siteDisplayName;
+
+          this.users = this.lock.assignedUsers;
+          this.users.forEach(element => {
+            if (element.cardholderName == null || element.scheduleName == null) {
+              this.userIsPresent = false;
+            }
+            else {
+              this.userIsPresent = true;
+            }
+          });
+        },
+        error: (response) => {
+          this.accessService.createErrorNotification("Incorrect api endpoint");
+        }
+      })
+    });
   }
 
   ChooseNewUser() {
-    this.accessService.get(`api/cardholders/site/${this.site.siteId}`).subscribe({
+    this.accessService.get(`api/cardholders/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.cardholders = response.data;
       },
@@ -68,7 +72,7 @@ export class AllowedUsersLockComponent implements OnInit {
         this.accessService.createErrorNotification("No Cardholders found, please Add Cardholder for Lock!")
       }
     })
-    this.accessService.get(`api/schedules/site/${this.site.siteId}`).subscribe({
+    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.schedules = response.data;
       },
@@ -79,7 +83,7 @@ export class AllowedUsersLockComponent implements OnInit {
   }
 
   EditUser() {
-    this.accessService.get(`api/schedules/site/${this.site.siteId}`).subscribe({
+    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.schedules = response.data;
       },
@@ -90,9 +94,10 @@ export class AllowedUsersLockComponent implements OnInit {
   }
 
   AssignUserToLock() {
+    debugger
     const data = {
-      "cardholderId": this.formGroup.value.cardholderId,
-      "scheduleId": this.formGroup.value.scheduleId
+      "cardholderId": this.formGroup.value.cardholder.cardholderId,
+      "scheduleId": this.formGroup.value.schedule.scheduleId
     }
 
     this.accessService.create(`api/locks/${this.lock.lockId}/assign`, data)
@@ -141,6 +146,6 @@ export class AllowedUsersLockComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialogref.close();
+    this.location.back();
   }
 }

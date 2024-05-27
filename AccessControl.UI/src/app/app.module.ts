@@ -47,6 +47,7 @@ import { TabMenuComponent } from './components/common/tab-menu/tab-menu.componen
 import { MenubarModule } from 'primeng/menubar';
 import { DropdownModule } from 'primeng/dropdown';
 import { SiteSelectorComponent } from './components/common/site-selector/site-selector.component';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { SiteSelectorComponent } from './components/common/site-selector/site-se
     ToastModule,
     TabMenuModule,
     MenubarModule,
-    DropdownModule
+    DropdownModule,
+    CardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

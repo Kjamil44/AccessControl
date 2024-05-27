@@ -5,6 +5,7 @@ import { CreateLockComponent } from '../create-lock/create-lock.component';
 import { DeleteLockComponent } from '../delete-lock/delete-lock.component';
 import { EditLockComponent } from '../edit-lock/edit-lock.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-locks-list',
@@ -21,7 +22,7 @@ export class LocksListComponent implements OnInit {
   site: any;
 
 
-  constructor(private accessService: AccessControlService, private dialog: DialogService) { }
+  constructor(private accessService: AccessControlService, private dialog: DialogService, private router: Router) { }
 
   ngOnInit(): void {
     this.accessService.get('api/sites').subscribe({
@@ -93,20 +94,7 @@ export class LocksListComponent implements OnInit {
   }
 
   onEditAccess(lock: any) {
-    const ref = this.dialog.open(AllowedUsersLockComponent, {
-      header: `Assigned Users from ${lock.displayName}`,
-      width: '610px',
-      height: '250px',
-      baseZIndex: 10000,
-      data: {
-        lock: lock,
-        siteId: this.siteId ?? this.site.siteId
-      }
-    });
-
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    this.router.navigate([`/locks/edit-access/${lock.lockId}`]);
   }
 
   onDelete(lock: any) {

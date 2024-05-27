@@ -18,6 +18,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                 public Guid CardholderId { get; set; }
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
+                public string FullName { get; set; }
                 public int CardNumber { get; set; }
                 public DateTime ActivationDate { get; set; }
                 public DateTime ExpirationDate { get; set; }
@@ -45,6 +46,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                         CardholderId = x.CardholderId,
                         FirstName = x.FirstName,
                         LastName = x.LastName,  
+                        FullName = x.FullName,
                         CardNumber = x.CardNumber,  
                         ActivationDate = x.ActivationDate,  
                         ExpirationDate = x.ExpirationDate,  

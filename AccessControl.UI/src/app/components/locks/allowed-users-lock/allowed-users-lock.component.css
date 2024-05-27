@@ -1,14 +1,13 @@
-.labelFirst{
+.labelFirst {
     font-size: large;
     font-weight: bold;
 }
-ul{
-    padding: 10 !important;
-    list-style-type:circle;
+
+.p-list {
+    list-style-type: none;
+    padding: 0;
 }
-li{
-    font-size: medium;
-}
-.template{
-    font-size: small;
+
+.p-list li {
+    margin-bottom: 0.5rem;
 }

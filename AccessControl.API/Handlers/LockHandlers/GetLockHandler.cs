@@ -10,12 +10,13 @@ namespace AccessControl.API.Handlers.LockHandlers
     {
         public class Request : IRequest<Response>
         {
-            public Guid SiteId { get; set; }
             public Guid LockId { get; set; }
         }
         public class Response
         {
             public Guid LockId { get; set; }
+            public Guid SiteId { get; set; }
+            public string SiteDisplayName { get; set; }
             public string DisplayName { get; set; }
             public class Item
             {
@@ -41,11 +42,18 @@ namespace AccessControl.API.Handlers.LockHandlers
                 if (lockFromDb == null)
                     throw new CoreException("Lock not found");
 
+                var site = await _session.LoadAsync<Site>(lockFromDb.SiteId);
+                if (site == null)
+                    throw new CoreException("Site not found");
+
                 var cardholders = await _session.Query<Cardholder>().ToListAsync();
                 var schedules = await _session.Query<Schedule>().ToListAsync();
+
                 return new Response
                 {
                     LockId = lockFromDb.LockId,
+                    SiteId = site.SiteId,
+                    SiteDisplayName = site.DisplayName,
                     DisplayName = lockFromDb.DisplayName,
                     AssignedUsers = lockFromDb.AllowedUsers.Select(x =>
                     {
@@ -63,7 +71,7 @@ namespace AccessControl.API.Handlers.LockHandlers
                             CardholderName = $"{cardholder.FirstName} {cardholder.LastName}",
                             ScheduleName = schedule.DisplayName,
                             ScheduleDays = schedule.ListOfDays.ToList()
-                        }; 
+                        };
                     }),
                     DateCreated = lockFromDb.DateCreated,
                     DateModified = lockFromDb.DateModified

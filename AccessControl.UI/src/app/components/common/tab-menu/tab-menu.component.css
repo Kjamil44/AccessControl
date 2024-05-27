@@ -1,3 +1,7 @@
+.menubar-container {
+    margin-bottom: 9px; /* Adjust the value as needed */
+}
+
 .logo{
     width: 300px; 
     height: auto;
