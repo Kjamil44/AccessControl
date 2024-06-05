@@ -3,13 +3,23 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+
+/* Grid/Table styles */
+.no-data-text {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+    color: #777;
+}
+
 /* dialog form styles */
 
 .form-row {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Align items vertically */
+    align-items: center;
+    /* Align items vertically */
     /* Ensure items are spaced evenly */
 }
 
@@ -24,8 +34,9 @@
 }
 
 .form-group input {
- /* Push the input to the far right */
-    width: 350px; /* Set width for the input */
+    /* Push the input to the far right */
+    width: 350px;
+    /* Set width for the input */
     margin-left: 106px;
 }
 
@@ -45,12 +56,12 @@
     border-top: 1px solid #ccc;
 }
 
-.p-dialog .p-dialog-header{
+.p-dialog .p-dialog-header {
     background-color: rgb(0, 0, 0);
     color: white
 }
 
-.icon{
+.icon {
     float: left;
     padding: 5px;
     color: white;

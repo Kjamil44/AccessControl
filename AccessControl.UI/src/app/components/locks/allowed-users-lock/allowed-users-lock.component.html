@@ -1,50 +1,46 @@
 <div class="card flex justify-content-center">
-    <p-card header="Edit Access to Lock - {{lock?.displayName}}">
+    <p-card header="Edit Access to Lock - {{ lock?.displayName }}">
         <form [formGroup]="formGroup" class="p-fluid" style="max-height: 500px; overflow-y: auto;">
             <div class="p-field">
                 <label class="labelFirst">Assigned Users</label>
-                <div *ngIf="userIsPresent">
+                <div *ngIf="userIsPresent; else noUsersTemplate">
                     <ol class="p-list">
-                        <li *ngFor="let user of users" (click)="remove = true; editCardholder = user; edit = false;"
-                            value="{{user.cardholderId}}">
-                            {{user.cardholderName}}, Schedule: {{user.scheduleName}}
-                            <div *ngIf="remove && editCardholder.cardholderId == user.cardholderId">
-                                <p-button label="Remove User" themeColor="error" size="small"
-                                    (click)="RemoveUserFromLock(user.cardholderId)"></p-button>
-                                <p-button label="Edit User" themeColor="tertiary" size="small"
-                                    (click)="EditUser(); edit = true; show = false; clicked = false; editCardholder = user;"></p-button>
+                        <li *ngFor="let user of users" [class.selected]="isUserSelected(user)">
+                            <span><b>Cardholder:</b> {{ user.cardholderName }}, <b>Schedule: </b></span>
+                            <div class="dropdown-container" *ngIf="user.editing; else viewModeTemplate">
+                                <p-dropdown [options]="schedules" [formControl]="user.scheduleControl" optionLabel="displayName" placeholder="Select a Schedule"></p-dropdown>
+                            </div>
+                            <ng-template #viewModeTemplate>
+                                <span> {{ user.scheduleName }}</span>
+                            </ng-template>
+                            <div class="actions">
+                                <p-button *ngIf="!user.editing" icon="pi pi-pencil" (click)="editUser(user)"></p-button>
+                                <p-button *ngIf="!user.editing" icon="pi pi-trash" severity="danger" (click)="removeUser(user, $event)"></p-button>
+                                <p-button *ngIf="user.editing" icon="pi pi-check" severity="success" (click)="saveEdit(user)"></p-button>
+                                <p-button *ngIf="user.editing" icon="pi pi-times" (click)="cancelEdit(user)"></p-button>
                             </div>
                         </li>
                     </ol>
                 </div>
-                <div *ngIf="!userIsPresent">
+                <ng-template #noUsersTemplate>
                     <h3>No users have been assigned</h3>
-                </div>
+                </ng-template>
             </div>
             <hr />
             <div class="p-field">
-                <p-button [disabled]="clicked" label="Choose New Users"
-                    (click)="ChooseNewUser(); clicked = true; edit = false; show = true; remove = false;"></p-button>
-                <div *ngIf="show">
-                    <label>Choose a Cardholder from <strong>{{siteDisplayName}}</strong></label>
-                    <p-dropdown [options]="cardholders" formControlName="cardholder" optionLabel="fullName"
-                        placeholder="Select a Cardholder"></p-dropdown>
-                    <label>Choose a Schedule from <strong>{{siteDisplayName}}</strong></label>
-                    <p-dropdown [options]="schedules" formControlName="schedule" optionLabel="displayName"
-                        placeholder="Select a Schedule"></p-dropdown>
-                    <p-button label="Assign New User" (click)="AssignUserToLock()"></p-button>
+                <p-button [disabled]="clicked" label="Choose New User" (click)="chooseNewUser()"></p-button>
+                <div *ngIf="show" class="assign-new-user">
+                    <label>Choose a Cardholder from <strong>{{ siteDisplayName }}</strong></label>
+                    <p-dropdown [options]="cardholders" formControlName="cardholder" optionLabel="fullName" placeholder="Select a Cardholder"></p-dropdown>
+                    <br>
+                    <label>Choose a Schedule from <strong>{{ siteDisplayName }}</strong></label>
+                    <p-dropdown [options]="schedules" formControlName="schedule" optionLabel="displayName" placeholder="Select a Schedule"></p-dropdown>
+                    <br>
+                    <p-button label="Assign New User" severity="success" (click)="assignUserToLock()"></p-button>
                 </div>
             </div>
-            <hr />
-            <div *ngIf="edit" class="p-field">
-                <label>Edit <strong>{{editCardholder.cardholderName}}</strong></label>
-                <label>Choose a new Schedule from <strong>{{siteDisplayName}}</strong></label>
-                <p-dropdown [options]="schedules" formControlName="scheduleId" optionLabel="displayName"
-                    placeholder="Select a Schedule"></p-dropdown>
-                <p-button label="Update User: {{editCardholder.cardholderName}}"
-                    (click)="EditUserToLock(editCardholder.cardholderId)"></p-button>
-            </div>
-            <p-button label="Back" (click)="closeDialog()"></p-button>
+            <hr>
+            <p-button label="Back" severity="secondary" (click)="closeDialog()"></p-button>
         </form>
     </p-card>
 </div>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { AccessControlService } from 'src/app/services/access-control.service';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -15,17 +14,17 @@ export class AllowedUsersLockComponent implements OnInit {
   siteDisplayName: any;
   lock: any;
 
-  users: any[] = []
-  cardholders: any[] = []
-  schedules: any[] = []
+  users: any[] = [];
+  cardholders: any[] = [];
+  schedules: any[] = [];
 
   userIsPresent: boolean = false;
   show: boolean = false;
   remove: boolean = false;
   edit: boolean = false;
 
-  selectedValue: any
-  editCardholder: any
+  selectedValue: any;
+  editCardholder: any;
   clicked = false;
   formGroup: FormGroup;
 
@@ -33,7 +32,7 @@ export class AllowedUsersLockComponent implements OnInit {
     this.formGroup = new FormGroup({
       cardholder: new FormControl(),
       schedule: new FormControl(),
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -46,106 +45,108 @@ export class AllowedUsersLockComponent implements OnInit {
           this.siteId = this.lock.siteId;
           this.siteDisplayName = this.lock.siteDisplayName;
 
-          this.users = this.lock.assignedUsers;
-          this.users.forEach(element => {
-            if (element.cardholderName == null || element.scheduleName == null) {
-              this.userIsPresent = false;
-            }
-            else {
-              this.userIsPresent = true;
+          this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
+            next: (response) => {
+              this.schedules = response.data;
+
+              this.users = this.lock.assignedUsers.map((user: any) => ({
+                ...user,
+                editing: false,
+                scheduleControl: new FormControl(this.schedules.filter(x => x.scheduleId === user.scheduleId)[0])
+              }));
+
+              this.userIsPresent = this.users.length > 0;
+            },
+            error: (response) => {
+              this.accessService.createErrorNotification("No Schedules found, please Add Schedule for Lock!");
             }
           });
         },
         error: (response) => {
           this.accessService.createErrorNotification("Incorrect api endpoint");
         }
-      })
+      });
     });
   }
 
-  ChooseNewUser() {
+  chooseNewUser() {
     this.accessService.get(`api/cardholders/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.cardholders = response.data;
+        this.show = true;
       },
       error: (response) => {
-        this.accessService.createErrorNotification("No Cardholders found, please Add Cardholder for Lock!")
+        this.accessService.createErrorNotification("No Cardholders found, please Add Cardholder for Lock!");
       }
-    })
-    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
-      next: (response) => {
-        this.schedules = response.data;
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification("No Schedules found, please Add Schedule for Lock!")
-      }
-    })
+    });
   }
 
-  EditUser() {
-    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
-      next: (response) => {
-        this.schedules = response.data;
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
+  editUser(user: any) {
+    user.editing = true;
   }
 
-  AssignUserToLock() {
-    debugger
+  cancelEdit(user: any) {
+    user.editing = false;
+  }
+
+  saveEdit(user: any) {
     const data = {
-      "cardholderId": this.formGroup.value.cardholder.cardholderId,
-      "scheduleId": this.formGroup.value.schedule.scheduleId
-    }
+      allowedUser: user.scheduleControl.value
+    };
 
-    this.accessService.create(`api/locks/${this.lock.lockId}/assign`, data)
-      .subscribe({
-        next: data => {
-          this.accessService.createSuccessNotification("User assigned successfully!")
-          this.closeDialog();
-        },
-        error: error => {
-          this.accessService.createErrorNotification(error.message)
-          this.closeDialog();
-        }
-      })
-  }
-
-  EditUserToLock(cardholderId: any) {
-    const data = {
-      "scheduleId": this.formGroup.value.scheduleId
-    }
-    this.accessService.update(`api/lockS/${this.lock.lockId}/edit`, cardholderId, data)
-      .subscribe({
-        next: data => {
-          this.accessService.createSuccessNotification("Allowed User's Schedule updated successfully!")
-          this.closeDialog();
-        },
-        error: error => {
-          this.accessService.createErrorNotification(error.message)
-          this.closeDialog();
-        }
-      })
-  }
-
-  RemoveUserFromLock(cardholderId: any) {
-    this.accessService.delete(`api/locks/${this.lock.lockId}/remove`, cardholderId).subscribe({
+    this.accessService.update(`api/locks/${this.lock.lockId}/edit`, user.cardholderId, data).subscribe({
       next: data => {
-        this.accessService.createSuccessNotification("Allowed User removed successfully!")
+        user.scheduleName = this.schedules.find(schedule => schedule.scheduleId === user.scheduleControl.value)?.displayName;
+        user.editing = false;
+        this.accessService.createSuccessNotification("Allowed User's Schedule updated successfully!");
+      },
+      error: error => {
+        this.accessService.createErrorNotification(error.message);
+      }
+    });
+  }
+
+  removeUser(user: any, event: Event) {
+    event.stopPropagation(); // Prevents triggering the edit on click
+    this.accessService.delete(`api/locks/${this.lock.lockId}/remove`, user.cardholderId).subscribe({
+      next: data => {
+        this.users = this.users.filter(u => u.cardholderId !== user.cardholderId);
+        this.userIsPresent = this.users.length > 0;
+        this.accessService.createSuccessNotification("Allowed User removed successfully!");
+      },
+      error: error => {
+        this.accessService.createErrorNotification(error.message);
+      }
+    });
+  }
+
+  assignUserToLock() {
+    const data = {
+      cardholderId: this.formGroup.value.cardholder.cardholderId,
+      scheduleId: this.formGroup.value.schedule.scheduleId
+    };
+
+    this.accessService.create(`api/locks/${this.lock.lockId}/assign`, data).subscribe({
+      next: data => {
+        this.accessService.createSuccessNotification("User assigned successfully!");
         this.closeDialog();
       },
       error: error => {
-        this.accessService.createErrorNotification(error.message)
+        this.accessService.createErrorNotification(error.message);
         this.closeDialog();
       }
-    })
-    this.closeDialog();
-    window.location.reload()
+    });
   }
 
   closeDialog() {
     this.location.back();
+  }
+
+  isUserSelected(user: any): boolean {
+    return user.editing;
+  }
+
+  toggleUserActions(user: any) {
+    user.editing = !user.editing;
   }
 }

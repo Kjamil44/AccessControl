@@ -21,6 +21,7 @@ namespace AccessControl.API.Handlers.LockHandlers
             public class Item
             {
                 public Guid CardholderId { get; set; }
+                public Guid ScheduleId { get; set; }
                 public string CardholderName { get; set; }
                 public string ScheduleName { get; set; }
                 public List<Days> ScheduleDays { get; set; } = new List<Days>();
@@ -68,6 +69,7 @@ namespace AccessControl.API.Handlers.LockHandlers
                         return new Response.Item
                         {
                             CardholderId = cardholder.CardholderId,
+                            ScheduleId = schedule.ScheduleId,
                             CardholderName = $"{cardholder.FirstName} {cardholder.LastName}",
                             ScheduleName = schedule.DisplayName,
                             ScheduleDays = schedule.ListOfDays.ToList()
