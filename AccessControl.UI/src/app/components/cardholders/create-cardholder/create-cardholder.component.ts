@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -8,19 +8,25 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './create-cardholder.component.html',
   styleUrls: ['./create-cardholder.component.css']
 })
-export class CreateCardholderComponent extends DialogContentBase {
+export class CreateCardholderComponent implements OnInit  {
 
   siteId: any
   formGroup: FormGroup;
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  constructor(private accessService: AccessControlService,
+    private dialogref: DynamicDialogRef,
+    private config: DynamicDialogConfig) {
     this.formGroup = new FormGroup({
       firstName: new FormControl(),
       lastName: new FormControl(),
       cardNumber: new FormControl()
     });
   }
+
+  ngOnInit(): void {
+    this.siteId = this.config.data.siteId;
+  }
+
   createCardholder() {
     const data = {
       "siteId": this.siteId,
@@ -42,6 +48,6 @@ export class CreateCardholderComponent extends DialogContentBase {
   }
 
   closeCreateDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

@@ -1,28 +1,19 @@
-label{
-    font-size: medium;
-    text-align: right;
-    clear: both;
-    float:left;
-    margin-right:15px;
-    margin-top: 5px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
-kendo-textbox{
-    float: right;
-    margin-left: 20px;
-    margin-right: 60px;
-    width: 180px;
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
-.form-control{
-    font-weight:normal; 
-    font-size: medium; 
+
+label {
+    width: 90px; /* Adjust width as necessary */
 }
-.custom-fill-mode{
-    border-color: #006eff;
-}
-.wrapper2{
-    padding-top: 40px;
-}
-.wrapper3{
-    padding-top: 40px;
-    padding-bottom: 40px;
+
+input {
+    flex: 1;
 }

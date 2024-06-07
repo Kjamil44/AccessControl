@@ -1,42 +1,40 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<h3>Site selected: <strong>{{siteName}}</strong></h3>
-<div>
-    <div class="vertical-menu">
-        <h3>Choose new Site</h3>
-        <a *ngFor="let site of sites" [routerLink]="[]"
-            (click)="showCardholders(site.siteId,site.displayName)">{{site.displayName}}</a>
-    </div>
-    <div class="grid">
-        <div *ngIf="cardholderIsPresent">
-            <div class="k-d-flex k-align-items-center">
-                <mat-icon class="icon">account_box</mat-icon>
-                <h2 class="title">Cardholders</h2>
-                <div style="margin-left:auto; padding-bottom: 15px;">
-                    <button kendoButton size="large" (click)="onCreate()" themeColor="success"
-                        routerLink="create">Create Cardholder</button>
-                </div>
-            </div>
-            <kendo-grid [data]="cardholders" (edit)="onEdit($event);" (remove)="onDelete($event)">
-                <kendo-grid-column field="firstName" title="First Name" [width]="20"></kendo-grid-column>
-                <kendo-grid-column field="lastName" title="Last Name" [width]="30"> </kendo-grid-column>
-                <kendo-grid-column title="Actions" [width]="13">
-                    <ng-template kendoGridCellTemplate let-dataItem>
-                        <button kendoGridEditCommand themeColor="tertiary" style="margin-left: 5px;">Edit</button>
-                        <button kendoGridRemoveCommand themeColor="error" style="margin-left: 5px;">Delete</button>
-                    </ng-template>
-                </kendo-grid-column>
-            </kendo-grid>
-        </div>
-        <div *ngIf="!cardholderIsPresent">
-            <div class="k-d-flex k-align-items-center">
-                <mat-icon class="icon">account_box</mat-icon>
-                <h2 class="title">Cardholders</h2>
-                <div style="margin-left: 10px;">
-                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
-                        Cardholder</button>
-                </div>
-            </div>
-            <h3 style="color: red;">No Cardholders avalabile for {{siteName}}</h3>
-        </div>
+<site-selector (site)="showCardholders($event)"></site-selector>
+<div class="k-d-flex k-align-items-center">
+    <i class="pi pi-id-card icon"></i>
+    <h2 class="title">Cardholders</h2>
+    <div style="margin-left:auto; padding-bottom: 15px;">
+        <p-button size="large" (click)="onCreate()" severity="success">Create
+            Cardholder</p-button>
     </div>
 </div>
+<p-table [value]="cardholders" 
+         styleClass="p-datatable-gridlines p-datatable-striped" 
+         [tableStyle]="{ 'min-width': '50rem' }"
+         selectionMode="single">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Activation Date</th>
+            <th>Expiration Date</th>
+            <th  style="width: 12.5rem;">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cardholder>
+        <tr [pSelectableRow]="cardholder">
+            <td>{{ cardholder.firstName }}</td>
+            <td>{{ cardholder.lastName }}</td>
+            <td>{{ cardholder.activationDate | date:'dd MMMM YYYY' }}</td>
+            <td>{{ cardholder.expirationDate | date:'dd MMMM YYYY' }}</td>
+            <td>
+                <!-- <p-button label="Edit"  size="small" (click)="onEdit(lock)"></p-button> -->
+                <!-- <p-button label="Delete" size="small" (click)="onDelete(lock)" severity="danger" class="delete-button"></p-button> -->
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="4" class="no-data-text">No cardholders available</td>
+        </tr>
+    </ng-template>
+</p-table>

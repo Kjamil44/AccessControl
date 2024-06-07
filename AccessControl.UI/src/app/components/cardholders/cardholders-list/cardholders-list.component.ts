@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { AddEvent, RemoveEvent } from '@progress/kendo-angular-grid';
+import { DialogService } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateCardholderComponent } from '../create-cardholder/create-cardholder.component';
 import { DeleteCardholderComponent } from '../delete-cardholder/delete-cardholder.component';
@@ -9,7 +8,8 @@ import { EditCardholderComponent } from '../edit-cardholder/edit-cardholder.comp
 @Component({
   selector: 'app-cardholders-list',
   templateUrl: './cardholders-list.component.html',
-  styleUrls: ['./cardholders-list.component.css']
+  styleUrls: ['./cardholders-list.component.css'],
+  providers: [DialogService]
 })
 export class CardholdersListComponent implements OnInit {
   sites: any[] = []
@@ -18,7 +18,7 @@ export class CardholdersListComponent implements OnInit {
   siteId: any = localStorage.getItem("selectedSiteId") 
   siteName: any = localStorage.getItem("selectedSiteName") 
 
-  constructor(private accessService: AccessControlService, private dialog: DialogService) { }
+  constructor(private accessService: AccessControlService,private dialog: DialogService) { }
 
   ngOnInit(): void {
     this.accessService.get('api/sites').subscribe({
@@ -41,12 +41,11 @@ export class CardholdersListComponent implements OnInit {
     })
   }
 
-  showCardholders(siteId: any,siteName: any) {
-    localStorage.setItem("selectedSiteName",siteName);
-    localStorage.setItem("selectedSiteId",siteId);
-    this.siteName = siteName 
-    this.siteId = siteId;
-    this.accessService.get(`api/cardholders/site/${siteId}`).subscribe({
+  showCardholders(site: any) {
+    this.siteName = site.displayName; 
+    this.siteId = site.siteId;
+
+    this.accessService.get(`api/cardholders/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.cardholders = response.data;
         this.cardholderIsPresent = true;
@@ -58,50 +57,56 @@ export class CardholdersListComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open({
-      content: CreateCardholderComponent
+    const ref = this.dialog.open(CreateCardholderComponent, {
+      header: 'Create Carholder',
+      width: '610px',
+      height: '400px',
+      baseZIndex: 10000,
+      data: {
+        siteId: this.siteId
+      }
     });
-    dialogRef.content.instance.siteId = this.siteId;
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
 
-  onEdit(args: AddEvent) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        console.log(response)
-      }
-    })
-    const dialogRef = this.dialog.open({
-      content: EditCardholderComponent
-    });
-    dialogRef.content.instance.cardholder = args.dataItem;
-    dialogRef.content.instance.cardValue = args.dataItem.cardNumber
-    dialogRef.result.subscribe(() => {
-      this.ngOnInit();
-    });
+  onEdit(cardholder: any) {
+    // this.accessService.getById('api/sites', this.siteId).subscribe({
+    //   next: (response) => {
+    //     dialogRef.content.instance.site = response.data
+    //   },
+    //   error: (response) => {
+    //     console.log(response)
+    //   }
+    // })
+    // const dialogRef = this.dialog.open({
+    //   content: EditCardholderComponent
+    // });
+    // dialogRef.content.instance.cardholder = args.dataItem;
+    // dialogRef.content.instance.cardValue = args.dataItem.cardNumber
+    // dialogRef.result.subscribe(() => {
+    //   this.ngOnInit();
+    // });
   }
 
-  onDelete(args: RemoveEvent) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-    const dialogRef = this.dialog.open({
-      content: DeleteCardholderComponent,
-    });
-    dialogRef.content.instance.cardholder = args.dataItem;
-    dialogRef.result.subscribe(() => {
-      this.ngOnInit();
-    });
+  onDelete(cardholder: any) {
+    // this.accessService.getById('api/sites', this.siteId).subscribe({
+    //   next: (response) => {
+    //     dialogRef.content.instance.site = response.data
+    //   },
+    //   error: (response) => {
+    //     this.accessService.createErrorNotification(response.message)
+    //   }
+    // })
+    // const dialogRef = this.dialog.open({
+    //   content: DeleteCardholderComponent,
+    // });
+    // dialogRef.content.instance.cardholder = args.dataItem;
+    // dialogRef.result.subscribe(() => {
+    //   this.ngOnInit();
+    // });
   }
 
 }
