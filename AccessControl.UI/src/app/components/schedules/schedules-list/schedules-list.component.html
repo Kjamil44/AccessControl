@@ -1,52 +1,38 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<h3>Site selected: <strong>{{siteName}}</strong></h3>
-<div>
-    <div class="vertical-menu">
-        <h3>Choose new Site</h3>
-        <a *ngFor="let site of sites" [routerLink]="[]"
-            (click)="showSchedules(site.siteId,site.displayName)">{{site.displayName}}</a>
-    </div>
-    <div class="grid">
-        <div *ngIf="scheduleIsPresent">
-            <div class="k-d-flex k-align-items-center">
-                <mat-icon class="icon">event</mat-icon>
-                <h2 class="title">Schedules</h2>
-                <div style="margin-left:auto; padding-bottom: 15px;">
-                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
-                        Schedule</button>
-                </div>
-            </div>
-            <kendo-grid [data]="schedules" (edit)="onEdit($event);" (remove)="onDelete($event)">
-                <kendo-grid-column field="displayName" title="Schedule Name" [width]="20"></kendo-grid-column>
-                <kendo-grid-column field="listOfDays" title="Days in week" [width]="30"> </kendo-grid-column>
-                <kendo-grid-column field="startTime" title="Start Time" [width]="30">
-                    <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.startTime | date:'dd MMMM YYYY, HH:mm:ss'}}
-                    </ng-template>
-                </kendo-grid-column>
-                <kendo-grid-column field="endTime" title="End Time" [width]="30">
-                    <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.endTime | date:'dd MMMM YYYY, HH:mm:ss'}}
-                    </ng-template>
-                </kendo-grid-column>
-                <kendo-grid-column title="Actions" [width]="13">
-                    <ng-template kendoGridCellTemplate let-dataItem>
-                        <button kendoGridEditCommand themeColor="tertiary" style="margin-left: 5px;">Edit</button>
-                        <button kendoGridRemoveCommand themeColor="error" style="margin-left: 5px;">Delete</button>
-                    </ng-template>
-                </kendo-grid-column>
-            </kendo-grid>
-        </div>
-        <div *ngIf="!scheduleIsPresent">
-            <div class="k-d-flex k-align-items-center">
-                <mat-icon class="icon">event</mat-icon>
-                <h2 class="title">Schedules</h2>
-                <div style="margin-left: 10px;">
-                    <button kendoButton size="large" (click)="onCreate()" themeColor="success" routerLink="create">Create
-                        Schedule</button>
-                </div>
-            </div>
-            <h3 style="color: red;">No Schedules avalabile for {{siteName}}</h3>
-        </div>
+<site-selector (site)="showSchedules($event)"></site-selector>
+<div class="k-d-flex k-align-items-center">
+    <i class="pi pi-calendar-clock icon"></i>
+    <h2 class="title">Schedules</h2>
+    <div style="margin-left:auto; padding-bottom: 15px;">
+        <p-button size="large" (click)="onCreate()" severity="success">Create
+            Schedule</p-button>
     </div>
 </div>
+<p-table [value]="schedules" styleClass="p-datatable-gridlines p-datatable-striped"
+    [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Schedule Name</th>
+            <th>Week Days</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th style="width: 12.5rem;">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-schedule>
+        <tr [pSelectableRow]="schedule">
+            <td>{{ schedule.displayName }}</td>
+            <td>{{ schedule.listOfDays }}</td>
+            <td>{{ schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss' }}</td>
+            <td>{{ schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss'}}</td>
+            <td>
+                <!-- <p-button label="Edit"  size="small" (click)="onEdit(cardholder)"></p-button>
+                <p-button label="Delete" size="small" (click)="onDelete(cardholder)" severity="danger" class="delete-button"></p-button> -->
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="4" class="no-data-text">No schedules available</td>
+        </tr>
+    </ng-template>
+</p-table>

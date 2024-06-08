@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { DialogService } from 'primeng/dynamicdialog';
 import { AddEvent, RemoveEvent } from '@progress/kendo-angular-grid';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateScheduleComponent } from '../create-schedule/create-schedule.component';
@@ -10,7 +10,8 @@ import {MatIconModule} from '@angular/material/icon'
 @Component({
   selector: 'app-schedules-list',
   templateUrl: './schedules-list.component.html',
-  styleUrls: ['./schedules-list.component.css']
+  styleUrls: ['./schedules-list.component.css'],
+  providers: [DialogService]
 })
 export class SchedulesListComponent implements OnInit {
   sites: any[] = []
@@ -42,12 +43,11 @@ export class SchedulesListComponent implements OnInit {
     })
   }
 
-  showSchedules(siteId: any,siteName: any) {
-    localStorage.setItem("selectedSiteName",siteName);
-    localStorage.setItem("selectedSiteId",siteId);
-    this.siteName = siteName 
-    this.siteId = siteId;
-    this.accessService.get(`api/schedules/site/${siteId}`).subscribe({
+  showSchedules(site: any) {
+    this.siteName = site.displayName;
+    this.siteId = site.siteId;
+
+    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
       next: (response) => {
         this.schedules = response.data;
         this.scheduleIsPresent = true;
@@ -59,49 +59,55 @@ export class SchedulesListComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open({
-      content: CreateScheduleComponent
+    const ref = this.dialog.open(CreateScheduleComponent, {
+      header: 'Create Schedule',
+      width: '610px',
+      height: '500px',
+      baseZIndex: 10000,
+      data: {
+        siteId: this.siteId
+      }
     });
-    dialogRef.content.instance.siteId = this.siteId;
-    dialogRef.result.subscribe(() => {
+
+    ref.onClose.subscribe(() => {
       this.ngOnInit();
     });
   }
 
   onEdit(args: AddEvent) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-    const dialogRef = this.dialog.open({
-      content: EditScheduleComponent
-    });
-    dialogRef.content.instance.schedule = args.dataItem;
-    dialogRef.result.subscribe(() => {
-      this.ngOnInit();
-    });
+    // this.accessService.getById('api/sites', this.siteId).subscribe({
+    //   next: (response) => {
+    //     dialogRef.content.instance.site = response.data
+    //   },
+    //   error: (response) => {
+    //     this.accessService.createErrorNotification(response.message)
+    //   }
+    // })
+    // const dialogRef = this.dialog.open({
+    //   content: EditScheduleComponent
+    // });
+    // dialogRef.content.instance.schedule = args.dataItem;
+    // dialogRef.result.subscribe(() => {
+    //   this.ngOnInit();
+    // });
   }
 
   onDelete(args: RemoveEvent) {
-    this.accessService.getById('api/sites', this.siteId).subscribe({
-      next: (response) => {
-        dialogRef.content.instance.site = response.data
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-    const dialogRef = this.dialog.open({
-      content: DeleteScheduleComponent,
-    });
-    dialogRef.content.instance.schedule = args.dataItem;
-    dialogRef.result.subscribe(() => {
-      this.ngOnInit();
-    });
+    // this.accessService.getById('api/sites', this.siteId).subscribe({
+    //   next: (response) => {
+    //     dialogRef.content.instance.site = response.data
+    //   },
+    //   error: (response) => {
+    //     this.accessService.createErrorNotification(response.message)
+    //   }
+    // })
+    // const dialogRef = this.dialog.open({
+    //   content: DeleteScheduleComponent,
+    // });
+    // dialogRef.content.instance.schedule = args.dataItem;
+    // dialogRef.result.subscribe(() => {
+    //   this.ngOnInit();
+    // });
   }
 
 }

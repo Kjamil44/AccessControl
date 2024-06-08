@@ -48,6 +48,8 @@ import { MenubarModule } from 'primeng/menubar';
 import { DropdownModule } from 'primeng/dropdown';
 import { SiteSelectorComponent } from './components/common/site-selector/site-selector.component';
 import { CardModule } from 'primeng/card';
+import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -103,7 +105,9 @@ import { CardModule } from 'primeng/card';
     TabMenuModule,
     MenubarModule,
     DropdownModule,
-    CardModule
+    CardModule,
+    CalendarModule,
+    MultiSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DateInputFillMode } from '@progress/kendo-angular-dateinputs';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -9,51 +8,60 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './create-schedule.component.html',
   styleUrls: ['./create-schedule.component.css']
 })
-export class CreateScheduleComponent extends DialogContentBase {
-
-  siteId: any
+export class CreateScheduleComponent implements OnInit {
+  siteId: any;
   formGroup: FormGroup;
-  daysInWeek: any[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-  daysValue: any[] = []
-  dateStartValue: Date = new Date(2022, 11, 11, 11);
-  dateEndValue: Date = new Date(2022, 11, 21, 11);
-  dateFormat = "dd/MM/yyyy HH:mm"
-  fillMode: DateInputFillMode = "outline";
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  daysInWeek: any[] = [
+    { name: "Monday", value: "Monday" },
+    { name: "Tuesday", value: "Tuesday" },
+    { name: "Wednesday", value: "Wednesday" },
+    { name: "Thursday", value: "Thursday" },
+    { name: "Friday", value: "Friday" },
+    { name: "Saturday", value: "Saturday" },
+    { name: "Sunday", value: "Sunday" }
+  ];
+
+  constructor(
+    private accessService: AccessControlService,
+    private dialogref: DynamicDialogRef,
+    private config: DynamicDialogConfig
+  ) {
     this.formGroup = new FormGroup({
       displayName: new FormControl(),
-      days: new FormControl()
+      days: new FormControl([]),
+      startTime: new FormControl(),
+      endTime: new FormControl()
     });
   }
 
-  getDays(args: any) {
-    this.daysValue.push(args);
+  ngOnInit(): void {
+    this.siteId = this.config.data.siteId;
   }
 
   createSchedule() {
+    const selectedDays = this.formGroup.value.days.map((day: any) => day.value);
     const data = {
       "siteId": this.siteId,
       "displayName": this.formGroup.value.displayName,
-      "listOfDays": this.daysValue,
-      "startTime": this.dateStartValue.toUTCString(),
-      "endTime": this.dateEndValue.toUTCString()
-    }
+      "listOfDays": selectedDays,
+      "startTime": this.formGroup.value.startTime,
+      "endTime": this.formGroup.value.endTime
+    };
     this.accessService.create(`api/schedules/create`, data)
       .subscribe({
         next: data => {
-          this.accessService.createSuccessNotification("Schedule created successfully!")
-          this.closeCreateDialog()
+          this.accessService.createSuccessNotification("Schedule created successfully!");
+          this.closeCreateDialog();
         },
         error: error => {
-          this.accessService.createErrorNotification(error.message)
-          this.closeCreateDialog()
+          this.accessService.createErrorNotification(error.message);
+          this.closeCreateDialog();
         }
-      })
+      });
   }
 
   closeCreateDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

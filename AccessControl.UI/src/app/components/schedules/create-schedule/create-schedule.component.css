@@ -1,35 +1,36 @@
-label{
-    font-size: medium;
-    text-align: right;
-    clear: both;
-    float:left;
-    margin-right:15px;
-    margin-top: 7px;
+.form-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
 }
-kendo-datetimepicker{
-    float: right;
-    margin-right: 250px;
-    width: auto;
+
+.form-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
 }
-kendo-textbox{
-    width: 300px;
+
+label {
+    width: 90px; /* Adjust width as necessary */
 }
-ul{
-    display: inline;
-    margin-left: 5px;
-    font-size: 20px;
-    list-style-type: none;
-    padding: 0;
+
+input{
+    flex: 1;
 }
-ul kendo-label{
-    font-size: small;
+
+.label-days{
+    right: 21px;
+    margin-right: 80px;
+    position: relative;
 }
-.custom-fill-mode{
-    border-color: #006eff;
+
+::ng-deep .p-multiselect{
+  left: 20px;  
+  width: 350px;
 }
-.wrap-date1{
-    margin-bottom: 40px;
+
+.multiselect-days{
+    left: 60px;
 }
-.wrap-date2{
-    margin-bottom: 70px;
-}
+
+

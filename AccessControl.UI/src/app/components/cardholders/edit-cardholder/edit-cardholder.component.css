@@ -17,3 +17,7 @@ label {
 input {
     flex: 1;
 }
+
+p{
+    font-size:x-small;
+}

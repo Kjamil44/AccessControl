@@ -76,7 +76,7 @@ export class CardholdersListComponent implements OnInit {
     const ref = this.dialog.open(EditCardholderComponent, {
       header: `Edit Cardholder from ${this.siteName}`,
       width: '610px',
-      height: '400px',
+      height: '440px',
       baseZIndex: 10000,
       data: {
         cardholder: cardholder
