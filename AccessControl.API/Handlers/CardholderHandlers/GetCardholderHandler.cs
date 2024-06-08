@@ -9,7 +9,6 @@ namespace AccessControl.API.Handlers.CardholderHandlers
     {
         public class Request : IRequest<Response>
         {
-            public Guid SiteId { get; set; }
             public Guid CardholderId { get; set; }
         }
         public class Response
@@ -17,6 +16,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
             public Guid CardholderId { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public string FullName { get; set; }
             public int CardNumber { get; set; }
             public DateTime ActivationDate { get; set; }
             public DateTime ExpirationDate { get; set; }
@@ -39,6 +39,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                     CardholderId = cardholder.CardholderId,
                     FirstName = cardholder.FirstName,
                     LastName = cardholder.LastName,
+                    FullName = cardholder.FullName,
                     CardNumber = cardholder.CardNumber,
                     ActivationDate = cardholder.ActivationDate,
                     ExpirationDate = cardholder.ExpirationDate,

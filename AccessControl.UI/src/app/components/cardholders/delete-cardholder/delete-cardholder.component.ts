@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -7,12 +7,20 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './delete-cardholder.component.html',
   styleUrls: ['./delete-cardholder.component.css']
 })
-export class DeleteCardholderComponent extends DialogContentBase{
-  site: any
-  cardholder: any
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+export class DeleteCardholderComponent implements OnInit {
+  cardholder: any;
+  siteName: any;
+
+  constructor(private dialogref: DynamicDialogRef,
+    private config: DynamicDialogConfig,
+    private accessService: AccessControlService) {
   }
+
+  ngOnInit(): void {
+    this.cardholder = this.config.data.cardholder;
+    this.siteName = this.config.data.siteName;
+  }
+
 
   deleteCardholder() {
     this.accessService.delete(`api/cardholders/delete`, this.cardholder.cardholderId).subscribe({
@@ -28,6 +36,6 @@ export class DeleteCardholderComponent extends DialogContentBase{
   }
 
   closeDeleteDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

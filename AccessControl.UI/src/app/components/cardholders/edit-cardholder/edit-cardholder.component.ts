@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -8,28 +8,33 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './edit-cardholder.component.html',
   styleUrls: ['./edit-cardholder.component.css']
 })
-export class EditCardholderComponent extends DialogContentBase implements OnInit {
-  site: any
-  cardholder: any
-  firstValue: any
-  lastValue: any
-  cardValue: any
+export class EditCardholderComponent implements OnInit {
+  cardholder: any;
+  formGroup: FormGroup;
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  constructor(private dialogref: DynamicDialogRef,
+    private accessService: AccessControlService,
+    private config: DynamicDialogConfig) {
+    this.formGroup = new FormGroup({
+      firstName: new FormControl(),
+      lastName: new FormControl(),
+      cardNumber: new FormControl(),
+    });
   }
   ngOnInit(): void {
-    this.firstValue = this.cardholder.firstName
-    this.lastValue = this.cardholder.lastName
-    this.cardValue = this.cardholder.cardNumber
+    this.cardholder = this.config.data.cardholder;
+    this.formGroup.controls['firstName'].setValue(this.cardholder.firstName);
+    this.formGroup.controls['lastName'].setValue(this.cardholder.lastName);
+    this.formGroup.controls['cardNumber'].setValue(this.cardholder.cardNumber);
   }
 
   editCardholder() {
     const data = {
-      "firstName": this.firstValue,
-      "lastName": this.lastValue,
-      "cardNumber": this.cardValue
+      "firstName": this.formGroup.value.firstName,
+      "lastName": this.formGroup.value.lastName,
+      "cardNumber": this.formGroup.value.cardNumber
     }
+
     this.accessService.update(`api/cardholders/update`, this.cardholder.cardholderId, data).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Cardholer edited successfully!")
@@ -43,6 +48,6 @@ export class EditCardholderComponent extends DialogContentBase implements OnInit
   }
 
   closeEditDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }
