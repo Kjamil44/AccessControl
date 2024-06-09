@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DateInputFillMode } from '@progress/kendo-angular-dateinputs';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -9,38 +8,53 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './edit-schedule.component.html',
   styleUrls: ['./edit-schedule.component.css']
 })
-export class EditScheduleComponent extends DialogContentBase implements OnInit {
-  site: any
+export class EditScheduleComponent implements OnInit {
   schedule: any
-  nameValue: any
-  daysInWeek: any[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-  daysValue: any[] = []
-  dateStartValue: Date = new Date(2022, 11, 11, 11);
-  dateEndValue: Date = new Date(2022, 11, 21, 11);
-  dateFormat = "dd/MM/yyyy HH:mm"
-  fillMode: DateInputFillMode = "outline";
 
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+  daysInWeek: any[] = [
+    { name: "Monday", value: "Monday" },
+    { name: "Tuesday", value: "Tuesday" },
+    { name: "Wednesday", value: "Wednesday" },
+    { name: "Thursday", value: "Thursday" },
+    { name: "Friday", value: "Friday" },
+    { name: "Saturday", value: "Saturday" },
+    { name: "Sunday", value: "Sunday" }
+  ];
+
+  formGroup: FormGroup;
+
+  constructor(private dialogref: DynamicDialogRef,
+    private accessService: AccessControlService,
+    private config: DynamicDialogConfig) {
+    this.formGroup = new FormGroup({
+      displayName: new FormControl(),
+      days: new FormControl([]),
+      startTime: new FormControl(),
+      endTime: new FormControl()
+    });
   }
 
   ngOnInit(): void {
-    this.nameValue = this.schedule.displayName;
-    this.dateStartValue = new Date(this.schedule.startTime);
-    this.dateEndValue = new Date(this.schedule.endTime);
-  }
+    this.schedule = this.config.data.schedule;
 
-  getDays(args: any) {
-    this.daysValue.push(args);
+    const selectedDays = this.schedule.listOfDays.map((day: string) => {
+      return this.daysInWeek.find((x: any) => x.name === day);
+    }).filter((day: any) => day !== undefined);
+
+    this.formGroup.controls['displayName'].setValue(this.schedule.displayName);
+    this.formGroup.controls['days'].setValue(selectedDays);
+    this.formGroup.controls['startTime'].setValue(new Date(this.schedule.startTime));
+    this.formGroup.controls['endTime'].setValue(new Date(this.schedule.endTime));
   }
 
   editSchedule() {
+    const selectedDays = this.formGroup.value.days.map((day: any) => day.value);
     const data = {
-      "displayName": this.nameValue,
-      "listOfDays": this.daysValue,
-      "startTime": this.dateStartValue,
-      "endTime": this.dateEndValue
-    }
+      "displayName": this.formGroup.value.displayName,
+      "listOfDays": selectedDays,
+      "startTime": this.formGroup.value.startTime,
+      "endTime": this.formGroup.value.endTime
+    };
 
     this.accessService.update(`api/schedules/update`, this.schedule.scheduleId, data).subscribe({
       next: data => {
@@ -56,6 +70,6 @@ export class EditScheduleComponent extends DialogContentBase implements OnInit {
   }
 
   closeEditDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

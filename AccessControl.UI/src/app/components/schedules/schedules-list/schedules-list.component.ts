@@ -5,7 +5,7 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateScheduleComponent } from '../create-schedule/create-schedule.component';
 import { DeleteScheduleComponent } from '../delete-schedule/delete-schedule.component';
 import { EditScheduleComponent } from '../edit-schedule/edit-schedule.component';
-import {MatIconModule} from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
   selector: 'app-schedules-list',
@@ -17,8 +17,8 @@ export class SchedulesListComponent implements OnInit {
   sites: any[] = []
   schedules: any[] = []
   scheduleIsPresent: boolean = false;
-  siteId: any = localStorage.getItem("selectedSiteId") 
-  siteName: any = localStorage.getItem("selectedSiteName") 
+  siteId: any = localStorage.getItem("selectedSiteId")
+  siteName: any = localStorage.getItem("selectedSiteName")
 
   constructor(private accessService: AccessControlService, private dialog: DialogService) { }
 
@@ -74,40 +74,37 @@ export class SchedulesListComponent implements OnInit {
     });
   }
 
-  onEdit(args: AddEvent) {
-    // this.accessService.getById('api/sites', this.siteId).subscribe({
-    //   next: (response) => {
-    //     dialogRef.content.instance.site = response.data
-    //   },
-    //   error: (response) => {
-    //     this.accessService.createErrorNotification(response.message)
-    //   }
-    // })
-    // const dialogRef = this.dialog.open({
-    //   content: EditScheduleComponent
-    // });
-    // dialogRef.content.instance.schedule = args.dataItem;
-    // dialogRef.result.subscribe(() => {
-    //   this.ngOnInit();
-    // });
+  onEdit(schedule: any) {
+    const ref = this.dialog.open(EditScheduleComponent, {
+      header: `Edit Schedule from ${this.siteName}`,
+      width: '610px',
+      height: '520px',
+      baseZIndex: 10000,
+      data: {
+        schedule: schedule
+      }
+    });
+
+    ref.onClose.subscribe(() => {
+      this.ngOnInit();
+    });
   }
 
-  onDelete(args: RemoveEvent) {
-    // this.accessService.getById('api/sites', this.siteId).subscribe({
-    //   next: (response) => {
-    //     dialogRef.content.instance.site = response.data
-    //   },
-    //   error: (response) => {
-    //     this.accessService.createErrorNotification(response.message)
-    //   }
-    // })
-    // const dialogRef = this.dialog.open({
-    //   content: DeleteScheduleComponent,
-    // });
-    // dialogRef.content.instance.schedule = args.dataItem;
-    // dialogRef.result.subscribe(() => {
-    //   this.ngOnInit();
-    // });
+  onDelete(schedule: any) {
+    const ref = this.dialog.open(DeleteScheduleComponent, {
+      header: 'Delete Schedule',
+      width: '470px',
+      height: '250px',
+      baseZIndex: 10000,
+      data: {
+        schedule: schedule,
+        siteName: this.siteName
+      }
+    });
+
+    ref.onClose.subscribe(() => {
+      this.ngOnInit();
+    });
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
@@ -7,13 +7,20 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   templateUrl: './delete-schedule.component.html',
   styleUrls: ['./delete-schedule.component.css']
 })
-export class DeleteScheduleComponent extends DialogContentBase {
-  site: any
-  schedule: any
-  constructor(public override dialog: DialogRef, private accessService: AccessControlService) {
-    super(dialog);
+export class DeleteScheduleComponent  implements OnInit  {
+  schedule: any;
+  siteName: any;
+
+  constructor(private dialogref: DynamicDialogRef,
+    private config: DynamicDialogConfig,
+    private accessService: AccessControlService) {
   }
 
+  ngOnInit(): void {
+    this.schedule = this.config.data.schedule;
+    this.siteName = this.config.data.siteName;
+  }
+  
   deleteSchedule() {
     this.accessService.delete(`api/schedules/delete`, this.schedule.scheduleId).subscribe({
       next: data => {
@@ -28,6 +35,6 @@ export class DeleteScheduleComponent extends DialogContentBase {
   }
 
   closeDeleteDialog() {
-    this.dialog.close();
+    this.dialogref.close();
   }
 }

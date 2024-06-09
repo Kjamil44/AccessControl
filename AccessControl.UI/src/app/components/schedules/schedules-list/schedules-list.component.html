@@ -25,8 +25,8 @@
             <td>{{ schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss' }}</td>
             <td>{{ schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss'}}</td>
             <td>
-                <!-- <p-button label="Edit"  size="small" (click)="onEdit(cardholder)"></p-button>
-                <p-button label="Delete" size="small" (click)="onDelete(cardholder)" severity="danger" class="delete-button"></p-button> -->
+                <p-button label="Edit"  size="small" (click)="onEdit(schedule)"></p-button>
+                <p-button label="Delete" size="small" (click)="onDelete(schedule)" severity="danger" class="delete-button"></p-button>
             </td>
         </tr>
     </ng-template>

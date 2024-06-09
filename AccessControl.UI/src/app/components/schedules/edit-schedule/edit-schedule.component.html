@@ -1,32 +1,42 @@
-<kendo-dialog title="Edit {{schedule.displayName}} from {{site.displayName}}" (close)="closeEditDialog()">
-    <p style="display:flex; ">Last Modified: <strong style="color: green;">{{schedule.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
-    <form>
-        <div class="form-row">
-            <label>Schedule Name</label>
-            <kendo-textbox placeholder="{{schedule.displayName}}" [(value)]="nameValue"
-                class="form-control custom-fill-mode">
-            </kendo-textbox><br>
-            <label>Days in Week</label>
-            <ul *ngFor="let day of daysInWeek">
-                <input (click)="getDays(day)" type="checkbox" value="{{day}}" #notification kendoCheckBox>
-                <kendo-label class="k-checkbox-label" [for]="notification" [text]="day"></kendo-label>
-            </ul>
-            <kendo-dialog-actions></kendo-dialog-actions>
-            <div class="wrap-date1">
-                <label>Start Time</label>
-                <kendo-datetimepicker [format]="dateFormat" [(value)]="dateStartValue">
-                </kendo-datetimepicker>
+<div class="surface-border">
+    <form [formGroup]="formGroup">
+        <p style="display:flex; ">Last Modified:  <strong style="color: green;">{{schedule.dateModified | date:'dd MMMM YYYY HH:MM'}}</strong></p>
+        <div class="form-group">
+            <div class="form-row">
+                <label for="displayName">Schedule Name</label>
+                <input id="displayName" type="text" pInputText formControlName="displayName" class="form-control"
+                    placeholder="Schedule Name">
             </div>
-            <div class="wrap-date2">
-                <label>End Time</label>
-                <kendo-datetimepicker [format]="dateFormat" [(value)]="dateEndValue">
-                </kendo-datetimepicker>
+            <div class="form-row">
+                <label class="label-days" for="days">Week Days</label>
+                <p-multiSelect [options]="daysInWeek" 
+                               formControlName="days" 
+                               optionLabel="name" 
+                               placeholder="Select Days"
+                               appendTo="body"
+                               class="multiselect-days" >
+                </p-multiSelect>
+            </div>
+            <div class="form-row">
+                <label for="startTime">Start Time</label>
+                <p-calendar formControlName="startTime" 
+                            [showTime]="true" 
+                            [iconDisplay]="'input'" 
+                            [showIcon]="true"
+                            appendTo="body"   />
+            </div>
+            <div class="form-row">
+                <label for="endTime">End Time</label>
+                <p-calendar formControlName="endTime" 
+                            [showTime]="true" 
+                            [iconDisplay]="'input'" 
+                            [showIcon]="true"
+                            appendTo="body"   />
             </div>
         </div>
-        <br>
-        <kendo-dialog-actions>
-            <button kendoButton (click)=" closeEditDialog()">Back</button>
-            <button kendoButton (click)="editSchedule()" themeColor="primary">Update</button>
-        </kendo-dialog-actions>
     </form>
-</kendo-dialog>
+</div>
+<div class="p-dialog-footer">
+    <button pButton type="button" (click)="closeEditDialog()" label="Back" class="p-button-secondary"></button>
+    <button pButton type="button" (click)="editSchedule()" label="Update" class="p-button-primary"></button>
+</div>
