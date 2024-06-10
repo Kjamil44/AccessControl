@@ -6,8 +6,13 @@ import { SchedulesListComponent } from './components/schedules/schedules-list/sc
 import { CreateSiteComponent } from './components/sites/create-site/create-site.component';
 import { SitesListComponent } from './components/sites/sites-list/sites-list.component';
 import { AllowedUsersLockComponent } from './components/locks/allowed-users-lock/allowed-users-lock.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: DashboardComponent
+  },
   {
     path: 'sites',
     component: SitesListComponent

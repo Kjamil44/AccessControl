@@ -1,0 +1,50 @@
+<div class="dashboard-container">
+    <p-card class="welcome-card">
+        <div class="welcome-section">
+            <h2>Welcome to Access Control</h2>
+            <p>Access Control is a Smart Lock Management System. The hierarchy is as follows:</p>
+            <p>Site → Lock → Cardholders (access based on schedules)</p>
+        </div>
+    </p-card>
+
+    <p-card class="organization-card">
+        <div class="organization-chart-section">
+            <h2>Hierarchy</h2>
+            <p-organizationChart [value]="data">
+                <ng-template let-node pTemplate="default">
+                    <div class="node-template">
+                        <i class="{{ node.icon }}"></i>
+                        <span>{{ node.label }}</span>
+                    </div>
+                </ng-template>
+            </p-organizationChart>
+        </div>
+    </p-card>
+
+    <div class="charts-section">
+        <p-card class="chart-card">
+            <div class="chart-container">
+                <h3>All Sites</h3>
+                <p-chart type="pie" [data]="siteChartData" [options]="chartOptions"></p-chart>
+            </div>
+        </p-card>
+        <p-card class="chart-card">
+            <div class="chart-container">
+                <h3>Locks by Site</h3>
+                <p-chart type="pie" [data]="lockChartData" [options]="chartOptions"></p-chart>
+            </div>
+        </p-card>
+        <p-card class="chart-card">
+            <div class="chart-container">
+                <h3>Cardholders by Lock</h3>
+                <p-chart type="pie" [data]="cardholderChartData" [options]="chartOptions"></p-chart>
+            </div>
+        </p-card>
+        <p-card class="chart-card">
+            <div class="chart-container">
+                <h3>Schedules by Cardholder</h3>
+                <p-chart type="pie" [data]="scheduleChartData" [options]="chartOptions"></p-chart>
+            </div>
+        </p-card>
+    </div>
+</div>

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { NotificationService } from '@progress/kendo-angular-notification';
+import { MessageService } from 'primeng/api';
 import { map, Observable } from "rxjs";
 import { environment } from 'src/environments/environment';
 
@@ -11,7 +12,7 @@ import { environment } from 'src/environments/environment';
 export class AccessControlService {
 
   baseApiUrl: string = environment.baseApiUrl;
-  constructor(private http: HttpClient, private notificationService: NotificationService) { }
+  constructor(private http: HttpClient, private notificationService: NotificationService, private messageService: MessageService) { }
 
   get(url:string): Observable<GridDataResult> {
    return this.http
@@ -46,12 +47,18 @@ export class AccessControlService {
   }
 
   public createSuccessNotification(message: any) {
-    this.notificationService.show({
-      content: message,
-      position: { horizontal: "center", vertical: "top" },
-      type: { style: "success", icon: true },
-      hideAfter: 5000,
-    });
+    // this.notificationService.show({
+    //   content: message,
+    //   position: { horizontal: "center", vertical: "top" },
+    //   type: { style: "success", icon: true },
+    //   hideAfter: 5000,
+    // });
+
+    this.messageService.add({ 
+      severity: 'success', 
+      summary: 'Success', 
+      detail: message,
+      life: 5000 });
   }
 
   public createErrorNotification(message: any) {

@@ -1,5 +1,6 @@
 body {
-    background: #039b87;
+    background-color: #56a6f7;
+    color: #333;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
@@ -7,36 +8,3 @@ body {
     font-size: 28px;
     margin: 0;
 }
-
-/* .navbar {
-    font-size: 20px;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
-
-li {
-    margin: 0 9px;
-}
-
-li:hover {
-    cursor: pointer;
-    color: #d6002f;
-}
-
-.actions .k-button {
-    padding: 0;
-}
-a{
-    text-decoration: none;
-    color: white
-}
-a:hover{
-    cursor: pointer;
-    color: #ff0000;
-}
-a:active{
-    background-color: #d6002f;
-    color: white;
-} */

@@ -50,6 +50,10 @@ import { SiteSelectorComponent } from './components/common/site-selector/site-se
 import { CardModule } from 'primeng/card';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ChartModule } from 'primeng/chart';
+import { OrganizationChartModule } from 'primeng/organizationchart';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -72,7 +76,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
     EditScheduleComponent,
     DeleteScheduleComponent,
     TabMenuComponent,
-    SiteSelectorComponent
+    SiteSelectorComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule, 
@@ -107,9 +112,11 @@ import { MultiSelectModule } from 'primeng/multiselect';
     DropdownModule,
     CardModule,
     CalendarModule,
-    MultiSelectModule
+    MultiSelectModule,
+    ChartModule,
+    OrganizationChartModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
