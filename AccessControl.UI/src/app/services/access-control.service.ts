@@ -14,6 +14,17 @@ export class AccessControlService {
   baseApiUrl: string = environment.baseApiUrl;
   constructor(private http: HttpClient, private notificationService: NotificationService, private messageService: MessageService) { }
 
+  getForDashboard(url:string): Observable<GridDataResult> {
+    return this.http
+       .get(`${this.baseApiUrl}/${url}`)
+       .pipe(
+         map((response: any) => (<GridDataResult>{
+           data: response
+         })),
+       );
+   }
+ 
+
   get(url:string): Observable<GridDataResult> {
    return this.http
       .get(`${this.baseApiUrl}/${url}`)

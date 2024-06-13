@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { ChartOptions, ChartData } from 'chart.js';
+import { AccessControlService } from 'src/app/services/access-control.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,13 +10,23 @@ import { ChartOptions, ChartData } from 'chart.js';
 })
 export class DashboardComponent implements OnInit {
   data!: TreeNode[];
+
   siteChartData!: ChartData<'pie'>;
   lockChartData!: ChartData<'pie'>;
   cardholderChartData!: ChartData<'pie'>;
   scheduleChartData!: ChartData<'pie'>;
   chartOptions!: ChartOptions<'pie'>;
 
-  constructor() {}
+  constructor(private accessService: AccessControlService) {
+    this.accessService.getForDashboard(`api/dashboard/info`).subscribe({
+      next: (response) => {
+          console.log(response);
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.data = [
@@ -85,7 +96,7 @@ export class DashboardComponent implements OnInit {
           display: true,
           position: 'bottom',
           labels: {
-            color: '#333333' /* Dark gray text color for legend */
+            color: '#33333' /* Dark gray text color for legend */
           }
         }
       }

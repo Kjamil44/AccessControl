@@ -42,5 +42,19 @@ namespace AccessControl.API.Helper
 
             return enumDays;
         }
+
+        public class ColorGenerator
+        {
+            private static Random random = new Random();
+
+            public static string GenerateRandomColor()
+            {
+                int red = random.Next(256);
+                int green = random.Next(256);
+                int blue = random.Next(256);
+
+                return $"#{red:X2}{green:X2}{blue:X2}";
+            }
+        }
     }
 }
