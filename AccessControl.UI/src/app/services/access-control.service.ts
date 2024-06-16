@@ -14,19 +14,19 @@ export class AccessControlService {
   baseApiUrl: string = environment.baseApiUrl;
   constructor(private http: HttpClient, private notificationService: NotificationService, private messageService: MessageService) { }
 
-  getForDashboard(url:string): Observable<GridDataResult> {
+  getForDashboard(endpoint: string): Observable<GridDataResult> {
     return this.http
-       .get(`${this.baseApiUrl}/${url}`)
-       .pipe(
-         map((response: any) => (<GridDataResult>{
-           data: response
-         })),
-       );
-   }
- 
+      .get(`${this.baseApiUrl}/api/dashboard/${endpoint}`)
+      .pipe(
+        map((response: any) => (<GridDataResult>{
+          data: response
+        })),
+      );
+  }
 
-  get(url:string): Observable<GridDataResult> {
-   return this.http
+
+  get(url: string): Observable<GridDataResult> {
+    return this.http
       .get(`${this.baseApiUrl}/${url}`)
       .pipe(
         map((response: any) => (<GridDataResult>{
@@ -35,49 +35,42 @@ export class AccessControlService {
       );
   }
 
-  getById(url:string, id:string): Observable<GridDataResult> {
+  getById(url: string, id: string): Observable<GridDataResult> {
     return this.http
-       .get(`${this.baseApiUrl}/${url}/${id}`)
-       .pipe(
-         map((response: any) => (<GridDataResult>{
-           data: response
-         })),
-       );
-   }
- 
-  create(url:string, request: any): Observable<any>{
-    return this.http.post<any>(`${this.baseApiUrl}/${url}`,request);
+      .get(`${this.baseApiUrl}/${url}/${id}`)
+      .pipe(
+        map((response: any) => (<GridDataResult>{
+          data: response
+        })),
+      );
   }
 
-  update(url:string, id:string, request: any): Observable<any>{
-    return this.http.put<any>(`${this.baseApiUrl}/${url}/${id}`,request);
+  create(url: string, request: any): Observable<any> {
+    return this.http.post<any>(`${this.baseApiUrl}/${url}`, request);
   }
 
-  delete(url:string, id:string): Observable<any>{
+  update(url: string, id: string, request: any): Observable<any> {
+    return this.http.put<any>(`${this.baseApiUrl}/${url}/${id}`, request);
+  }
+
+  delete(url: string, id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseApiUrl}/${url}/${id}`);
   }
 
   public createSuccessNotification(message: any) {
-    // this.notificationService.show({
-    //   content: message,
-    //   position: { horizontal: "center", vertical: "top" },
-    //   type: { style: "success", icon: true },
-    //   hideAfter: 5000,
-    // });
-
-    this.messageService.add({ 
-      severity: 'success', 
-      summary: 'Success', 
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
       detail: message,
-      life: 5000 });
+      life: 5000
+    });
   }
 
   public createErrorNotification(message: any) {
-    this.notificationService.show({
-      content: message,
-      position: { horizontal: "center", vertical: "top" },
-      type: { style: "error", icon: true },
-      closable: true
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message
     });
   }
 }

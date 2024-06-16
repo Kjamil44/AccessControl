@@ -6,29 +6,35 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   data!: TreeNode[];
 
-  siteChartData!: ChartData<'pie'>;
-  lockChartData!: ChartData<'pie'>;
-  cardholderChartData!: ChartData<'pie'>;
-  scheduleChartData!: ChartData<'pie'>;
-  chartOptions!: ChartOptions<'pie'>;
+  siteChartData: any;
+  lockChartData: any;
+  cardholderTimeChartData: any;
+  chartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false
+  };
 
-  constructor(private accessService: AccessControlService) {
-    this.accessService.getForDashboard(`api/dashboard/info`).subscribe({
+  cardholderCount!: number;
+  scheduleCount!: number;
+  accessCount!: number;
+
+  constructor(private accessService: AccessControlService) {}
+
+  ngOnInit() {
+    this.accessService.getForDashboard('info').subscribe({
       next: (response) => {
-          console.log(response);
+        this.updateDashboardData(response.data);
       },
       error: (response) => {
-        this.accessService.createErrorNotification(response.message)
+        this.accessService.createErrorNotification(response.message);
       }
     });
-  }
 
-  ngOnInit(): void {
     this.data = [
       {
         label: 'Site',
@@ -45,61 +51,54 @@ export class DashboardComponent implements OnInit {
         ]
       }
     ];
-    
+  }
+
+  private updateDashboardData(data: any) {
+    this.cardholderCount = data.numberOfCardholders;
+    this.scheduleCount = data.numberOfSchedules;
+    this.accessCount = data.cardholdersWithAccess;
+
+    const siteLabels = data.allSites.map((site: any) => site.displayName);
+    const siteData = data.allSites.map(() => Math.floor(Math.random() * 100)); // Mock data for example
+
     this.siteChartData = {
-      labels: ['Site 1', 'Site 2', 'Site 3'],
-      datasets: [
-        {
-          data: [300, 500, 200],
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-        }
-      ]
+      labels: siteLabels,
+      datasets: [{
+        data: siteData,
+        backgroundColor: siteData.map(() => this.generateRandomColor())
+      }]
     };
+
+    const lockLabels = data.allLocksBySite.map((lock: any) => lock.displayName);
+    const lockData = data.allLocksBySite.map(() => Math.floor(Math.random() * 100)); // Mock data for example
 
     this.lockChartData = {
-      labels: ['Lock 1', 'Lock 2', 'Lock 3'],
+      labels: lockLabels,
+      datasets: [{
+        data: lockData,
+        backgroundColor: lockData.map(() => this.generateRandomColor())
+      }]
+    };
+
+    this.cardholderTimeChartData = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
       datasets: [
         {
-          data: [100, 150, 75],
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+          label: 'Cardholders',
+          data: [65, 59, 80, 81, 56, 55], // Example data, you can update this with real data if available
+          fill: false,
+          borderColor: '#4bc0c0'
         }
       ]
     };
+  }
 
-    this.cardholderChartData = {
-      labels: ['Cardholder 1', 'Cardholder 2', 'Cardholder 3'],
-      datasets: [
-        {
-          data: [20, 40, 10],
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-        }
-      ]
-    };
-
-    this.scheduleChartData = {
-      labels: ['Schedule 1', 'Schedule 2', 'Schedule 3'],
-      datasets: [
-        {
-          data: [10, 15, 5],
-          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-        }
-      ]
-    };
-
-    this.chartOptions = {
-      plugins: {
-        legend: {
-          display: true,
-          position: 'bottom',
-          labels: {
-            color: '#33333' /* Dark gray text color for legend */
-          }
-        }
-      }
-    };
+  private generateRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 }

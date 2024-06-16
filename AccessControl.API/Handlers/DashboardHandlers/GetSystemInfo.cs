@@ -14,8 +14,9 @@ namespace AccessControl.API.Handlers.DashboardHandlers
         {
             public IEnumerable<ChartData> AllSites { get; set; } = Enumerable.Empty<ChartData>();
             public IEnumerable<ChartData> AllLocksBySite { get; set; } = Enumerable.Empty<ChartData>();
-            public IEnumerable<ChartData> AllCardholdersBySite { get; set; } = Enumerable.Empty<ChartData>();
-            public IEnumerable<ChartData> AllSchedulesBySite { get; set; } = Enumerable.Empty<ChartData>();
+            public int NumberOfCardholders { get; set; }
+            public int NumberOfSchedules { get; set; }
+            public int CardholdersWithAccess { get; set; }
 
             public class ChartData
             {
@@ -34,40 +35,48 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                 if (!allSites.Any())
                     return new Response();
 
-              var sitesForChart = allSites.Select(x => new Response.ChartData()
+                var sitesForChart = allSites.Select(x => new Response.ChartData()
                 {
                     Id = x.SiteId,
                     DisplayName = x.DisplayName,
                     BackgroundColor = ColorGenerator.GenerateRandomColor()
                 });
 
-                //var allSiteIds = allSites.Select(x => x.SiteId).ToArray();
+                var allSiteIds = allSites.Select(x => x.SiteId).ToArray();
 
-                //var allLocks = await _session.Query<Lock>()
-                //    .Where(x => x.SiteId.IsOneOf(allSiteIds))
-                //    .ToListAsync();
+                var allLocks = await _session.Query<Lock>()
+                    .Where(x => x.SiteId.IsOneOf(allSiteIds))
+                    .ToListAsync();
 
-                //var locksForChart = new List<Response.ChartData>();
-                //foreach (var site in sitesForChart)
-                //{
-                //    foreach (var item in allLocks)
-                //    {
-                //        if (site.Id == item.SiteId)
-                //        {
-                //            locksForChart.Add(new Response.ChartData()
-                //            {
-                //                Id = item.LockId,
-                //                DisplayName = item.DisplayName,
-                //                BackgroundColor = site.BackgroundColor,
-                //            });
-                //        }
-                //    }
-                //}
+                var siteDictionary = sitesForChart.ToDictionary(x => x.Id, x => x.DisplayName);
 
+                var locksForChart = allLocks
+                    .Where(lockItem => siteDictionary.ContainsKey(lockItem.SiteId))
+                    .Select(lockItem => new Response.ChartData()
+                    {
+                        Id = lockItem.LockId,
+                        DisplayName = $"{lockItem.DisplayName} - {siteDictionary[lockItem.SiteId]}",
+                        BackgroundColor = ColorGenerator.GenerateRandomColor(),
+                    })
+                    .ToList();
+
+                var cardholdersCount = await _session.Query<Cardholder>()
+                    .Where(x => x.SiteId.IsOneOf(allSiteIds))
+                    .CountAsync();
+
+                var schedulesCount = await _session.Query<Schedule>()
+                    .Where(x => x.SiteId.IsOneOf(allSiteIds))
+                    .CountAsync();
+
+                var allowedUsersCount = allLocks.Select(x => x.AllowedUsers).Count();
 
                 return new Response
                 {
                     AllSites = sitesForChart,
+                    AllLocksBySite = locksForChart,
+                    NumberOfCardholders = cardholdersCount,
+                    NumberOfSchedules = schedulesCount,
+                    CardholdersWithAccess = allowedUsersCount,
                 };
             }
         }

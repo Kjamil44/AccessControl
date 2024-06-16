@@ -1,50 +1,87 @@
 <div class="dashboard-container">
-    <p-card class="welcome-card">
-        <div class="welcome-section">
+    <div class="grid-container">
+      <!-- Welcome and Organization Chart Card -->
+      <div class="grid-item">
+        <p-card class="welcome-card standard-card">
+          <div class="welcome-section">
             <h2>Welcome to Access Control</h2>
             <p>Access Control is a Smart Lock Management System. The hierarchy is as follows:</p>
             <p>Site → Lock → Cardholders (access based on schedules)</p>
-        </div>
-    </p-card>
-
-    <p-card class="organization-card">
-        <div class="organization-chart-section">
+            <p>Site → Lock → Cardholders (access based on schedules)</p>
+          </div>
+        </p-card>
+        <p-card class="organization-card standard-card">
+          <div class="organization-chart-section">
             <h2>Hierarchy</h2>
             <p-organizationChart [value]="data">
-                <ng-template let-node pTemplate="default">
-                    <div class="node-template">
-                        <i class="{{ node.icon }}"></i>
-                        <span>{{ node.label }}</span>
-                    </div>
-                </ng-template>
+              <ng-template let-node pTemplate="default">
+                <div class="node-template">
+                  <i class="{{ node.icon }}"></i>
+                  <span>{{ node.label }}</span>
+                </div>
+              </ng-template>
             </p-organizationChart>
-        </div>
-    </p-card>
-
-    <div class="charts-section">
-        <p-card class="chart-card">
-            <div class="chart-container">
-                <h3>All Sites</h3>
-                <p-chart type="pie" [data]="siteChartData" [options]="chartOptions"></p-chart>
-            </div>
+          </div>
         </p-card>
-        <p-card class="chart-card">
-            <div class="chart-container">
-                <h3>Locks by Site</h3>
-                <p-chart type="pie" [data]="lockChartData" [options]="chartOptions"></p-chart>
+      </div>
+  
+      <!-- Sites and Locks Pie Charts -->
+      <div class="grid-item">
+        <p-card class="chart-card standard-card">
+          <div class="chart-container row">
+            <div class="chart-half">
+              <h3>All Sites</h3>
+              <p-chart type="pie" [data]="siteChartData" [options]="chartOptions"></p-chart>
             </div>
-        </p-card>
-        <p-card class="chart-card">
-            <div class="chart-container">
-                <h3>Cardholders by Lock</h3>
-                <p-chart type="pie" [data]="cardholderChartData" [options]="chartOptions"></p-chart>
+            <div class="chart-half">
+              <h3>Locks by Site</h3>
+              <p-chart type="pie" [data]="lockChartData" [options]="chartOptions"></p-chart>
             </div>
+          </div>
         </p-card>
-        <p-card class="chart-card">
-            <div class="chart-container">
-                <h3>Schedules by Cardholder</h3>
-                <p-chart type="pie" [data]="scheduleChartData" [options]="chartOptions"></p-chart>
+  
+        <!-- Cardholders Information -->
+        <p-card class="info-card standard-card">
+          <div class="info-container">
+            <h3>Statistics</h3>
+            <div class="info-item">
+              <i class="pi pi-users"></i>
+              <span>Number of Cardholders:</span>
+              <span class="info-value">{{ cardholderCount }}</span>
             </div>
+            <div class="info-item">
+              <i class="pi pi-calendar"></i>
+              <span>Number of Schedules:</span>
+              <span class="info-value">{{ scheduleCount }}</span>
+            </div>
+            <div class="info-item">
+              <i class="pi pi-key"></i>
+              <span>Cardholders with Access:</span>
+              <span class="info-value">{{ accessCount }}</span>
+            </div>
+            <div class="info-item">
+              <i class="pi pi-users"></i>
+              <span>Number of Cardholders:</span>
+              <span class="info-value">{{ cardholderCount }}</span>
+            </div>
+            <div class="info-item">
+                <i class="pi pi-users"></i>
+                <span>Number of Cardholders:</span>
+                <span class="info-value">{{ cardholderCount }}</span>
+              </div>
+          </div>
         </p-card>
+      </div>
+  
+      <!-- Line Chart for Cardholders Over Time -->
+      <div class="grid-item full-width">
+        <p-card class="chart-card standard-card">
+          <div class="chart-container">
+            <h3>Cardholders Over Time</h3>
+            <p-chart type="line" [data]="cardholderTimeChartData" [options]="chartOptions"></p-chart>
+          </div>
+        </p-card>
+      </div>
     </div>
-</div>
+  </div>
+  
