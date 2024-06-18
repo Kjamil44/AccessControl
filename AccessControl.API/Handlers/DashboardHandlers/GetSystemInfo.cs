@@ -14,6 +14,9 @@ namespace AccessControl.API.Handlers.DashboardHandlers
         {
             public IEnumerable<ChartData> AllSites { get; set; } = Enumerable.Empty<ChartData>();
             public IEnumerable<ChartData> AllLocksBySite { get; set; } = Enumerable.Empty<ChartData>();
+            public IEnumerable<CardholdersByMonthInfo> CardholdersInLastSixMonths { get; set; } = Enumerable.Empty<CardholdersByMonthInfo>();
+            public int NumberOfSites { get; set; }
+            public int NumberOfLocks { get; set; }
             public int NumberOfCardholders { get; set; }
             public int NumberOfSchedules { get; set; }
             public int CardholdersWithAccess { get; set; }
@@ -22,7 +25,15 @@ namespace AccessControl.API.Handlers.DashboardHandlers
             {
                 public Guid Id { get; set; }
                 public string DisplayName { get; set; }
+                public int Data {  get; set; }
                 public string BackgroundColor { get; set; }
+            }
+
+            public class CardholdersByMonthInfo
+            {
+                public string MonthName { get; set; }
+                public int CardholdersCount { get; set; }
+                public DateTime MonthDate { get; set; }
             }
         }
         public class Handler : IRequestHandler<Request, Response>
@@ -35,18 +46,23 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                 if (!allSites.Any())
                     return new Response();
 
-                var sitesForChart = allSites.Select(x => new Response.ChartData()
-                {
-                    Id = x.SiteId,
-                    DisplayName = x.DisplayName,
-                    BackgroundColor = ColorGenerator.GenerateRandomColor()
-                });
-
                 var allSiteIds = allSites.Select(x => x.SiteId).ToArray();
 
                 var allLocks = await _session.Query<Lock>()
                     .Where(x => x.SiteId.IsOneOf(allSiteIds))
                     .ToListAsync();
+
+                var cardholders = await _session.Query<Cardholder>()
+                    .Where(x => x.SiteId.IsOneOf(allSiteIds))
+                    .ToListAsync();
+
+                var sitesForChart = allSites.Select(x => new Response.ChartData()
+                {
+                    Id = x.SiteId,
+                    DisplayName = x.DisplayName,
+                    Data = GetNumberOfLocks(allLocks, x.SiteId),
+                    BackgroundColor = ColorGenerator.GenerateRandomColor()
+                });
 
                 var siteDictionary = sitesForChart.ToDictionary(x => x.Id, x => x.DisplayName);
 
@@ -56,13 +72,12 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                     {
                         Id = lockItem.LockId,
                         DisplayName = $"{lockItem.DisplayName} - {siteDictionary[lockItem.SiteId]}",
+                        Data = lockItem.AllowedUsers.Count(),
                         BackgroundColor = ColorGenerator.GenerateRandomColor(),
                     })
                     .ToList();
 
-                var cardholdersCount = await _session.Query<Cardholder>()
-                    .Where(x => x.SiteId.IsOneOf(allSiteIds))
-                    .CountAsync();
+                var cardholdersCount = cardholders.Count();
 
                 var schedulesCount = await _session.Query<Schedule>()
                     .Where(x => x.SiteId.IsOneOf(allSiteIds))
@@ -74,10 +89,44 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                 {
                     AllSites = sitesForChart,
                     AllLocksBySite = locksForChart,
+                    NumberOfSites = allSites.Count(),
+                    NumberOfLocks = allLocks.Count(),
                     NumberOfCardholders = cardholdersCount,
                     NumberOfSchedules = schedulesCount,
                     CardholdersWithAccess = allowedUsersCount,
-                };
+                    CardholdersInLastSixMonths = GetCardholdersCountForLastSixMonths(cardholders)
+            };
+            }
+
+            private int GetNumberOfLocks(IReadOnlyList<Lock> allLocks, Guid siteId)
+            {
+                var numOfLockPerSite = allLocks
+                    .Where(x => x.SiteId == siteId)
+                    .Count();
+
+                return numOfLockPerSite;
+            }
+
+            private List<Response.CardholdersByMonthInfo> GetCardholdersCountForLastSixMonths(IReadOnlyList<Cardholder> cardholders)
+            {
+                var months = new List<Response.CardholdersByMonthInfo>();
+                for (int i = 0; i < 6; i++)
+                {
+                    var date = DateTime.Now.AddMonths(-i);
+
+                    var cardholdersCount = cardholders
+                        .Where(x => x.DateCreated.Year == date.Year && x.DateCreated.Month == date.Month) 
+                        .Count();
+
+                    months.Add(new Response.CardholdersByMonthInfo
+                    {
+                        MonthName = date.ToString("MMMM"),
+                        CardholdersCount = cardholdersCount,
+                        MonthDate = new DateTime(date.Year, date.Month, 1)
+                    });
+                }
+
+                return months;
             }
         }
     }

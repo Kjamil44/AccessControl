@@ -19,6 +19,8 @@ export class DashboardComponent implements OnInit {
     maintainAspectRatio: false
   };
 
+  sitesCount!: number;
+  locksCount!: number;
   cardholderCount!: number;
   scheduleCount!: number;
   accessCount!: number;
@@ -39,9 +41,11 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Site',
         icon: 'pi pi-home',
+        expanded: true,
         children: [
           {
             label: 'Lock',
+            expanded: true,
             icon: 'pi pi-lock',
             children: [
               { label: 'Cardholder', icon: 'pi pi-id-card' },
@@ -54,51 +58,49 @@ export class DashboardComponent implements OnInit {
   }
 
   private updateDashboardData(data: any) {
+    this.sitesCount = data.numberOfSites;
+    this.locksCount = data.numberOfLocks;
     this.cardholderCount = data.numberOfCardholders;
     this.scheduleCount = data.numberOfSchedules;
     this.accessCount = data.cardholdersWithAccess;
 
     const siteLabels = data.allSites.map((site: any) => site.displayName);
-    const siteData = data.allSites.map(() => Math.floor(Math.random() * 100)); // Mock data for example
+    const siteData = data.allSites.map((site: any) => site.data);
+    const siteColors = data.allSites.map((site: any) => site.backgroundColor);
 
     this.siteChartData = {
       labels: siteLabels,
       datasets: [{
         data: siteData,
-        backgroundColor: siteData.map(() => this.generateRandomColor())
+        backgroundColor: siteColors
       }]
     };
 
     const lockLabels = data.allLocksBySite.map((lock: any) => lock.displayName);
-    const lockData = data.allLocksBySite.map(() => Math.floor(Math.random() * 100)); // Mock data for example
+    const lockData = data.allLocksBySite.map((lock: any) => lock.data);
+    const lockColors = data.allLocksBySite.map((lock: any) => lock.backgroundColor);
 
     this.lockChartData = {
       labels: lockLabels,
       datasets: [{
         data: lockData,
-        backgroundColor: lockData.map(() => this.generateRandomColor())
+        backgroundColor: lockColors
       }]
     };
 
+    const lastSixMonths = data.cardholdersInLastSixMonths.map((x: any) => x.monthName);
+    const numOfCardholders = data.cardholdersInLastSixMonths.map((x: any) => x.cardholdersCount);
+
     this.cardholderTimeChartData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+      labels: lastSixMonths,
       datasets: [
         {
           label: 'Cardholders',
-          data: [65, 59, 80, 81, 56, 55], // Example data, you can update this with real data if available
+          data: numOfCardholders,
           fill: false,
           borderColor: '#4bc0c0'
         }
       ]
     };
-  }
-
-  private generateRandomColor(): string {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
   }
 }

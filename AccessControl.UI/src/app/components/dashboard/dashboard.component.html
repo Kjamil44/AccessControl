@@ -1,87 +1,90 @@
 <div class="dashboard-container">
-    <div class="grid-container">
-      <!-- Welcome and Organization Chart Card -->
-      <div class="grid-item">
-        <p-card class="welcome-card standard-card">
-          <div class="welcome-section">
-            <h2>Welcome to Access Control</h2>
-            <p>Access Control is a Smart Lock Management System. The hierarchy is as follows:</p>
-            <p>Site → Lock → Cardholders (access based on schedules)</p>
-            <p>Site → Lock → Cardholders (access based on schedules)</p>
-          </div>
-        </p-card>
-        <p-card class="organization-card standard-card">
-          <div class="organization-chart-section">
-            <h2>Hierarchy</h2>
-            <p-organizationChart [value]="data">
-              <ng-template let-node pTemplate="default">
-                <div class="node-template">
-                  <i class="{{ node.icon }}"></i>
-                  <span>{{ node.label }}</span>
-                </div>
-              </ng-template>
-            </p-organizationChart>
-          </div>
-        </p-card>
-      </div>
-  
-      <!-- Sites and Locks Pie Charts -->
-      <div class="grid-item">
-        <p-card class="chart-card standard-card">
-          <div class="chart-container row">
-            <div class="chart-half">
-              <h3>All Sites</h3>
-              <p-chart type="pie" [data]="siteChartData" [options]="chartOptions"></p-chart>
-            </div>
-            <div class="chart-half">
-              <h3>Locks by Site</h3>
-              <p-chart type="pie" [data]="lockChartData" [options]="chartOptions"></p-chart>
-            </div>
-          </div>
-        </p-card>
-  
-        <!-- Cardholders Information -->
-        <p-card class="info-card standard-card">
-          <div class="info-container">
-            <h3>Statistics</h3>
-            <div class="info-item">
-              <i class="pi pi-users"></i>
-              <span>Number of Cardholders:</span>
-              <span class="info-value">{{ cardholderCount }}</span>
-            </div>
-            <div class="info-item">
-              <i class="pi pi-calendar"></i>
-              <span>Number of Schedules:</span>
-              <span class="info-value">{{ scheduleCount }}</span>
-            </div>
-            <div class="info-item">
-              <i class="pi pi-key"></i>
-              <span>Cardholders with Access:</span>
-              <span class="info-value">{{ accessCount }}</span>
-            </div>
-            <div class="info-item">
-              <i class="pi pi-users"></i>
-              <span>Number of Cardholders:</span>
-              <span class="info-value">{{ cardholderCount }}</span>
-            </div>
-            <div class="info-item">
-                <i class="pi pi-users"></i>
-                <span>Number of Cardholders:</span>
-                <span class="info-value">{{ cardholderCount }}</span>
+  <div class="grid-container">
+    <!-- Welcome and Organization Chart Card -->
+    <div class="grid-item">
+      <p-card class="welcome-card standard-card">
+        <div class="welcome-section">
+          <h2>Welcome to Access Control</h2>
+          <p>Access Control is your premier Smart Lock Management System, designed for optimal security and convenience. 
+            Our system simplifies managing and monitoring access across your sites.</p>
+          <p>Our system is built to offer robust security features, allowing you to assign and revoke access permissions effortlessly, track entry logs, and ensure that only authorized personnel can enter your premises at the designated times.</p>
+          <li> Site: Your different locations.</li>
+          <li> Lock: Entry points within each site.</li>
+          <li> Cardholders: Individuals with access permissions.</li> 
+          <li> Schedules: Date and Time of allowed access for cardholders.</li> 
+        </div>
+      </p-card>
+      <p-card class="organization-card standard-card">
+        <div class="organization-chart-section">
+          <h2>Hierarchy</h2>
+          <p-organizationChart [value]="data">
+            <ng-template let-node pTemplate="default">
+              <div class="node-template">
+                <i class="{{ node.icon }}"></i>
+                <span>{{ node.label }}</span>
               </div>
+            </ng-template>
+          </p-organizationChart>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Sites and Locks Pie Charts -->
+    <div class="grid-item">
+      <p-card class="chart-card standard-card">
+        <div class="chart-container row">
+          <div class="chart-half">
+            <h4>Sites by Lock Created</h4>
+            <p-chart type="pie" [data]="siteChartData" [options]="chartOptions"></p-chart>
           </div>
-        </p-card>
-      </div>
-  
-      <!-- Line Chart for Cardholders Over Time -->
-      <div class="grid-item full-width">
-        <p-card class="chart-card standard-card">
-          <div class="chart-container">
-            <h3>Cardholders Over Time</h3>
-            <p-chart type="line" [data]="cardholderTimeChartData" [options]="chartOptions"></p-chart>
+          <div class="chart-half">
+            <h4>Locks by Number of Allowed Users</h4>
+            <p-chart type="pie" [data]="lockChartData" [options]="chartOptions"></p-chart>
           </div>
-        </p-card>
-      </div>
+        </div>
+      </p-card>
+
+      <!-- Cardholders Information -->
+      <p-card class="info-card standard-card">
+        <div class="info-container">
+          <h3>Statistics</h3>
+          <div class="info-item">
+            <i class="pi pi-home"></i>
+            <span>Number of Sites:</span>
+            <span class="info-value">{{ sitesCount }}</span>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-lock"></i>
+            <span>Number of Locks:</span>
+            <span class="info-value">{{ locksCount }}</span>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-id-card"></i>
+            <span>Number of Cardholders:</span>
+            <span class="info-value">{{ cardholderCount }}</span>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-calendar-clock"></i>
+            <span>Number of Schedules:</span>
+            <span class="info-value">{{ scheduleCount }}</span>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-key"></i>
+            <span>Cardholders with Access:</span>
+            <span class="info-value">{{ accessCount }}</span>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Line Chart for Cardholders Over Time -->
+    <div class="grid-item full-width">
+      <p-card class="chart-card standard-card">
+        <div class="chart-container">
+          <h3>Number of Cardholders Created Over Time</h3>
+          <p-chart type="line" [data]="cardholderTimeChartData" [options]="chartOptions"></p-chart>
+        </div>
+      </p-card>
     </div>
   </div>
-  
+</div>
