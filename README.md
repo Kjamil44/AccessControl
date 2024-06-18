@@ -1,4 +1,5 @@
 ## Welcome to Access Control
+![Access Control](AccessControl.UI/src/assets/images/logo_transparent.png)
 
 Access Control is the leading Smart Lock Management System, crafted for unparalleled security and ease of use. Our platform streamlines the process of managing and monitoring access throughout your facilities.
 
