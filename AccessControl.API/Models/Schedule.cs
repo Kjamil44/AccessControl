@@ -5,6 +5,8 @@ namespace AccessControl.API.Models
 {
     public class Schedule
     {
+        [ForeignKey(typeof(User))]
+        public Guid UserId { get; set; }
         [ForeignKey(typeof(Site))]
         public Guid SiteId { get; set; }
         [Identity]

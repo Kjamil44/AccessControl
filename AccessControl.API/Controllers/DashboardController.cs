@@ -1,10 +1,12 @@
 ﻿using AccessControl.API.Handlers.DashboardHandlers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.API.Controllers
 {
     [Route("api/dashboard")]
+    [Authorize]
     [ApiController]
     public class DashboardController : ControllerBase
     {

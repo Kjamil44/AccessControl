@@ -1,13 +1,13 @@
-﻿using AccessControl.API.Handlers.SiteHandlers;
-using Marten.Schema;
-using System.Security.Policy;
+﻿using Marten.Schema;
 
 namespace AccessControl.API.Models
 {
     public class Site
     {
         [Identity]
-        public Guid SiteId { get; set; } 
+        public Guid SiteId { get; set; }
+        [ForeignKey(typeof(User))]
+        public Guid UserId { get; set; }
         public string DisplayName { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
