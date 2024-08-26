@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace AccessControl.API.Controllers
 {
     [ApiController]
-    [Route("accounts")]
+    [Route("auth")]
     [AllowAnonymous]
-    public class AccountsController : ControllerBase
+    public class AuthorizationController : ControllerBase
     {
         private readonly IDocumentSession _documentStore;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IPasswordHasher _passwordHasher;
 
-        public AccountsController(IDocumentSession documentStore, IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher passwordHasher)
+        public AuthorizationController(IDocumentSession documentStore, IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher passwordHasher)
         {
             _documentStore = documentStore;
             _jwtTokenGenerator = jwtTokenGenerator;

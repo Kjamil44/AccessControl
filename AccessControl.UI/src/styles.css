@@ -3,6 +3,39 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+/* Login And Register form*/
+.login-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Hide overflow to prevent scrollbars */
+    background: url('assets/images/bg-1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    padding-right: 25vh;
+    box-sizing: border-box;
+    background-size: cover;
+  }
+  
+  .login-card {
+    width: 300px;
+    padding: 2rem;
+    margin-right: 5rem;
+  }
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('assets/images/bg-1.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.register-card {
+    width: 350px;
+    padding: 2rem;
+}
 
 /* Grid/Table styles */
 .no-data-text {

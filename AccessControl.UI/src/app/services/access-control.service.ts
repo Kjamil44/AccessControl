@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GridDataResult } from '@progress/kendo-angular-grid';
-import { NotificationService } from '@progress/kendo-angular-notification';
 import { MessageService } from 'primeng/api';
 import { map, Observable } from "rxjs";
 import { environment } from 'src/environments/environment';
@@ -12,34 +10,34 @@ import { environment } from 'src/environments/environment';
 export class AccessControlService {
 
   baseApiUrl: string = environment.baseApiUrl;
-  constructor(private http: HttpClient, private notificationService: NotificationService, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private messageService: MessageService) { }
 
-  getForDashboard(endpoint: string): Observable<GridDataResult> {
+  getForDashboard(endpoint: string): Observable<any> {
     return this.http
       .get(`${this.baseApiUrl}/api/dashboard/${endpoint}`)
       .pipe(
-        map((response: any) => (<GridDataResult>{
+        map((response: any) => (<any>{
           data: response
         })),
       );
   }
 
 
-  get(url: string): Observable<GridDataResult> {
+  get(url: string): Observable<any> {
     return this.http
       .get(`${this.baseApiUrl}/${url}`)
       .pipe(
-        map((response: any) => (<GridDataResult>{
+        map((response: any) => (<any>{
           data: response.items
         })),
       );
   }
 
-  getById(url: string, id: string): Observable<GridDataResult> {
+  getById(url: string, id: string): Observable<any> {
     return this.http
       .get(`${this.baseApiUrl}/${url}/${id}`)
       .pipe(
-        map((response: any) => (<GridDataResult>{
+        map((response: any) => (<any>{
           data: response
         })),
       );

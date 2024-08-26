@@ -7,10 +7,15 @@ import { CreateSiteComponent } from './components/sites/create-site/create-site.
 import { SitesListComponent } from './components/sites/sites-list/sites-list.component';
 import { AllowedUsersLockComponent } from './components/locks/allowed-users-lock/allowed-users-lock.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LoginComponent } from './components/common/login/login.component';
+import { RegisterComponent } from './components/common/register/register.component';
 
 const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
-    path: '',
+    path: 'dashboard',
     component: DashboardComponent
   },
   {

@@ -1,0 +1,19 @@
+<div class="login-container">
+    <div class="login-card p-card">
+      <h2>Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogIn()">
+        <div class="p-field">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" pInputText />
+        </div>
+        <div class="p-field">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password" pInputText />
+        </div>
+        <br>
+        <button type="submit" pButton label="Login" class="p-mt-2"></button>
+        <p-divider class="p-mt-3">OR</p-divider>
+        <button type="button" pButton label="Sign Up" class="p-button-secondary p-mt-2" (click)="navigateToRegister()"></button>
+      </form>
+    </div>
+  </div>

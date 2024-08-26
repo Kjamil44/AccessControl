@@ -54,6 +54,10 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartModule } from 'primeng/chart';
 import { OrganizationChartModule } from 'primeng/organizationchart';
 import { MessageService } from 'primeng/api';
+import { PasswordModule } from 'primeng/password';
+import { LoginComponent } from './components/common/login/login.component';
+import { DividerModule } from 'primeng/divider';
+import { RegisterComponent } from './components/common/register/register.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +81,9 @@ import { MessageService } from 'primeng/api';
     DeleteScheduleComponent,
     TabMenuComponent,
     SiteSelectorComponent,
-    DashboardComponent
+    DashboardComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule, 
@@ -114,7 +120,9 @@ import { MessageService } from 'primeng/api';
     CalendarModule,
     MultiSelectModule,
     ChartModule,
-    OrganizationChartModule
+    OrganizationChartModule,
+    PasswordModule,
+    DividerModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]
