@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
@@ -58,6 +58,10 @@ import { PasswordModule } from 'primeng/password';
 import { LoginComponent } from './components/common/login/login.component';
 import { DividerModule } from 'primeng/divider';
 import { RegisterComponent } from './components/common/register/register.component';
+import { AuthInterceptor } from './services/auth-interceptor';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { SidebarModule } from 'primeng/sidebar';
 
 @NgModule({
   declarations: [
@@ -86,11 +90,11 @@ import { RegisterComponent } from './components/common/register/register.compone
     RegisterComponent
   ],
   imports: [
-    BrowserModule, 
-    HttpClientModule, 
-    AppRoutingModule, 
-    NavigationModule, 
-    BrowserAnimationsModule, 
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    NavigationModule,
+    BrowserAnimationsModule,
     GridModule,
     HttpClientModule,
     ButtonsModule,
@@ -122,9 +126,14 @@ import { RegisterComponent } from './components/common/register/register.compone
     ChartModule,
     OrganizationChartModule,
     PasswordModule,
-    DividerModule
+    DividerModule,
+    AvatarGroupModule,
+    AvatarModule,
+    SidebarModule
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

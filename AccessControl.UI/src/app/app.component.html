@@ -1,4 +1,3 @@
-<tab-menu *ngIf="currentRoute != '/' && currentRoute != '/login' && currentRoute != '/register'"></tab-menu>
+<tab-menu [hidden]="!isMainContent"></tab-menu>
 <p-toast />
 <router-outlet></router-outlet>
-<div kendoDialogContainer></div>

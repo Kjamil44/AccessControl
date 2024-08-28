@@ -3,5 +3,23 @@
         <ng-template pTemplate="start">
             <img src="assets/images/logo_transparent.png" alt="Access Control Logo" class="logo">
         </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <p-avatar icon="pi pi-user" 
+                          styleClass="mr-2" 
+                          size="large" 
+                          shape="circle" 
+                          [style]="{ 'background-color': '#a494fc', color: '#2a1261' }"
+                          (click)="showSidebar()"/>
+            </div>
+        </ng-template>
     </p-menubar>
 </div>
+
+<p-sidebar [(visible)]="sidebarVisible" position="right" [style]="{width: '300px'}">
+    <h3>User Info</h3>
+    <div class="user-info">
+        <p><strong>Username:</strong> {{username}}</p>
+        <p><strong>Email:</strong> {{userEmail}}</p>
+    </div>
+</p-sidebar>

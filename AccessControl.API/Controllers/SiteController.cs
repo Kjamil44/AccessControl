@@ -1,10 +1,12 @@
 ﻿using AccessControl.API.Handlers.SiteHandlers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.API.Controllers
 {
     [Route("api/sites")]
+    [Authorize]
     [ApiController]
     public class SiteController : ControllerBase
     {

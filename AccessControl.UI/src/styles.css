@@ -3,32 +3,46 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+body.main-content {
+    background-color: #56a6f7;
+    color: #333;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+body.main-content .title {
+    font-size: 28px;
+    margin: 0;
+}
+
 /* Login And Register form*/
 .login-container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     height: 100vh;
-    overflow: hidden; /* Hide overflow to prevent scrollbars */
+    overflow: hidden;
+    /* Hide overflow to prevent scrollbars */
     background: url('assets/images/bg-1.jpg') no-repeat center center fixed;
     background-size: cover;
     padding-right: 25vh;
     box-sizing: border-box;
     background-size: cover;
-  }
-  
-  .login-card {
+}
+
+.login-card {
     width: 300px;
     padding: 2rem;
     margin-right: 5rem;
-  }
+}
 
 .register-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     height: 100vh;
     background: url('assets/images/bg-1.jpg') no-repeat center center fixed;
+    padding-right: 25vh;
+    box-sizing: border-box;
     background-size: cover;
 }
 

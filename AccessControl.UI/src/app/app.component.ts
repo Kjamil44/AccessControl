@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Renderer2, ViewEncapsulation } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +9,18 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'AccessControl.UI';
-  currentRoute: any;
+  isMainContent: boolean = false;
 
-  constructor(private router: Router) {
-    this.currentRoute = router.url;
+  constructor(private router: Router, private renderer: Renderer2) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isMainContent = !['/', '/login', '/register'].includes(event.urlAfterRedirects);
+        if (!this.isMainContent) {
+          this.renderer.removeClass(document.body, 'main-content');
+        } else {
+          this.renderer.addClass(document.body, 'main-content');
+        }
+      }
+    });
   }
 }

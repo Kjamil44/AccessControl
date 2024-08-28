@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit{
     this.authService.login(credentials)
     .subscribe({
       next: data => {
+        this.authService.storeToken(data.token);
         this.router.navigate([`/dashboard`]);
       },
       error: error => {
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit{
   }
 
   navigateToRegister(){
-    //NAVIGATE
+    this.router.navigate([`/register`]);
   }
 
 }

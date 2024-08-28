@@ -1,10 +1,12 @@
 ﻿using AccessControl.API.Handlers.CardholderHandlers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.API.Controllers
 {
     [Route("api/cardholders")]
+    [Authorize]
     [ApiController]
     public class CardholderController : ControllerBase
     {

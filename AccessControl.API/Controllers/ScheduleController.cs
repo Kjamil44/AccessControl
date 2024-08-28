@@ -1,10 +1,12 @@
 ﻿using AccessControl.API.Handlers.ScheduleHandlers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessControl.API.Controllers
 {
     [Route("api/schedules")]
+    [Authorize]
     [ApiController]
     public class ScheduleController : ControllerBase
     {

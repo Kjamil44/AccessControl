@@ -12,6 +12,16 @@ export class AccessControlService {
   baseApiUrl: string = environment.baseApiUrl;
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
+  getCurrentUser(): Observable<any> {
+    return this.http
+      .get(`${this.baseApiUrl}/api/users/current`)
+      .pipe(
+        map((response: any) => (<any>{
+          data: response
+        })),
+      );
+  }
+
   getForDashboard(endpoint: string): Observable<any> {
     return this.http
       .get(`${this.baseApiUrl}/api/dashboard/${endpoint}`)

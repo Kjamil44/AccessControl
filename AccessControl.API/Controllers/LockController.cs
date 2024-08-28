@@ -3,10 +3,12 @@ using AccessControl.API.Handlers.AllowedUserHandlers;
 using AccessControl.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AccessControl.API.Controllers
 {
     [Route("api/locks")]
+    [Authorize]
     [ApiController]
     public class LockController : ControllerBase
     {
