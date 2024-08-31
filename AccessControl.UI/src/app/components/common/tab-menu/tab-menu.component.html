@@ -4,7 +4,7 @@
             <img src="assets/images/logo_transparent.png" alt="Access Control Logo" class="logo">
         </ng-template>
         <ng-template pTemplate="end">
-            <div class="flex align-items-center gap-2">
+            <div class="flex align-items-center gap-2" style="cursor: pointer;">
                 <p-avatar icon="pi pi-user" 
                           styleClass="mr-2" 
                           size="large" 
@@ -16,10 +16,20 @@
     </p-menubar>
 </div>
 
-<p-sidebar [(visible)]="sidebarVisible" position="right" [style]="{width: '300px'}">
-    <h3>User Info</h3>
-    <div class="user-info">
-        <p><strong>Username:</strong> {{username}}</p>
-        <p><strong>Email:</strong> {{userEmail}}</p>
+<p-sidebar [(visible)]="sidebarVisible" position="right" [baseZIndex]="10000" class="user-sidebar">
+    <div class="sidebar-content">
+        <!-- User Info Section -->
+        <div class="user-info">
+            <p-avatar label="{{userInitials}}" shape="circle" size="large" styleClass="user-avatar"></p-avatar>
+            <div class="user-details">
+                <h3 class="user-name">{{ username }}</h3>
+                <p class="user-email">{{ userEmail }}</p>
+            </div>
+        </div>
+
+        <!-- Logout Button at the Bottom -->
+        <div class="logout-section">
+            <button pButton label="Logout" icon="pi pi-power-off" class="p-button-danger p-button-rounded" (click)="logOut()"></button>
+        </div>
     </div>
 </p-sidebar>

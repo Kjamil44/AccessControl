@@ -10,10 +10,10 @@ namespace AccessControl.API.Controllers
     [ApiController]
     public class DashboardController : ControllerBase
     {
-        private readonly ISender _sender;   
+        private readonly ISender _sender;
         public DashboardController(ISender sender) => _sender = sender;
 
         [HttpGet("info")]
-        public async Task<GetSystemInfo.Response> GetSystemInfo() => await _sender.Send(new GetSystemInfo.Request());
+        public async Task<GetSystemInfo.Response> GetSystemInfo(Guid userId) => await _sender.Send(new GetSystemInfo.Request { UserId = userId });
     }
 }

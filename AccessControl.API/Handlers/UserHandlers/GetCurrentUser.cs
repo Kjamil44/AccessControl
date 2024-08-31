@@ -1,7 +1,7 @@
-﻿using AccessControl.API.Models;
+﻿using AccessControl.API.Exceptions;
+using AccessControl.API.Models;
 using Marten;
 using MediatR;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace AccessControl.API.Handlers.UserHandlers
 {
@@ -9,7 +9,7 @@ namespace AccessControl.API.Handlers.UserHandlers
     {
         public class Request : IRequest<Response>
         {
-            public Guid SiteId { get; set; }
+            public Guid UserId { get; set; }
         }
         public class Response
         {
@@ -28,30 +28,15 @@ namespace AccessControl.API.Handlers.UserHandlers
             }
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var userId = Guid.Parse(GetUserIdFromToken());
-
-                var user = _session.Query<User>().FirstOrDefault(x => x.Id == userId);
+                var user = await _session.LoadAsync<User>(request.UserId);
+                if (user == null)
+                    throw new CoreException("Schedule not found");
 
                 return new Response
                 {
                     Email = user.Email,
                     Username = user.Username,
                 };
-            }
-
-            private string GetUserIdFromToken()
-            {
-                var httpContext = _httpContextAccessor.HttpContext;
-                var token = httpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-                if (token == null)
-                {
-                    return null;
-                }
-
-                var jwtToken = new JwtSecurityTokenHandler().ReadToken(token) as JwtSecurityToken;
-                var userId = jwtToken?.Claims.First(claim => claim.Type == "sub")?.Value;
-
-                return userId;
             }
         }
     }

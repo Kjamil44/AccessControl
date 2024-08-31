@@ -8,6 +8,7 @@ namespace AccessControl.API.Handlers.SiteHandlers
     {
         public class Request : IRequest<Response>
         {
+            public Guid UserId { get; set; }
             public string DisplayName { get; set; }
         }
         public class Response
@@ -20,9 +21,11 @@ namespace AccessControl.API.Handlers.SiteHandlers
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var site = new Site(request.DisplayName);
+                var site = new Site(request.UserId, request.DisplayName);
+
                 _session.Store(site);
                 await _session.SaveChangesAsync();
+
                 return new Response();
             }
         }

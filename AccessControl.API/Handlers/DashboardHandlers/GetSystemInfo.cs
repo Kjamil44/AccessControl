@@ -9,6 +9,7 @@ namespace AccessControl.API.Handlers.DashboardHandlers
     {
         public class Request : IRequest<Response>
         {
+            public Guid UserId { get; set; }
         }
         public class Response
         {
@@ -25,7 +26,7 @@ namespace AccessControl.API.Handlers.DashboardHandlers
             {
                 public Guid Id { get; set; }
                 public string DisplayName { get; set; }
-                public int Data {  get; set; }
+                public int Data { get; set; }
                 public string BackgroundColor { get; set; }
             }
 
@@ -42,7 +43,11 @@ namespace AccessControl.API.Handlers.DashboardHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var allSites = await _session.Query<Site>().ToListAsync();
+                var allSites = await _session
+                    .Query<Site>()
+                    .Where(x => x.UserId == request.UserId)
+                    .ToListAsync();
+
                 if (!allSites.Any())
                     return new Response();
 
@@ -95,7 +100,7 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                     NumberOfSchedules = schedulesCount,
                     CardholdersWithAccess = allowedUsersCount,
                     CardholdersInLastSixMonths = GetCardholdersCountForLastSixMonths(cardholders)
-            };
+                };
             }
 
             private int GetNumberOfLocks(IReadOnlyList<Lock> allLocks, Guid siteId)
@@ -115,7 +120,7 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                     var date = DateTime.Now.AddMonths(-i);
 
                     var cardholdersCount = cardholders
-                        .Where(x => x.DateCreated.Year == date.Year && x.DateCreated.Month == date.Month) 
+                        .Where(x => x.DateCreated.Year == date.Year && x.DateCreated.Month == date.Month)
                         .Count();
 
                     months.Add(new Response.CardholdersByMonthInfo

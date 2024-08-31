@@ -1,14 +1,9 @@
-﻿using AccessControl.API.Controllers;
-using AccessControl.API.Handlers.CardholderHandlers;
-using Baseline;
-using Marten.Schema;
+﻿using Marten.Schema;
 
 namespace AccessControl.API.Models
 {
     public class Cardholder
     {
-        [ForeignKey(typeof(User))]
-        public Guid UserId { get; set; }
         [ForeignKey(typeof(Site))]
         public Guid SiteId { get; set; }
         [Identity]

@@ -1,4 +1,5 @@
 using AccessControl.API;
+using AccessControl.API.Filters;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
 using MediatR;
@@ -15,6 +16,7 @@ builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddControllers(options =>
 {
     options.ReturnHttpNotAcceptable = true;
+    options.Filters.Add<UserIdValidationFilter>();
 }).AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -54,6 +56,7 @@ builder.Services.AddAuthentication(opt =>
 
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
 // HttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

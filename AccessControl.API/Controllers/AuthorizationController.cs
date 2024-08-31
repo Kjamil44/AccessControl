@@ -11,17 +11,20 @@ namespace AccessControl.API.Controllers
     [ApiController]
     [Route("auth")]
     [AllowAnonymous]
-    public class AuthorizationController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IDocumentSession _documentStore;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IValidationService _validationService;
 
-        public AuthorizationController(IDocumentSession documentStore, IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher passwordHasher)
+        public AuthController(IDocumentSession documentStore, IJwtTokenGenerator jwtTokenGenerator,
+            IPasswordHasher passwordHasher, IValidationService validationService)
         {
             _documentStore = documentStore;
             _jwtTokenGenerator = jwtTokenGenerator;
             _passwordHasher = passwordHasher;
+            _validationService = validationService;
         }
 
         [HttpPost("register")]
@@ -30,9 +33,11 @@ namespace AccessControl.API.Controllers
             var user = new User
             {
                 Username = registerUserDto.Username,
-                Email = registerUserDto.Email,
+                Email = registerUserDto.Email.Trim().ToLower(),
                 PasswordHash = _passwordHasher.HashPassword(registerUserDto.Password),
             };
+
+            await _validationService.CheckIfUserAlreadyExists(_documentStore, user.Email);
 
             _documentStore.Store(user);
 

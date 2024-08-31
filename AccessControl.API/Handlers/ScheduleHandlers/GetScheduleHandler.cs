@@ -28,9 +28,7 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var schedule = await _session.Query<Schedule>()
-                    .FirstOrDefaultAsync(x => x.ScheduleId == request.ScheduleId);
-
+                var schedule = await _session.LoadAsync<Schedule>(request.ScheduleId);
                 if (schedule == null)
                     throw new CoreException("Schedule not found");
 

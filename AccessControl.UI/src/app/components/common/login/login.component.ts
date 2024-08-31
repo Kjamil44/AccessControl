@@ -9,40 +9,35 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private authService: AuthService, private accessService: AccessControlService, private router: Router){
+  constructor(private authService: AuthService, private accessService: AccessControlService, private router: Router) {
     this.loginForm = new FormGroup({
       email: new FormControl(),
       password: new FormControl()
     });
   }
 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-
-  onLogIn(){
+  onLogIn() {
     const credentials = {
       "email": this.loginForm.value.email,
       "password": this.loginForm.value.password
     }
 
     this.authService.login(credentials)
-    .subscribe({
-      next: data => {
-        this.authService.storeToken(data.token);
-        this.router.navigate([`/dashboard`]);
-      },
-      error: error => {
-        this.accessService.createErrorNotification(error.message);
-        //navigate
-      }
-    });;
+      .subscribe({
+        next: data => {
+          this.authService.storeToken(data.token);
+          this.router.navigate([`/dashboard`]);
+        },
+        error: error => {
+          this.accessService.createErrorNotification(error.message);
+        }
+      });;
   }
 
-  navigateToRegister(){
+  navigateToRegister() {
     this.router.navigate([`/register`]);
   }
 

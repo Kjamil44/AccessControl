@@ -37,9 +37,7 @@ namespace AccessControl.API.Handlers.LockHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var lockFromDb = await _session.Query<Lock>()
-                    .FirstOrDefaultAsync(x => x.LockId == request.LockId);
-
+                var lockFromDb = await _session.LoadAsync<Lock>(request.LockId);
                 if (lockFromDb == null)
                     throw new CoreException("Lock not found");
 

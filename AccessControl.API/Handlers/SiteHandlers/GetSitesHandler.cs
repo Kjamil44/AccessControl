@@ -9,6 +9,7 @@ namespace AccessControl.API.Handlers.SiteHandlers
     {
         public class Request : IRequest<Response>
         {
+            public Guid UserId { get; set; }
         }
         public class Response
         {
@@ -27,7 +28,11 @@ namespace AccessControl.API.Handlers.SiteHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var sites = await _session.Query<Site>().ToListAsync();
+                var sites = await _session
+                    .Query<Site>()
+                    .Where(x => x.UserId == request.UserId)
+                    .ToListAsync();
+
                 if (!sites.Any())
                     throw new CoreException("No Sites available");
 
@@ -35,7 +40,7 @@ namespace AccessControl.API.Handlers.SiteHandlers
                 {
                     Items = sites.Select(x => new Response.Item
                     {
-                        SiteId = x.SiteId,  
+                        SiteId = x.SiteId,
                         DisplayName = x.DisplayName,
                         DateCreated = x.DateCreated,
                         DateModified = x.DateModified

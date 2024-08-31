@@ -28,9 +28,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var cardholder = await _session.Query<Cardholder>()
-                    .FirstOrDefaultAsync(x => x.CardholderId == request.CardholderId);
-
+                var cardholder = await _session.LoadAsync<Cardholder>(request.CardholderId);
                 if (cardholder == null)
                     throw new CoreException("Carholder not found");
 

@@ -16,6 +16,6 @@ namespace AccessControl.API.Controllers
         public UserController(ISender sender) => _sender = sender;
 
         [HttpGet("current")]
-        public async Task<GetCurrentUser.Response> GetCurrentUser() => await _sender.Send(new GetCurrentUser.Request());
+        public async Task<GetCurrentUser.Response> GetCurrentUser(Guid userId) => await _sender.Send(new GetCurrentUser.Request { UserId = userId });
     }
 }
