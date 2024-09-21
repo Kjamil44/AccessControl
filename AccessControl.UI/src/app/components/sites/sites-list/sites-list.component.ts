@@ -60,7 +60,7 @@ export class SitesListComponent implements OnInit {
     const ref = this.dialog.open(DeleteSiteComponent, {
       header: 'Delete Site',
       width: '450px',
-      height: '200px',
+      height: '250px',
       baseZIndex: 10000,
       data: {
         site: site

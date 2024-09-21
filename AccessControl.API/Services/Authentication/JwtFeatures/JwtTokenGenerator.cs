@@ -33,7 +33,7 @@ namespace AccessControl.API.Services.Authentication.JwtFeatures
                 issuer: _configuration["JWTSettings:Issuer"],
                 audience: _configuration["JWTSettings:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(60),
 
                 signingCredentials: creds
             );

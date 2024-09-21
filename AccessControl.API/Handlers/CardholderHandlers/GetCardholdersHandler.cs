@@ -9,7 +9,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
     {
         public class Request : IRequest<Response>
         {
-            public Guid SiteId { get; set; }
+            public Guid? SiteId { get; set; }
         }
         public class Response
         {
@@ -19,6 +19,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
                 public string FullName { get; set; }
+                public string SiteName { get; set; }
                 public int CardNumber { get; set; }
                 public DateTime ActivationDate { get; set; }
                 public DateTime ExpirationDate { get; set; }
@@ -32,12 +33,18 @@ namespace AccessControl.API.Handlers.CardholderHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var cardholders = await _session.Query<Cardholder>()
-                    .Where(x => x.SiteId == request.SiteId)
+                var cardholders = await _session
+                    .Query<Cardholder>()
                     .ToListAsync();
 
                 if (!cardholders.Any())
                     throw new CoreException("No Cardholders available");
+
+                if (request.SiteId.HasValue)
+                    cardholders = cardholders.Where(x => x.SiteId == request.SiteId).ToList();
+
+                var sites = await _session.Query<Site>()
+                    .ToListAsync();
 
                 return new Response
                 {
@@ -47,6 +54,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                         FirstName = x.FirstName,
                         LastName = x.LastName,  
                         FullName = x.FullName,
+                        SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId).DisplayName,
                         CardNumber = x.CardNumber,  
                         ActivationDate = x.ActivationDate,  
                         ExpirationDate = x.ExpirationDate,  

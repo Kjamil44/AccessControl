@@ -34,7 +34,7 @@ export class LocksListComponent implements OnInit {
       }
     })
 
-    this.accessService.get(`api/locks/site/${this.siteId}`).subscribe({
+    this.accessService.getWithParams(`api/locks`, "").subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
@@ -49,7 +49,12 @@ export class LocksListComponent implements OnInit {
     this.siteName = site.displayName; 
     this.siteId = site.siteId;
     this.site = site;
-    this.accessService.get(`api/locks/site/${this.siteId}`).subscribe({
+
+    let request = this.siteName !== "All Sites" ? {
+      siteId: this.siteId
+    } : "";
+
+    this.accessService.getWithParams(`api/locks`, request).subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;

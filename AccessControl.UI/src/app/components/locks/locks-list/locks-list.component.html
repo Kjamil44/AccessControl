@@ -14,6 +14,8 @@
     <ng-template pTemplate="header">
         <tr>
             <th>Lock Name</th>
+            <th>Site</th>
+            <th>Users with Access</th>
             <th>Date Created</th>
             <th>Date Modified</th>
             <th  style="width: 12.5rem;">Actions</th>
@@ -22,6 +24,8 @@
     <ng-template pTemplate="body" let-lock>
         <tr [pSelectableRow]="lock">
             <td>{{ lock.displayName }}</td>
+            <td>{{ lock.siteName }}</td>
+            <td>{{ lock.numberOfAllowedUsers }}</td>
             <td>{{ lock.dateCreated | date:'dd MMMM YYYY' }}</td>
             <td>{{ lock.dateModified | date:'dd MMMM YYYY' }}</td>
             <td>
@@ -33,7 +37,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="4" class="no-data-text">No locks available</td>
+            <td colspan="6" class="no-data-text">No locks available</td>
         </tr>
     </ng-template>
 </p-table>

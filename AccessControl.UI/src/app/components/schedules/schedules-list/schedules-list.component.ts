@@ -32,7 +32,7 @@ export class SchedulesListComponent implements OnInit {
       }
     })
 
-    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
+    this.accessService.getWithParams(`api/schedules`, "").subscribe({
       next: (response) => {
         this.schedules = response.data;
         this.scheduleIsPresent = true;
@@ -47,7 +47,11 @@ export class SchedulesListComponent implements OnInit {
     this.siteName = site.displayName;
     this.siteId = site.siteId;
 
-    this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
+    let request = this.siteName !== "All Sites" ? {
+      siteId: this.siteId
+    } : "";
+
+    this.accessService.getWithParams(`api/schedules`, request).subscribe({
       next: (response) => {
         this.schedules = response.data;
         this.scheduleIsPresent = true;

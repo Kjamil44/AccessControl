@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { map, Observable } from "rxjs";
@@ -36,6 +36,17 @@ export class AccessControlService {
   get(url: string): Observable<any> {
     return this.http
       .get(`${this.baseApiUrl}/${url}`)
+      .pipe(
+        map((response: any) => (<any>{
+          data: response.items
+        })),
+      );
+  }
+
+  getWithParams(url: string, params: any): Observable<any> {
+    const httpParams = new HttpParams({ fromObject: params });
+    return this.http
+      .get(`${this.baseApiUrl}/${url}`, { params: httpParams })
       .pipe(
         map((response: any) => (<any>{
           data: response.items

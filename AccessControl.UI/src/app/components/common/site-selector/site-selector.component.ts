@@ -16,7 +16,12 @@ export class SiteSelectorComponent  implements OnInit {
   ngOnInit(): void {
     this.accessService.get('api/sites').subscribe({
       next: (response) => {
-        this.sites = response.data;
+        this.sites = [
+          { siteId: null, displayName: 'All Sites' },  // This is the "For All Sites" option
+          ...response.data
+        ];
+
+        this.selectedSite = { siteId: null, displayName: 'All Sites' };
       },
       error: (response) => {
         this.accessService.createErrorNotification("Incorrect api endpoint");

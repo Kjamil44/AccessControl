@@ -45,7 +45,11 @@ export class AllowedUsersLockComponent implements OnInit {
           this.siteId = this.lock.siteId;
           this.siteDisplayName = this.lock.siteDisplayName;
 
-          this.accessService.get(`api/schedules/site/${this.siteId}`).subscribe({
+          let request = {
+            siteId: this.siteId
+          };
+
+          this.accessService.getWithParams(`api/schedules`, request).subscribe({
             next: (response) => {
               this.schedules = response.data;
 
@@ -70,7 +74,11 @@ export class AllowedUsersLockComponent implements OnInit {
   }
 
   chooseNewUser() {
-    this.accessService.get(`api/cardholders/site/${this.siteId}`).subscribe({
+    let request = {
+      siteId: this.siteId
+    };
+
+    this.accessService.getWithParams(`api/cardholders`, request).subscribe({
       next: (response) => {
         this.cardholders = response.data;
         this.show = true;
@@ -90,14 +98,13 @@ export class AllowedUsersLockComponent implements OnInit {
   }
 
   saveEdit(user: any) {
-    const data = {
-      allowedUser: user.scheduleControl.value
-    };
+    const allowedUser = user.scheduleControl.value;
 
-    this.accessService.update(`api/locks/${this.lock.lockId}/edit`, user.cardholderId, data).subscribe({
+    this.accessService.update(`api/locks/${this.lock.lockId}/edit`, user.cardholderId, allowedUser).subscribe({
       next: data => {
-        user.scheduleName = this.schedules.find(schedule => schedule.scheduleId === user.scheduleControl.value)?.displayName;
+        user.scheduleName = this.schedules.find(schedule => schedule.scheduleId === data.scheduleId)?.displayName;
         user.editing = false;
+        console.log(user);
         this.accessService.createSuccessNotification("Allowed User's Schedule updated successfully!");
       },
       error: error => {

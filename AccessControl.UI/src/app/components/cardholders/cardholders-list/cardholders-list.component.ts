@@ -30,7 +30,7 @@ export class CardholdersListComponent implements OnInit {
       }
     })
 
-    this.accessService.get(`api/cardholders/site/${this.siteId}`).subscribe({
+    this.accessService.getWithParams(`api/cardholders`, "").subscribe({
       next: (response) => {
         this.cardholders = response.data;
         this.cardholderIsPresent = true;
@@ -45,12 +45,17 @@ export class CardholdersListComponent implements OnInit {
     this.siteName = site.displayName;
     this.siteId = site.siteId;
 
-    this.accessService.get(`api/cardholders/site/${this.siteId}`).subscribe({
+    let request = this.siteName !== "All Sites" ? {
+      siteId: this.siteId
+    } : "";
+
+    this.accessService.getWithParams(`api/cardholders`, request).subscribe({
       next: (response) => {
         this.cardholders = response.data;
         this.cardholderIsPresent = true;
       },
       error: (response) => {
+        
         this.cardholderIsPresent = false;
       }
     })

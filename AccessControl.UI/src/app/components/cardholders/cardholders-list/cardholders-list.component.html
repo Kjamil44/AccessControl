@@ -15,6 +15,7 @@
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Site</th>
             <th>Card Number</th>
             <th>Activation Date</th>
             <th>Expiration Date</th>
@@ -25,6 +26,7 @@
         <tr [pSelectableRow]="cardholder">
             <td>{{ cardholder.firstName }}</td>
             <td>{{ cardholder.lastName }}</td>
+            <td>{{ cardholder.siteName }}</td>
             <td>{{ cardholder.cardNumber }}</td>
             <td>{{ cardholder.activationDate | date:'dd MMMM YYYY' }}</td>
             <td>{{ cardholder.expirationDate | date:'dd MMMM YYYY' }}</td>
@@ -36,7 +38,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="6" class="no-data-text">No cardholders available</td>
+            <td colspan="7" class="no-data-text">No cardholders available</td>
         </tr>
     </ng-template>
 </p-table>

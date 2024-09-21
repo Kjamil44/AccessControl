@@ -16,6 +16,7 @@ namespace AccessControl.API.Handlers.AllowedUserHandlers
         }
         public class Response
         {
+            public Guid ScheduleId { get; set; }
         }
         public class Handler : IRequestHandler<Request, Response>
         {
@@ -40,10 +41,16 @@ namespace AccessControl.API.Handlers.AllowedUserHandlers
                     throw new CoreException("No Assigned Users for Cardholder");
 
                 allowedUser.ScheduleId = request.ScheduleId;
+
                 lockFromDb.EditAccessToLock(allowedUser);
+
                 _session.Store(lockFromDb);
                 await _session.SaveChangesAsync();
-                return new Response();
+
+                return new Response
+                {
+                    ScheduleId = allowedUser.ScheduleId
+                };
             }
         }
     }

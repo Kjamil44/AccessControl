@@ -13,8 +13,8 @@ namespace AccessControl.API.Controllers
         private readonly ISender _sender;
         public CardholderController(ISender sender) => _sender = sender;
 
-        [HttpGet("site/{siteId}")]
-        public async Task<GetCardholders.Response> GetCardholders([FromRoute] Guid siteId) => await _sender.Send(new GetCardholders.Request { SiteId = siteId });
+        [HttpGet]
+        public async Task<GetCardholders.Response> GetCardholders([FromQuery] GetCardholders.Request request) => await _sender.Send(request ?? new GetCardholders.Request());
 
         [HttpGet("{cardholderId}")]
         public async Task<GetCardholder.Response> GetCardholder(Guid cardholderId) => await _sender.Send(new GetCardholder.Request { CardholderId = cardholderId });
