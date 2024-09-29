@@ -9,8 +9,9 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   styleUrls: ['./create-schedule.component.css']
 })
 export class CreateScheduleComponent implements OnInit {
-  siteId: any;
+  sites: any[] = [];
   formGroup: FormGroup;
+  showInfo: boolean = false;
 
   daysInWeek: any[] = [
     { name: "Monday", value: "Monday" },
@@ -31,22 +32,32 @@ export class CreateScheduleComponent implements OnInit {
       displayName: new FormControl(),
       days: new FormControl([]),
       startTime: new FormControl(),
-      endTime: new FormControl()
+      endTime: new FormControl(),
+      site: new FormControl(),
+      isTemporary: new FormControl<boolean>(false)
     });
   }
 
   ngOnInit(): void {
-    this.siteId = this.config.data.siteId;
+    this.accessService.get('api/sites').subscribe({
+      next: (response) => {
+        this.sites = response.data;
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    })
   }
 
   createSchedule() {
     const selectedDays = this.formGroup.value.days.map((day: any) => day.value);
     const data = {
-      "siteId": this.siteId,
+      "siteId": this.formGroup.value.site.siteId,
       "displayName": this.formGroup.value.displayName,
       "listOfDays": selectedDays,
       "startTime": this.formGroup.value.startTime,
-      "endTime": this.formGroup.value.endTime
+      "endTime": this.formGroup.value.endTime,
+      "isTemporary":  this.formGroup.value.isTemporary
     };
     this.accessService.create(`api/schedules/create`, data)
       .subscribe({

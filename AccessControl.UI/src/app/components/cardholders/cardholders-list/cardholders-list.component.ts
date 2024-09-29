@@ -12,7 +12,6 @@ import { EditCardholderComponent } from '../edit-cardholder/edit-cardholder.comp
   providers: [DialogService]
 })
 export class CardholdersListComponent implements OnInit {
-  sites: any[] = []
   cardholders: any[] = []
   cardholderIsPresent: boolean = false;
   siteId: any = localStorage.getItem("selectedSiteId")
@@ -21,15 +20,6 @@ export class CardholdersListComponent implements OnInit {
   constructor(private accessService: AccessControlService, private dialog: DialogService) { }
 
   ngOnInit(): void {
-    this.accessService.get('api/sites').subscribe({
-      next: (response) => {
-        this.sites = response.data;
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-
     this.accessService.getWithParams(`api/cardholders`, "").subscribe({
       next: (response) => {
         this.cardholders = response.data;
@@ -65,11 +55,8 @@ export class CardholdersListComponent implements OnInit {
     const ref = this.dialog.open(CreateCardholderComponent, {
       header: 'Create Carholder',
       width: '610px',
-      height: '400px',
+      height: '500px',
       baseZIndex: 10000,
-      data: {
-        siteId: this.siteId
-      }
     });
 
     ref.onClose.subscribe(() => {
@@ -79,7 +66,7 @@ export class CardholdersListComponent implements OnInit {
 
   onEdit(cardholder: any) {
     const ref = this.dialog.open(EditCardholderComponent, {
-      header: `Edit Cardholder from ${this.siteName}`,
+      header: `Edit Cardholder from ${cardholder.siteName}`,
       width: '610px',
       height: '440px',
       baseZIndex: 10000,
@@ -101,7 +88,7 @@ export class CardholdersListComponent implements OnInit {
       baseZIndex: 10000,
       data: {
         cardholder: cardholder,
-        siteName: this.siteName
+        siteName: cardholder.siteName
       }
     });
 

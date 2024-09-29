@@ -65,6 +65,16 @@ export class AllowedUsersLockComponent implements OnInit {
               this.accessService.createErrorNotification("No Schedules found, please Add Schedule for Lock!");
             }
           });
+          
+          this.accessService.getWithParams(`api/cardholders`, request).subscribe({
+            next: (response) => {
+              this.cardholders = response.data;
+              
+            },
+            error: (response) => {
+              this.accessService.createErrorNotification("No Cardholders found, please Add Cardholder for Lock!");
+            }
+          });
         },
         error: (response) => {
           this.accessService.createErrorNotification("Incorrect api endpoint");
@@ -74,19 +84,7 @@ export class AllowedUsersLockComponent implements OnInit {
   }
 
   chooseNewUser() {
-    let request = {
-      siteId: this.siteId
-    };
-
-    this.accessService.getWithParams(`api/cardholders`, request).subscribe({
-      next: (response) => {
-        this.cardholders = response.data;
-        this.show = true;
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification("No Cardholders found, please Add Cardholder for Lock!");
-      }
-    });
+    this.show = true;
   }
 
   editUser(user: any) {

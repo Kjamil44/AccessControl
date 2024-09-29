@@ -62,6 +62,8 @@ import { AuthInterceptor } from './services/auth-interceptor';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { SidebarModule } from 'primeng/sidebar';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @NgModule({
   declarations: [
@@ -129,7 +131,9 @@ import { SidebarModule } from 'primeng/sidebar';
     DividerModule,
     AvatarGroupModule,
     AvatarModule,
-    SidebarModule
+    SidebarModule,
+    RadioButtonModule,
+    ToggleButtonModule
   ],
   providers: [
     MessageService,

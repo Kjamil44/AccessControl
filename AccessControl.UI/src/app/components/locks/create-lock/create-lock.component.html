@@ -7,6 +7,15 @@
                     placeholder="Lock Name">
             </div>
         </div>
+        <div class="form-row">
+            <label for="site">Site</label>
+            <p-dropdown 
+                    [options]="sites" 
+                    formControlName="site"
+                    optionLabel="displayName" 
+                    placeholder="Select a Site"
+                    appendTo="body"/>       
+        </div>
     </form>
 </div>
 <div class="p-dialog-footer">

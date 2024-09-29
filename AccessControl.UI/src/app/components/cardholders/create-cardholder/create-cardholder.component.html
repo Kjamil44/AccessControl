@@ -16,6 +16,16 @@
                 <input id="cardNumber" type="text" pInputText formControlName="cardNumber" class="form-control"
                     placeholder="Card Number">
             </div>
+            <div class="form-row">
+                <label for="site" class="site">Site</label>
+                <p-dropdown 
+                        [options]="sites" 
+                        formControlName="site"
+                        optionLabel="displayName" 
+                        placeholder="Select a Site"
+                        class="form-control"
+                        appendTo="body"/>       
+            </div>
         </div>
     </form>
 </div>

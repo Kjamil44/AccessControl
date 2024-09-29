@@ -9,6 +9,7 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   styleUrls: ['./create-lock.component.css']
 })
 export class CreateLockComponent implements OnInit {
+  sites: any[] = [];
   siteId: any
   formGroup: FormGroup;
 
@@ -17,16 +18,24 @@ export class CreateLockComponent implements OnInit {
     private config: DynamicDialogConfig) {
     this.formGroup = new FormGroup({
       displayName: new FormControl(),
+      site: new FormControl()
     });
   }
 
   ngOnInit(): void {
-    this.siteId = this.config.data.siteId;
+    this.accessService.get('api/sites').subscribe({
+      next: (response) => {
+        this.sites = response.data;
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    })
   }
 
   createLock() {
     const data = {
-      "siteId": this.siteId,
+      "siteId": this.formGroup.value.site.siteId,
       "displayName": this.formGroup.value.displayName,
     }
 

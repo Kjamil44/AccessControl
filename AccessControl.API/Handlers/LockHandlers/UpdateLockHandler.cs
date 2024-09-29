@@ -9,7 +9,6 @@ namespace AccessControl.API.Handlers.LockHandlers
     {
         public class Request : IRequest<Response>
         {
-            public Guid SiteId { get; set; }
             public Guid LockId { get; set; }
             public string DisplayName { get; set; }
         }

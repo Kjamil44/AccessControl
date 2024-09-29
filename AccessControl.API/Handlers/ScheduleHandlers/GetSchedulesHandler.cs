@@ -3,6 +3,8 @@ using AccessControl.API.Models;
 using AccessControl.API.Helper;
 using Marten;
 using MediatR;
+using AccessControl.API.Enums;
+using Microsoft.OpenApi.Extensions;
 
 namespace AccessControl.API.Handlers.ScheduleHandlers
 {
@@ -20,6 +22,7 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                 public List<string> ListOfDays { get; set; } = new List<string>();
                 public string DisplayName { get; set; }
                 public string SiteName { get; set; }
+                public string Type { get; set; }
                 public DateTime StartTime { get; set; }
                 public DateTime EndTime { get; set; }
                 public DateTime DateModified { get; set; }
@@ -52,6 +55,7 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                         ScheduleId = x.ScheduleId,
                         DisplayName = x.DisplayName,
                         SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId).DisplayName,
+                        Type = x.Type.GetDisplayName(),
                         StartTime = x.StartTime,
                         EndTime = x.EndTime,
                         ListOfDays = HelperClass.MapWeekDays(x.ListOfDays),

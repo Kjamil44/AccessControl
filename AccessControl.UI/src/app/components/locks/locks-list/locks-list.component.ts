@@ -14,7 +14,6 @@ import { Router } from '@angular/router';
   providers: [DialogService]
 })
 export class LocksListComponent implements OnInit {
-  sites: any[] = []
   locks: any[] = []
   lockIsPresent: boolean = false;
   siteId: any = localStorage.getItem("selectedSiteId"); 
@@ -25,15 +24,6 @@ export class LocksListComponent implements OnInit {
   constructor(private accessService: AccessControlService, private dialog: DialogService, private router: Router) { }
 
   ngOnInit(): void {
-    this.accessService.get('api/sites').subscribe({
-      next: (response) => {
-        this.sites = response.data;
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-
     this.accessService.getWithParams(`api/locks`, "").subscribe({
       next: (response) => {
         this.locks = response.data;
@@ -70,11 +60,8 @@ export class LocksListComponent implements OnInit {
     const ref = this.dialog.open(CreateLockComponent, {
       header: 'Create Lock',
       width: '610px',
-      height: '250px',
+      height: '320px',
       baseZIndex: 10000,
-      data: {
-        siteId: this.siteId
-      }
     });
 
     ref.onClose.subscribe(() => {

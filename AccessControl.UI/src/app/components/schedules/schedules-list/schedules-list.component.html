@@ -13,6 +13,7 @@
         <tr>
             <th>Schedule Name</th>
             <th>Site</th>
+            <th>Type</th>
             <th>Week Days</th>
             <th>Start Time</th>
             <th>End Time</th>
@@ -23,9 +24,10 @@
         <tr [pSelectableRow]="schedule">
             <td>{{ schedule.displayName }}</td>
             <td>{{ schedule.siteName }}</td>
+            <td>{{ schedule.type }}</td>
             <td>{{ schedule.listOfDays }}</td>
-            <td>{{ schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss' }}</td>
-            <td>{{ schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss'}}</td>
+            <td> {{ schedule.type === 'Standard' ? (schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss') : (schedule.startTime | date:'HH:mm') }}</td>
+            <td> {{ schedule.type === 'Standard' ? (schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss') : (schedule.endTime | date:'HH:mm') }}</td>
             <td>
                 <p-button label="Edit"  size="small" (click)="onEdit(schedule)"></p-button>
                 <p-button label="Delete" size="small" (click)="onDelete(schedule)" severity="danger" class="delete-button"></p-button>
@@ -34,7 +36,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="6" class="no-data-text">No schedules available</td>
+            <td colspan="7" class="no-data-text">No schedules available</td>
         </tr>
     </ng-template>
 </p-table>

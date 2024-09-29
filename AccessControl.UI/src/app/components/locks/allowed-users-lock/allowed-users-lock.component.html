@@ -1,46 +1,83 @@
-<div class="card flex justify-content-center">
-    <p-card header="Edit Access to Lock - {{ lock?.displayName }}">
-        <form [formGroup]="formGroup" class="p-fluid" style="max-height: 500px; overflow-y: auto;">
-            <div class="p-field">
-                <label class="labelFirst">Assigned Users</label>
-                <div *ngIf="userIsPresent; else noUsersTemplate">
-                    <ol class="p-list">
-                        <li *ngFor="let user of users" [class.selected]="isUserSelected(user)">
-                            <span><b>Cardholder:</b> {{ user.cardholderName }}, <b>Schedule: </b></span>
-                            <div class="dropdown-container" *ngIf="user.editing; else viewModeTemplate">
-                                <p-dropdown [options]="schedules" [formControl]="user.scheduleControl" optionLabel="displayName" placeholder="Select a Schedule"></p-dropdown>
-                            </div>
-                            <ng-template #viewModeTemplate>
-                                <span> {{ user.scheduleName }}</span>
-                            </ng-template>
-                            <div class="actions">
-                                <p-button *ngIf="!user.editing" icon="pi pi-pencil" (click)="editUser(user)"></p-button>
-                                <p-button *ngIf="!user.editing" icon="pi pi-trash" severity="danger" (click)="removeUser(user, $event)"></p-button>
-                                <p-button *ngIf="user.editing" icon="pi pi-check" severity="success" (click)="saveEdit(user)"></p-button>
-                                <p-button *ngIf="user.editing" icon="pi pi-times" (click)="cancelEdit(user)"></p-button>
-                            </div>
-                        </li>
-                    </ol>
+<div class="card-container" style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <!-- Left Side: Original p-card for editing access -->
+    <div class="left-card" style="flex: 1; margin-right: 20px;">
+        <p-card header="Edit Access to Lock - {{ lock?.displayName }}">
+            <form [formGroup]="formGroup" class="p-fluid" style="max-height: 500px; overflow-y: auto;">
+                <div class="p-field">
+                    <label *ngIf="userIsPresent" class="labelFirst">Assigned Users</label>
+                    <div *ngIf="userIsPresent; else noUsersTemplate">
+                        <ol class="p-list">
+                            <li *ngFor="let user of users" [class.selected]="isUserSelected(user)">
+                                <span><b>Cardholder:</b> {{ user.cardholderName }}, <b>Schedule: </b></span>
+                                <div class="dropdown-container" *ngIf="user.editing; else viewModeTemplate">
+                                    <p-dropdown [options]="schedules" [formControl]="user.scheduleControl"
+                                        optionLabel="displayName" placeholder="Select a Schedule"></p-dropdown>
+                                </div>
+                                <ng-template #viewModeTemplate>
+                                    <span> {{ user.scheduleName }}</span>
+                                </ng-template>
+                                <div class="actions">
+                                    <p-button *ngIf="!user.editing" icon="pi pi-pencil"
+                                        (click)="editUser(user)"></p-button>
+                                    <p-button *ngIf="!user.editing" icon="pi pi-trash" severity="danger"
+                                        (click)="removeUser(user, $event)"></p-button>
+                                    <p-button *ngIf="user.editing" icon="pi pi-check" severity="success"
+                                        (click)="saveEdit(user)"></p-button>
+                                    <p-button *ngIf="user.editing" icon="pi pi-times"
+                                        (click)="cancelEdit(user)"></p-button>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                    <ng-template #noUsersTemplate>
+                        <h3>No users have been assigned</h3>
+                    </ng-template>
                 </div>
-                <ng-template #noUsersTemplate>
-                    <h3>No users have been assigned</h3>
-                </ng-template>
+                <hr />
+                <div class="p-field">
+                    <p-button [disabled]="clicked" label="Choose New User" (click)="chooseNewUser()"></p-button>
+                    <div *ngIf="show" class="assign-new-user">
+                        <label>Choose a Cardholder from <strong>{{ siteDisplayName }}</strong></label>
+                        <p-dropdown [options]="cardholders" formControlName="cardholder" optionLabel="fullName"
+                            placeholder="Select a Cardholder"></p-dropdown>
+                        <br>
+                        <label>Choose a Schedule from <strong>{{ siteDisplayName }}</strong></label>
+                        <p-dropdown [options]="schedules" formControlName="schedule" optionLabel="displayName"
+                            placeholder="Select a Schedule"></p-dropdown>
+                        <br>
+                        <p-button label="Assign New User" severity="success" (click)="assignUserToLock()"></p-button>
+                    </div>
+                </div>
+                <hr>
+                <p-button label="Back" severity="secondary" (click)="closeDialog()"></p-button>
+            </form>
+        </p-card>
+    </div>
+
+    <!-- Right Side: Independent p-card for site-wide cardholder and schedule info -->
+    <div class="right-card" style="width: 400px;">
+        <p-card header="Available Cardholders and Schedules on Site - {{ siteDisplayName }}">
+            <div class="p-list">
+                <h4><i class="pi pi-users"></i> Cardholders</h4>
+                <ul>
+                    <li *ngFor="let cardholder of cardholders" class="cardholder-item">
+                        <i class="pi pi-id-card"></i>
+                        <span><b>Full Name:</b> {{ cardholder.fullName }} <b>Card Number:</b> {{ cardholder.cardNumber }}</span><br>
+                    </li>
+                </ul>
             </div>
             <hr />
-            <div class="p-field">
-                <p-button [disabled]="clicked" label="Choose New User" (click)="chooseNewUser()"></p-button>
-                <div *ngIf="show" class="assign-new-user">
-                    <label>Choose a Cardholder from <strong>{{ siteDisplayName }}</strong></label>
-                    <p-dropdown [options]="cardholders" formControlName="cardholder" optionLabel="fullName" placeholder="Select a Cardholder"></p-dropdown>
-                    <br>
-                    <label>Choose a Schedule from <strong>{{ siteDisplayName }}</strong></label>
-                    <p-dropdown [options]="schedules" formControlName="schedule" optionLabel="displayName" placeholder="Select a Schedule"></p-dropdown>
-                    <br>
-                    <p-button label="Assign New User" severity="success" (click)="assignUserToLock()"></p-button>
-                </div>
+            <div class="p-list">
+                <h4><i class="pi pi-calendar-clock"></i> Schedules</h4>
+                <ul>
+                    <li *ngFor="let schedule of schedules" class="schedule-item">
+                        <i class="pi pi-clock"></i>
+                        <span><b>Schedule:</b> {{ schedule.displayName }}</span> <br>
+                        <span class="schedule-weekdays"><b>Weekdays:</b> {{ schedule.listOfDays.join(', ') }}</span> <br>
+                        <span class="schedule-time"><b>Time:</b> {{ schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss' }} - {{ schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss' }}</span>
+                    </li>
+                </ul>
             </div>
-            <hr>
-            <p-button label="Back" severity="secondary" (click)="closeDialog()"></p-button>
-        </form>
-    </p-card>
+        </p-card>
+    </div>
 </div>

@@ -35,3 +35,88 @@ li::marker {
 .assign-new-user {
     margin: 15px;
 }
+
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.left-card {
+    flex: 0 0 90%; /* Adjust the left card width to 60% */
+
+    margin-right: 20px;
+}
+
+.right-card {
+    flex: 0 0 800px; /* Fixed width of 400px */
+    max-width: 700px; /* Ensures right card stays at 400px */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .card-container {
+        flex-direction: column;
+    }
+
+    .left-card, .right-card {
+        width: 100%;
+        margin-right: 0;
+        margin-top: 20px;
+    }
+}
+
+.p-list {
+    padding: 15px;
+}
+
+.p-list h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.cardholder-item,
+.schedule-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f5f5f5; /* Light background for better contrast */
+    margin-bottom: 10px; /* Spacing between items */
+}
+
+.cardholder-item:hover,
+.schedule-item:hover {
+    background-color: #e0e0e0; /* Slightly darker on hover */
+}
+
+.cardholder-item i,
+.schedule-item i {
+    margin-right: 10px; /* Space between icon and text */
+    color: #007bff; /* Optional: customize icon color */
+}
+
+.cardholder-item span,
+.schedule-item span {
+    display: block; /* Display each info line in a block for clarity */
+    margin-bottom: 5px; /* Space between lines */
+}
+
+.schedule-item span {
+    display: block; /* Ensures each item is on a new line */
+    margin-bottom: 5px; /* Space between lines */
+}
+
+.schedule-weekdays,
+.schedule-time {
+    margin-left: 20px; /* Optional: add left margin for better alignment */
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 600px) {
+    .p-list {
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+}

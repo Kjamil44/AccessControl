@@ -7,31 +7,92 @@
                     placeholder="Schedule Name">
             </div>
             <div class="form-row">
-                <label class="label-days" for="days">Week Days</label>
-                <p-multiSelect [options]="daysInWeek" 
-                               formControlName="days" 
-                               optionLabel="name" 
-                               placeholder="Select Days"
-                               appendTo="body"
-                               class="multiselect-days" >
-                </p-multiSelect>
+                <label class="type" for="isTemporary">Type 
+                    <span class="info-icon">
+                        <i class="pi pi-question-circle" 
+                           pTooltip="Temporary: This type is a short-term schedule. The user can select specific time slots only, making it suitable for brief engagements. 
+                                     Standard: This type is the default schedule. It allows the user to choose weekdays, precise dates, and time slots, providing more flexibility for recurring or long-term planning."
+                           tooltipPosition="right"></i>
+                    </span>
+                </label>
+                <p-toggleButton 
+                    formControlName="isTemporary" 
+                    onLabel="Temporary" 
+                    offLabel="Standard" />
             </div>
             <div class="form-row">
-                <label for="startTime">Start Time</label>
-                <p-calendar formControlName="startTime" 
-                            [showTime]="true" 
-                            [iconDisplay]="'input'" 
-                            [showIcon]="true"
-                            appendTo="body"   />
+                <label for="site" class="site">Site</label>
+                <p-dropdown 
+                        [options]="sites" 
+                        formControlName="site"
+                        optionLabel="displayName" 
+                        placeholder="Select a Site"
+                        class="form-control"
+                        appendTo="body"/>       
             </div>
-            <div class="form-row">
-                <label for="endTime">End Time</label>
-                <p-calendar formControlName="endTime" 
-                            [showTime]="true" 
-                            [iconDisplay]="'input'" 
-                            [showIcon]="true"
-                            appendTo="body"   />
+            <div *ngIf="!formGroup.value.isTemporary">
+                <div class="form-row">
+                    <label for="days">Week Days</label>
+                    <p-multiSelect [options]="daysInWeek" 
+                                   formControlName="days" 
+                                   optionLabel="name" 
+                                   placeholder="Select Days"
+                                   appendTo="body"
+                                   class="multiselect-days" >
+                    </p-multiSelect>
+                </div>
+                <div class="form-row">
+                    <label for="startTime">Start Time</label>
+                    <p-calendar formControlName="startTime" 
+                                [showTime]="true" 
+                                [iconDisplay]="'input'" 
+                                [showIcon]="true"
+                                appendTo="body"   />
+                </div>
+                <div class="form-row">
+                    <label for="endTime">End Time</label>
+                    <p-calendar formControlName="endTime" 
+                                [showTime]="true" 
+                                [iconDisplay]="'input'" 
+                                [showIcon]="true"
+                                appendTo="body"   />
+                </div>
             </div>
+            <div *ngIf="formGroup.value.isTemporary">
+                <div class="form-row">
+                    <label for="startTime">Start Time</label>
+                    <p-calendar formControlName="startTime" 
+                                [showTime]="true" 
+                                [iconDisplay]="'input'" 
+                                [showIcon]="true"
+                                appendTo="body"   
+                                [timeOnly]="true"
+                                inputId="templatedisplay">
+                                <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+                                    <i 
+                                        class="pi pi-clock pointer-events-none pointer-events-none" 
+                                        (click)="clickCallBack($event)"></i>
+                                </ng-template>>
+                    </p-calendar>
+                </div>
+                <div class="form-row">
+                    <label for="endTime">End Time</label>
+                    <p-calendar formControlName="endTime" 
+                                [showTime]="true" 
+                                [iconDisplay]="'input'" 
+                                [showIcon]="true"
+                                appendTo="body"   
+                                [timeOnly]="true"
+                                inputId="templatedisplay">
+                                <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+                                    <i 
+                                        class="pi pi-clock pointer-events-none pointer-events-none" 
+                                        (click)="clickCallBack($event)"></i>
+                                </ng-template>>                   
+                    </p-calendar>
+                </div>
+            </div>
+           
         </div>
     </form>
 </div>

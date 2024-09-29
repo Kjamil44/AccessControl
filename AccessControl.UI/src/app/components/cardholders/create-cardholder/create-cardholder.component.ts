@@ -9,8 +9,7 @@ import { AccessControlService } from 'src/app/services/access-control.service';
   styleUrls: ['./create-cardholder.component.css']
 })
 export class CreateCardholderComponent implements OnInit  {
-
-  siteId: any
+  sites: any[] = [];
   formGroup: FormGroup;
 
   constructor(private accessService: AccessControlService,
@@ -19,17 +18,25 @@ export class CreateCardholderComponent implements OnInit  {
     this.formGroup = new FormGroup({
       firstName: new FormControl(),
       lastName: new FormControl(),
-      cardNumber: new FormControl()
+      cardNumber: new FormControl(),
+      site: new FormControl()
     });
   }
 
   ngOnInit(): void {
-    this.siteId = this.config.data.siteId;
+    this.accessService.get('api/sites').subscribe({
+      next: (response) => {
+        this.sites = response.data;
+      },
+      error: (response) => {
+        this.accessService.createErrorNotification(response.message)
+      }
+    })
   }
 
   createCardholder() {
     const data = {
-      "siteId": this.siteId,
+      "siteId": this.formGroup.value.site.siteId,
       "firstName": this.formGroup.value.firstName,
       "lastName": this.formGroup.value.lastName,
       "cardNumber": this.formGroup.value.cardNumber

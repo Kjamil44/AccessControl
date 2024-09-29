@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon'
   providers: [DialogService]
 })
 export class SchedulesListComponent implements OnInit {
-  sites: any[] = []
   schedules: any[] = []
   scheduleIsPresent: boolean = false;
   siteId: any = localStorage.getItem("selectedSiteId")
@@ -23,15 +22,6 @@ export class SchedulesListComponent implements OnInit {
   constructor(private accessService: AccessControlService, private dialog: DialogService) { }
 
   ngOnInit(): void {
-    this.accessService.get('api/sites').subscribe({
-      next: (response) => {
-        this.sites = response.data;
-      },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
-
     this.accessService.getWithParams(`api/schedules`, "").subscribe({
       next: (response) => {
         this.schedules = response.data;
@@ -66,11 +56,8 @@ export class SchedulesListComponent implements OnInit {
     const ref = this.dialog.open(CreateScheduleComponent, {
       header: 'Create Schedule',
       width: '610px',
-      height: '500px',
+      height: '680px',
       baseZIndex: 10000,
-      data: {
-        siteId: this.siteId
-      }
     });
 
     ref.onClose.subscribe(() => {
@@ -80,7 +67,7 @@ export class SchedulesListComponent implements OnInit {
 
   onEdit(schedule: any) {
     const ref = this.dialog.open(EditScheduleComponent, {
-      header: `Edit Schedule from ${this.siteName}`,
+      header: `Edit Schedule from ${schedule.siteName}`,
       width: '610px',
       height: '520px',
       baseZIndex: 10000,
@@ -102,7 +89,7 @@ export class SchedulesListComponent implements OnInit {
       baseZIndex: 10000,
       data: {
         schedule: schedule,
-        siteName: this.siteName
+        siteName: schedule.siteName
       }
     });
 

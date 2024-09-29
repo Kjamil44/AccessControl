@@ -10,6 +10,11 @@
     gap: 1rem;
 }
 
+.form-row .site{
+    position: relative;
+    right: 50px;
+}
+
 label {
     width: 90px; /* Adjust width as necessary */
 }
@@ -17,3 +22,8 @@ label {
 input {
     flex: 1;
 }
+
+::ng-deep .surface-border .p-dropdown{
+    left: 52px;  
+    width: 350px;
+  }
