@@ -10,6 +10,11 @@
     gap: 1rem !important;
 }
 
+.form-row .type {
+    position: relative;
+    right: 52px;
+}
+
 label {
     width: 90px; /* Adjust width as necessary */
 }
@@ -19,7 +24,6 @@ input{
 }
 
 .label-days{
-    right: 21px;
     margin-right: 80px;
     position: relative;
 }
@@ -30,10 +34,15 @@ input{
 }
 
 .multiselect-days{
-    left: 60px;
+    right: 21px;
+    position: relative;
 }
 
 p{
     font-size:x-small;
 }
 
+::ng-deep .surface-border .p-togglebutton {
+    left: 52px;
+    width: 350px;
+}

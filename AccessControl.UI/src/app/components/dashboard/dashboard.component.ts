@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { ChartOptions, ChartData } from 'chart.js';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { CreateSiteComponent } from '../sites/create-site/create-site.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  providers: [DialogService]
 })
 export class DashboardComponent implements OnInit {
   data!: TreeNode[];
@@ -25,7 +28,9 @@ export class DashboardComponent implements OnInit {
   scheduleCount!: number;
   accessCount!: number;
 
-  constructor(private accessService: AccessControlService) {}
+  showNoSitesDialog: boolean = false;
+
+  constructor(private accessService: AccessControlService, private dialog: DialogService) {}
 
   ngOnInit() {
     this.accessService.getForDashboard('info').subscribe({
@@ -63,6 +68,8 @@ export class DashboardComponent implements OnInit {
     this.cardholderCount = data.numberOfCardholders;
     this.scheduleCount = data.numberOfSchedules;
     this.accessCount = data.cardholdersWithAccess;
+
+    this.showNoSitesDialog = this.sitesCount == 0;
 
     const siteLabels = data.allSites.map((site: any) => site.displayName);
     const siteData = data.allSites.map((site: any) => site.data);
@@ -102,5 +109,18 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
+  }
+
+  navigateToCreateSite(){
+    const ref = this.dialog.open(CreateSiteComponent, {
+      header: 'Create Site',
+      width: '600px',
+      height: '250px',
+      baseZIndex: 10000
+    });
+
+    ref.onClose.subscribe(() => {
+      this.ngOnInit();
+    });
   }
 }

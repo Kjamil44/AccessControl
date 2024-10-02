@@ -5,7 +5,6 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateScheduleComponent } from '../create-schedule/create-schedule.component';
 import { DeleteScheduleComponent } from '../delete-schedule/delete-schedule.component';
 import { EditScheduleComponent } from '../edit-schedule/edit-schedule.component';
-import { MatIconModule } from '@angular/material/icon'
 
 @Component({
   selector: 'app-schedules-list',
@@ -28,6 +27,7 @@ export class SchedulesListComponent implements OnInit {
         this.scheduleIsPresent = true;
       },
       error: (response) => {
+        console.log(response)
         this.scheduleIsPresent = false;
       }
     })
@@ -69,7 +69,7 @@ export class SchedulesListComponent implements OnInit {
     const ref = this.dialog.open(EditScheduleComponent, {
       header: `Edit Schedule from ${schedule.siteName}`,
       width: '610px',
-      height: '520px',
+      height: '600px',
       baseZIndex: 10000,
       data: {
         schedule: schedule

@@ -56,28 +56,52 @@
 
     <!-- Right Side: Independent p-card for site-wide cardholder and schedule info -->
     <div class="right-card" style="width: 400px;">
-        <p-card header="Available Cardholders and Schedules on Site - {{ siteDisplayName }}">
+        <p-card header="Available Cardholders and Schedules on Site - {{ siteDisplayName }}" styleClass="p-datatable-sm">
+            <!-- Cardholders Section -->
             <div class="p-list">
-                <h4><i class="pi pi-users"></i> Cardholders</h4>
-                <ul>
-                    <li *ngFor="let cardholder of cardholders" class="cardholder-item">
-                        <i class="pi pi-id-card"></i>
-                        <span><b>Full Name:</b> {{ cardholder.fullName }} <b>Card Number:</b> {{ cardholder.cardNumber }}</span><br>
-                    </li>
-                </ul>
+                <h4><i class="pi pi-id-card"></i> Cardholders</h4>
+                <p-table [value]="cardholders" class="cardholder-table">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Card Number</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-cardholder>
+                        <tr>
+                            <td>{{ cardholder.fullName }}</td>
+                            <td>{{ cardholder.cardNumber }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
+    
             <hr />
+    
+            <!-- Schedules Section -->
             <div class="p-list">
                 <h4><i class="pi pi-calendar-clock"></i> Schedules</h4>
-                <ul>
-                    <li *ngFor="let schedule of schedules" class="schedule-item">
-                        <i class="pi pi-clock"></i>
-                        <span><b>Schedule:</b> {{ schedule.displayName }}</span> <br>
-                        <span class="schedule-weekdays"><b>Weekdays:</b> {{ schedule.listOfDays.join(', ') }}</span> <br>
-                        <span class="schedule-time"><b>Time:</b> {{ schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss' }} - {{ schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss' }}</span>
-                    </li>
-                </ul>
+                <p-table [value]="schedules" class="schedule-table">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Schedule</th>
+                            <th>Type</th>
+                            <th>Weekdays</th>
+                            <th>Time</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-schedule>
+                        <tr>
+                            <td>{{ schedule.displayName }}</td>
+                            <td>{{ schedule.type }}</td>
+                            <td>{{ schedule.listOfDays.join(', ') }}</td>
+                            <td *ngIf="schedule.type === 'Standard'">{{ schedule.startTime | date:'dd.MM.YYYY, HH:mm' }} - {{ schedule.endTime | date:'dd.MM.YYYY, HH:mm' }}</td>
+                            <td *ngIf="schedule.type === 'Temporary'">{{ schedule.startTime | date:'HH:mm' }} - {{ schedule.endTime | date:'HH:mm' }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
         </p-card>
     </div>
+    
 </div>

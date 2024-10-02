@@ -10,6 +10,7 @@ namespace AccessControl.API.Handlers.LockHandlers
     {
         public class Request : IRequest<Response>
         {
+            public Guid UserId { get; set; }
             public Guid? SiteId { get; set; }
         }
         public class Response
@@ -21,7 +22,7 @@ namespace AccessControl.API.Handlers.LockHandlers
                 public int NumberOfAllowedUsers { get; set; }
                 public DateTime DateCreated { get; set; }
                 public DateTime DateModified { get; set; }
-                public string SiteName { get; set; }
+                public string? SiteName { get; set; }
             }
             public IEnumerable<Item> Items { get; set; } = Enumerable.Empty<Item>();
             
@@ -33,8 +34,15 @@ namespace AccessControl.API.Handlers.LockHandlers
             public Handler(IDocumentSession session) => _session = session;
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
+                var sites = await _session.Query<Site>()
+                    .Where(x => x.UserId == request.UserId)
+                    .ToListAsync();
+
+                var siteIds = sites.Select(x => x.SiteId).ToArray();
+
                 var locks = await _session
                     .Query<Lock>()
+                    .Where(x => x.SiteId.IsOneOf(siteIds))
                     .ToListAsync();
 
                 if (!locks.Any())
@@ -42,9 +50,6 @@ namespace AccessControl.API.Handlers.LockHandlers
 
                 if (request.SiteId.HasValue)
                     locks = locks.Where(x => x.SiteId == request.SiteId).ToList();
-
-                var sites = await _session.Query<Site>()
-                    .ToListAsync();
 
                 var cardholders = await _session.Query<Cardholder>()
                     .ToListAsync();
@@ -61,7 +66,7 @@ namespace AccessControl.API.Handlers.LockHandlers
                         NumberOfAllowedUsers = x.AllowedUsers.Count(),
                         DateCreated = x.DateCreated,
                         DateModified = x.DateModified,
-                        SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId).DisplayName
+                        SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId)?.DisplayName
                     })
                 };
             }

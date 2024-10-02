@@ -16,7 +16,11 @@ namespace AccessControl.API.Controllers
         public LockController(ISender sender) => _sender = sender;
 
         [HttpGet]
-        public async Task<GetLocks.Response> GetLocks([FromQuery] GetLocks.Request request) => await _sender.Send(request ?? new GetLocks.Request());
+        public async Task<GetLocks.Response> GetLocks([FromQuery] GetLocks.Request request, Guid userId)
+        {
+            request.UserId = userId;
+            return await _sender.Send(request);
+        }
 
         [HttpGet("{lockId}")]
         public async Task<GetLock.Response> GetLock(Guid lockId) => await _sender.Send(new GetLock.Request { LockId = lockId });

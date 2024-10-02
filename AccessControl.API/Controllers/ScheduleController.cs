@@ -14,7 +14,11 @@ namespace AccessControl.API.Controllers
         public ScheduleController(ISender sender) => _sender = sender;
 
         [HttpGet]
-        public async Task<GetSchedules.Response> GetSchedules([FromQuery] GetSchedules.Request request) => await _sender.Send(request ?? new GetSchedules.Request());
+        public async Task<GetSchedules.Response> GetSchedules([FromQuery] GetSchedules.Request request, Guid userId)
+        {
+            request.UserId = userId;
+            return await _sender.Send(request);
+        }
 
         [HttpGet("{scheduleId}")]
         public async Task<GetSchedule.Response> GetSchedule(Guid scheduleId) => await _sender.Send(new GetSchedule.Request { ScheduleId = scheduleId });

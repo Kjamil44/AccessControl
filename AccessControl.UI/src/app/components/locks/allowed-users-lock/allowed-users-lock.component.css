@@ -120,3 +120,16 @@ li::marker {
         padding: 10px; /* Adjust padding for smaller screens */
     }
 }
+
+.cardholder-table, .schedule-table {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.p-table {
+    margin-bottom: 20px;
+}
+
+.p-table td, .p-table th {
+    padding: 8px;
+}

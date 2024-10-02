@@ -23,6 +23,8 @@ export class EditScheduleComponent implements OnInit {
 
   formGroup: FormGroup;
 
+  isTemporary: boolean = false;
+
   constructor(private dialogref: DynamicDialogRef,
     private accessService: AccessControlService,
     private config: DynamicDialogConfig) {
@@ -30,7 +32,8 @@ export class EditScheduleComponent implements OnInit {
       displayName: new FormControl(),
       days: new FormControl([]),
       startTime: new FormControl(),
-      endTime: new FormControl()
+      endTime: new FormControl(),
+      isTemporary: new FormControl<boolean>(false)
     });
   }
 
@@ -45,6 +48,9 @@ export class EditScheduleComponent implements OnInit {
     this.formGroup.controls['days'].setValue(selectedDays);
     this.formGroup.controls['startTime'].setValue(new Date(this.schedule.startTime));
     this.formGroup.controls['endTime'].setValue(new Date(this.schedule.endTime));
+    this.formGroup.controls['isTemporary'].setValue(this.schedule.type);
+    this.isTemporary = this.schedule.type === 'Temporary';
+    this.formGroup.controls['isTemporary'].disable();
   }
 
   editSchedule() {

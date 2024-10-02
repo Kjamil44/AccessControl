@@ -11,7 +11,6 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 export class CreateScheduleComponent implements OnInit {
   sites: any[] = [];
   formGroup: FormGroup;
-  showInfo: boolean = false;
 
   daysInWeek: any[] = [
     { name: "Monday", value: "Monday" },

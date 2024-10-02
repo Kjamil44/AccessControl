@@ -13,11 +13,11 @@
          selectionMode="single">
     <ng-template pTemplate="header">
         <tr>
-            <th>Lock Name</th>
-            <th>Site</th>
-            <th>Users with Access</th>
-            <th>Date Created</th>
-            <th>Date Modified</th>
+            <th pSortableColumn="displayName">Lock Name <p-sortIcon field="displayName" /></th>
+            <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
+            <th pSortableColumn="numberOfAllowedUsers">Users with Access <p-sortIcon field="numberOfAllowedUsers" /></th>
+            <th pSortableColumn="dateCreated">Date Created <p-sortIcon field="dateCreated" /></th>
+            <th pSortableColumn="dateModified">Date Modified <p-sortIcon field="dateModified" /></th>
             <th  style="width: 12.5rem;">Actions</th>
         </tr>
     </ng-template>

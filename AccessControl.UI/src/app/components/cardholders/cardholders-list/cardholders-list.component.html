@@ -13,12 +13,12 @@
          selectionMode="single">
     <ng-template pTemplate="header">
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Site</th>
-            <th>Card Number</th>
-            <th>Activation Date</th>
-            <th>Expiration Date</th>
+            <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName" /></th>
+            <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName" /></th>
+            <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
+            <th pSortableColumn="cardNumber">Card Number <p-sortIcon field="cardNumber" /></th>
+            <th pSortableColumn="activationDate">Activation Date <p-sortIcon field="activationDate" /></th>
+            <th pSortableColumn="expirationDate">Expiration Date <p-sortIcon field="expirationDate" /></th>
             <th  style="width: 12.5rem;">Actions</th>
         </tr>
     </ng-template>

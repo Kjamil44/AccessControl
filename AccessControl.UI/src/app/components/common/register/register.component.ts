@@ -38,6 +38,7 @@ export class RegisterComponent {
             this.router.navigate([`/dashboard`]);
           },
           error: error => {
+            console.log(error)
             this.accessService.createErrorNotification(error.message);
             //navigate
           }

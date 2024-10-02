@@ -14,7 +14,11 @@ namespace AccessControl.API.Controllers
         public CardholderController(ISender sender) => _sender = sender;
 
         [HttpGet]
-        public async Task<GetCardholders.Response> GetCardholders([FromQuery] GetCardholders.Request request) => await _sender.Send(request ?? new GetCardholders.Request());
+        public async Task<GetCardholders.Response> GetCardholders([FromQuery] GetCardholders.Request request, Guid userId)
+        {
+            request.UserId = userId;
+            return await _sender.Send(request);
+        }
 
         [HttpGet("{cardholderId}")]
         public async Task<GetCardholder.Response> GetCardholder(Guid cardholderId) => await _sender.Send(new GetCardholder.Request { CardholderId = cardholderId });
@@ -26,11 +30,11 @@ namespace AccessControl.API.Controllers
         public async Task<UpdateCardholder.Response> UpdateCardholder(Guid cardholderId, [FromBody] UpdateCardholder.Request newCardholder)
         {
             newCardholder.CardholderId = cardholderId;
-            return await _sender.Send(newCardholder);   
+            return await _sender.Send(newCardholder);
         }
 
         [HttpDelete("delete/{cardholderId}")]
         public async Task<DeleteCardholder.Response> DeleteCardholder(Guid cardholderId) =>
-               await _sender.Send(new DeleteCardholder.Request {CardholderId = cardholderId});
+               await _sender.Send(new DeleteCardholder.Request { CardholderId = cardholderId });
     }
 }

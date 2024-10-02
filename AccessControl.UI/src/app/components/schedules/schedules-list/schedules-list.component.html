@@ -11,12 +11,12 @@
     [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
     <ng-template pTemplate="header">
         <tr>
-            <th>Schedule Name</th>
-            <th>Site</th>
-            <th>Type</th>
-            <th>Week Days</th>
-            <th>Start Time</th>
-            <th>End Time</th>
+            <th pSortableColumn="displayName">Schedule Name <p-sortIcon field="displayName" /></th>
+            <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
+            <th pSortableColumn="type">Type <p-sortIcon field="type" /></th>
+            <th pSortableColumn="listOfDays">Week Days <p-sortIcon field="listOfDays" /></th>
+            <th pSortableColumn="startTime">Start Time <p-sortIcon field="startTime" /></th>
+            <th pSortableColumn="endTime">End Time <p-sortIcon field="endTime" /></th>
             <th style="width: 12.5rem;">Actions</th>
         </tr>
     </ng-template>
