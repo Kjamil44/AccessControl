@@ -20,12 +20,14 @@ namespace AccessControl.API.Handlers.LockHandlers
                 public Guid LockId { get; set; }
                 public string DisplayName { get; set; }
                 public int NumberOfAllowedUsers { get; set; }
+                public int NumberOfCardholdersPerSite { get; set; }
+                public int NumberOfSchedulesPerSite { get; set; }
                 public DateTime DateCreated { get; set; }
                 public DateTime DateModified { get; set; }
                 public string? SiteName { get; set; }
             }
             public IEnumerable<Item> Items { get; set; } = Enumerable.Empty<Item>();
-            
+
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -61,9 +63,11 @@ namespace AccessControl.API.Handlers.LockHandlers
                 {
                     Items = locks.Select(x => new Response.Item
                     {
-                        LockId = x.LockId, 
+                        LockId = x.LockId,
                         DisplayName = x.DisplayName,
                         NumberOfAllowedUsers = x.AllowedUsers.Count(),
+                        NumberOfCardholdersPerSite = cardholders.Where(y => y.SiteId == x.SiteId).Count(),
+                        NumberOfSchedulesPerSite = schedules.Where(y => y.SiteId == x.SiteId).Count(),
                         DateCreated = x.DateCreated,
                         DateModified = x.DateModified,
                         SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId)?.DisplayName

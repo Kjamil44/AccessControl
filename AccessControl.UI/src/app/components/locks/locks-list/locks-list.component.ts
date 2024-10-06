@@ -86,7 +86,12 @@ export class LocksListComponent implements OnInit {
   }
 
   onEditAccess(lock: any) {
-    this.router.navigate([`/locks/edit-access/${lock.lockId}`]);
+    if(lock.numberOfCardholdersPerSite < 1 || lock.numberOfSchedulesPerSite < 1){
+      this.accessService.createInfoNotification("At least one Cardholder and one Schedule are required to assign access to the Lock.");
+    }
+    else{
+      this.router.navigate([`/locks/edit-access/${lock.lockId}`]);
+    }
   }
 
   onDelete(lock: any) {

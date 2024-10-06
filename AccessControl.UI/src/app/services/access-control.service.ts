@@ -92,4 +92,12 @@ export class AccessControlService {
       detail: message
     });
   }
+
+  public createInfoNotification(message: any) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Info',
+      detail: message
+    });
+  }
 }
