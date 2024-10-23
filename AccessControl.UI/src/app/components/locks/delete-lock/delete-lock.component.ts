@@ -18,7 +18,7 @@ export class DeleteLockComponent implements OnInit {
 
   ngOnInit(): void {
     this.lock = this.config.data.lock;
-    this.siteName = this.config.data.siteName;
+    this.siteName = this.lock.siteName;
   }
 
   deleteLock() {

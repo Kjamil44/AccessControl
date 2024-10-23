@@ -18,7 +18,7 @@ export class DeleteCardholderComponent implements OnInit {
 
   ngOnInit(): void {
     this.cardholder = this.config.data.cardholder;
-    this.siteName = this.config.data.siteName;
+    this.siteName = this.cardholder.siteName;
   }
 
 

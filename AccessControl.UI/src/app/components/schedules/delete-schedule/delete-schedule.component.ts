@@ -18,7 +18,7 @@ export class DeleteScheduleComponent  implements OnInit  {
 
   ngOnInit(): void {
     this.schedule = this.config.data.schedule;
-    this.siteName = this.config.data.siteName;
+    this.siteName = this.schedule.siteName;
   }
   
   deleteSchedule() {
