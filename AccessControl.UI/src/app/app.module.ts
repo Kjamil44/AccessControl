@@ -32,7 +32,6 @@ import { SchedulesListComponent } from './components/schedules/schedules-list/sc
 import { CreateScheduleComponent } from './components/schedules/create-schedule/create-schedule.component';
 import { EditScheduleComponent } from './components/schedules/edit-schedule/edit-schedule.component';
 import { DeleteScheduleComponent } from './components/schedules/delete-schedule/delete-schedule.component';
-import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { MatIconModule } from '@angular/material/icon';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ButtonModule } from 'primeng/button';
@@ -64,6 +63,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { SidebarModule } from 'primeng/sidebar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { FooterComponent } from './components/common/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +89,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     SiteSelectorComponent,
     DashboardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +110,6 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    DateInputsModule,
     MatIconModule,
     NotificationModule,
     ButtonModule,

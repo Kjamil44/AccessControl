@@ -7,6 +7,7 @@ body.main-content {
     background-color: #56a6f7;
     color: #333;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding-bottom: 5rem;
 }
 
 body.main-content .title {

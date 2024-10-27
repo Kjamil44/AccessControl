@@ -1,0 +1,40 @@
+:host {
+    display: block;
+    width: 100vw !important;
+    margin-left: calc((100% - 100vw) / 2);
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 1rem 0;
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;  /* Stretch across the entire viewport */
+    padding: 0 2rem;  /* Adjust if you want space from the sides */
+}
+
+.footer-content nav a {
+    color: #007bff;
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+.footer-content nav a:hover {
+    text-decoration: underline;
+}
+
+.footer-right {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Optional: margin above footer */
+.footer-spacing {
+    padding-bottom: 3rem;
+}
