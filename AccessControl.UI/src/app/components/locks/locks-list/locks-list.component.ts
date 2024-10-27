@@ -95,10 +95,11 @@ export class LocksListComponent implements OnInit {
   }
 
   onDelete(lock: any) {
+    let adjustableHeight = lock.numberOfAllowedUsers > 0 ? '300px' : '250px';
     const ref = this.dialog.open(DeleteLockComponent, {
       header: 'Delete Lock',
       width: '470px',
-      height: '250px',
+      height: adjustableHeight,
       baseZIndex: 10000,
       data: {
         lock: lock,

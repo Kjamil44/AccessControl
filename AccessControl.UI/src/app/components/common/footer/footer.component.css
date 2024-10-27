@@ -2,7 +2,7 @@
     display: block;
     width: 100vw !important;
     margin-left: calc((100% - 100vw) / 2);
-    background-color: #f0f0f0;
+    background-color: #cac9c9;
     color: #333;
     padding: 1rem 0;
     position: fixed !important;
