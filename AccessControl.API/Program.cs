@@ -29,9 +29,10 @@ builder.Services.AddSwaggerGen(c =>
     c.DescribeAllParametersInCamelCase();
 });
 
+var dbConnectionString = builder.Configuration["ConnectionString"];
 //database
-builder.Services.AddSingleton(x => MartenFactory.CreateDocumentStore())
-                .AddScoped(x => MartenFactory.CreateDocumentSession());
+builder.Services.AddSingleton(x => MartenFactory.CreateDocumentStore(dbConnectionString))
+                .AddScoped(x => MartenFactory.CreateDocumentSession(dbConnectionString));
 
 //JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
