@@ -1,5 +1,4 @@
-﻿using Baseline;
-using Marten.Schema;
+﻿using Marten.Schema;
 
 namespace AccessControl.API.Models
 {

@@ -1,6 +1,6 @@
 ﻿using AccessControl.API.Models;
 using Marten;
-using Weasel.Core;
+using SessionOptions = Marten.Services.SessionOptions;
 
 namespace AccessControl.API
 {
@@ -15,17 +15,18 @@ namespace AccessControl.API
 
                 opts.Schema.For<User>();
 
-                opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
+                opts.AutoCreateSchemaObjects = JasperFx.AutoCreate.CreateOrUpdate;
             });
             return store;
         }
         public static IDocumentSession CreateDocumentSession(string connectionString)
         {
             var store = CreateDocumentStore(connectionString);
-            var docTracking = DocumentTracking.IdentityOnly;
+            var sessionOptions = new SessionOptions();
+            sessionOptions.Tracking = DocumentTracking.IdentityOnly;
             //options.Tracking = DocumentTracking.IdentityOnly;
             //options.IsolationLevel = IsolationLevel.ReadCommitted;
-            return store.OpenSession(docTracking);
+            return store.OpenSession(sessionOptions);
         }
     }
 }

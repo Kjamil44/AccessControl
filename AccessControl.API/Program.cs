@@ -2,7 +2,6 @@ using AccessControl.API;
 using AccessControl.API.Filters;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,7 +10,10 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddMediatR(typeof(Program));
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 builder.Services.AddControllers(options =>
 {
