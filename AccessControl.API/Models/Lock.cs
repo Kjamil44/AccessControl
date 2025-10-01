@@ -1,4 +1,5 @@
 ﻿using Marten.Schema;
+using System.Text.Json.Serialization;
 
 namespace AccessControl.API.Models
 {
@@ -9,10 +10,12 @@ namespace AccessControl.API.Models
         [Identity]
         public Guid LockId { get; set; }
         public string DisplayName { get; set; }
-        public IEnumerable<AllowedUser> AllowedUsers => _allowedUsers;
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
-        private readonly IList<AllowedUser> _allowedUsers = new List<AllowedUser>();
+
+        [JsonInclude]
+        public List<AllowedUser> AllowedUsers { get; private set; } = [];
+
         public Lock(Guid siteId, string displayName)
         {
             SiteId = siteId;
@@ -39,17 +42,17 @@ namespace AccessControl.API.Models
         }
         private void AddAccess(AllowedUser allowedUser)
         {
-            _allowedUsers.Add(allowedUser);
+            AllowedUsers.Add(allowedUser);
         }
         private void EditAccess(AllowedUser allowedUser)
         {
-            _allowedUsers
+            AllowedUsers
                 .FirstOrDefault(x => x.CardholderId == allowedUser.CardholderId)
                 .ScheduleId = allowedUser.ScheduleId;
         }
         private void RemoveAccess(AllowedUser allowedUser)
         {
-            _allowedUsers.Remove(allowedUser);  
+            AllowedUsers.Remove(allowedUser);  
         }
     }
     public class AllowedUser
