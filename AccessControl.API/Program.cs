@@ -2,6 +2,8 @@ using AccessControl.API;
 using AccessControl.API.Filters;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
+using AccessControl.Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -64,6 +66,24 @@ builder.Services.AddScoped<IValidationService, ValidationService>();
 // HttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+//TODO: RabbitMQ Configuration
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["Rabbit:Host"] ?? "localhost", builder.Configuration["Rabbit:VHost"] ?? "/", h =>
+        {
+            h.Username(builder.Configuration["Rabbit:User"] ?? "admin");
+            h.Password(builder.Configuration["Rabbit:Pass"] ?? "admin");
+        });
+        cfg.UseInMemoryOutbox();
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -86,6 +106,13 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
+});
+
+//TODO: Signal R
+app.MapPost("/doors/{doorId:guid}/unlock", async (Guid doorId, IPublishEndpoint bus) =>
+{
+    await bus.Publish(new UnlockDoor(doorId, Guid.NewGuid(), "api"));
+    return Results.Accepted();
 });
 
 app.Run();
