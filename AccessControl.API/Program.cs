@@ -2,6 +2,7 @@ using AccessControl.API;
 using AccessControl.API.Filters;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
+using AccessControl.API.Services.Infrastructure.Messaging;
 using AccessControl.Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,6 +67,9 @@ builder.Services.AddScoped<IValidationService, ValidationService>();
 // HttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+//MassTransit Domain Event Dispatcher
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
 //TODO: RabbitMQ Configuration
 builder.Services.AddMassTransit(x =>
 {
@@ -109,10 +113,10 @@ app.UseEndpoints(endpoints =>
 });
 
 //TODO: Signal R
-app.MapPost("/doors/{doorId:guid}/unlock", async (Guid doorId, IPublishEndpoint bus) =>
-{
-    await bus.Publish(new UnlockDoor(doorId, Guid.NewGuid(), "api"));
-    return Results.Accepted();
-});
+//app.MapPost("/doors/{doorId:guid}/unlock", async (Guid doorId, IPublishEndpoint bus) =>
+//{
+//    await bus.Publish(new UnlockDoor(doorId, Guid.NewGuid(), "api"));
+//    return Results.Accepted();
+//});
 
 app.Run();

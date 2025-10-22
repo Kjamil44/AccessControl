@@ -4,23 +4,18 @@ using AccessControl.Messaging.Consumers;
 Host.CreateDefaultBuilder(args)
   .ConfigureServices((ctx, services) =>
   {
-      var cfg = ctx.Configuration;
       services.AddMassTransit(x =>
       {
-          x.SetKebabCaseEndpointNameFormatter();
-          x.AddConsumer<UnlockDoorConsumer>();
-          //TODO: ADD MORE CONSUMERS HERE
+          x.AddConsumer<TriggerLockConsumer>();
 
-          x.UsingRabbitMq((context, bus) =>
+          x.UsingRabbitMq((context, cfg) =>
           {
-              bus.Host(cfg["Rabbit:Host"] ?? "localhost", cfg["Rabbit:VHost"] ?? "/", h =>
+              cfg.Host("localhost", "/", h => { h.Username("guest"); h.Password("guest"); });
+
+              cfg.ReceiveEndpoint("trigger-lock", e =>
               {
-                  h.Username(cfg["Rabbit:User"] ?? "admin");
-                  h.Password(cfg["Rabbit:Pass"] ?? "admin");
+                  e.ConfigureConsumer<TriggerLockConsumer>(context);
               });
-              bus.UseMessageRetry(r => r.Incremental(5, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5)));
-              bus.UseInMemoryOutbox();
-              bus.ConfigureEndpoints(context);
           });
       });
   })

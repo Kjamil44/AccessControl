@@ -1,15 +1,18 @@
-﻿using AccessControl.API.Handlers.LockHandlers;
-using AccessControl.API.Handlers.AllowedUserHandlers;
+﻿using AccessControl.API.Handlers.AllowedUserHandlers;
+using AccessControl.API.Handlers.LockHandlers;
+using AccessControl.API.Handlers.LockUnlockHandlers;
 using AccessControl.API.Models;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using static AccessControl.API.Handlers.LockUnlockHandlers.TriggerLockDoorHandler;
 
 namespace AccessControl.API.Controllers
 {
     [Route("api/locks")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
+    [AllowAnonymous]
     public class LockController : ControllerBase
     {
         private readonly ISender _sender;
@@ -38,6 +41,7 @@ namespace AccessControl.API.Controllers
         [HttpDelete("delete/{lockId}")]
         public async Task<DeleteLock.Response> DeleteLock(Guid lockId) =>
                await _sender.Send(new DeleteLock.Request { LockId = lockId });
+
         //Allow User To Lock
         [HttpPost("{lockId}/assign")]
         public async Task<AssignAccessToLock.Response> AssignAccessToLock(Guid lockId, [FromBody] AllowedUser allowedUser) =>
@@ -50,5 +54,10 @@ namespace AccessControl.API.Controllers
         [HttpDelete("{lockId}/remove/{cardholderId}")]
         public async Task<RemoveAccessFromLock.Response> RemoveAccessFromLock(Guid siteId, Guid lockId, Guid cardholderId) =>
                await _sender.Send(new RemoveAccessFromLock.Request { SiteId = siteId, LockId = lockId, CardholderId = cardholderId });
+
+        //Lock/Unlock Door Triggers
+        [HttpPut("{lockId}/lock/{cardnumber}")]
+        public async Task<TriggerLockDoor.Response> TriggerLockDoor(Guid lockId, int cardNumber) =>
+              await _sender.Send(new TriggerLockDoor.Request { LockId = lockId, CardNumber = cardNumber });
     }
 }
