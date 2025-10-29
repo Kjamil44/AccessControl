@@ -24,7 +24,7 @@ namespace AccessControl.API.Handlers.LockHandlers
                 public Guid ScheduleId { get; set; }
                 public string CardholderName { get; set; }
                 public string ScheduleName { get; set; }
-                public List<Days> ScheduleDays { get; set; } = new List<Days>();
+                public List<DayOfWeek> ScheduleDays { get; set; } = new List<DayOfWeek>();
             }
             public IEnumerable<Item> AssignedUsers { get; set; }
             public DateTime DateCreated { get; set; }

@@ -16,6 +16,7 @@ namespace AccessControl.API.Models
         public DateTime ExpirationDate { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
+
         public Cardholder(Guid siteId, string firstName, string lastName, int cardNumber)
         {
             SiteId = siteId;
@@ -27,12 +28,18 @@ namespace AccessControl.API.Models
             DateCreated = DateTime.UtcNow;
             DateModified = DateTime.UtcNow;
         }
+
         public void UpdateCardholder(string firstName, string lastName, int cardNumber)
         {
             FirstName = firstName;
             LastName = lastName;
             CardNumber = cardNumber;
             DateModified = DateTime.UtcNow;
+        }
+
+        public bool ValidateCardNumber(int cardNumber)
+        {
+            return CardNumber == cardNumber;
         }
     }
 }

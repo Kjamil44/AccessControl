@@ -25,7 +25,6 @@ export class CreateScheduleComponent implements OnInit {
   constructor(
     private accessService: AccessControlService,
     private dialogref: DynamicDialogRef,
-    private config: DynamicDialogConfig
   ) {
     this.formGroup = new FormGroup({
       displayName: new FormControl(),

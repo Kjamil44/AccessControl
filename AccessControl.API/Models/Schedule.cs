@@ -1,5 +1,4 @@
 ﻿using AccessControl.API.Enums;
-using Marten.Events.CodeGeneration;
 using Marten.Schema;
 
 namespace AccessControl.API.Models
@@ -10,7 +9,7 @@ namespace AccessControl.API.Models
         public Guid SiteId { get; set; }
         [Identity]
         public Guid ScheduleId { get; set; }
-        public IEnumerable<Days> ListOfDays { get; set; } = new List<Days>();
+        public IEnumerable<DayOfWeek> ListOfDays { get; set; } = [];
         public ScheduleType Type { get; set; }
         public string DisplayName { get; set; }
         public DateTime StartTime { get; set; }
@@ -19,7 +18,7 @@ namespace AccessControl.API.Models
         public DateTime DateModified { get; set; }
 
 
-        public void CreateStandard(Guid siteId, IEnumerable<Days> listOfDays, string displayName, DateTime startTime, DateTime endTime)
+        public void CreateStandard(Guid siteId, IEnumerable<DayOfWeek> listOfDays, string displayName, DateTime startTime, DateTime endTime)
         {
             SiteId = siteId;
             ListOfDays = listOfDays;
@@ -41,7 +40,7 @@ namespace AccessControl.API.Models
             DateModified = DateTime.UtcNow;
         }
 
-        public void UpdateSchedule(IEnumerable<Days> listOfDays, string displayName, DateTime startTime, DateTime endTime)
+        public void UpdateSchedule(IEnumerable<DayOfWeek> listOfDays, string displayName, DateTime startTime, DateTime endTime)
         {
             ListOfDays = listOfDays;
             DisplayName = displayName;

@@ -56,8 +56,11 @@ namespace AccessControl.API.Controllers
                await _sender.Send(new RemoveAccessFromLock.Request { SiteId = siteId, LockId = lockId, CardholderId = cardholderId });
 
         //Lock/Unlock Door Triggers
-        [HttpPut("{lockId}/lock/{cardnumber}")]
-        public async Task<TriggerLockDoor.Response> TriggerLockDoor(Guid lockId, int cardNumber) =>
-              await _sender.Send(new TriggerLockDoor.Request { LockId = lockId, CardNumber = cardNumber });
+        [HttpPut("{lockId}/lock")]
+        public async Task<TriggerLockDoor.Response> TriggerLockDoor(Guid lockId, [FromBody] TriggerLockDoor.Request request)
+        {
+            request.LockId = lockId;
+            return await _sender.Send(request);
+        }
     }
 }
