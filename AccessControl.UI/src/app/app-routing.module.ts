@@ -27,7 +27,7 @@ const routes: Routes = [
     component: LocksListComponent
   },
   {
-    path: 'locks/edit-access/:id',
+    path: 'locks/:id/edit-access',
     component: AllowedUsersLockComponent
   },
   {

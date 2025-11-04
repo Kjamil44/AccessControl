@@ -1,6 +1,6 @@
 ﻿using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
-using AccessControl.API.Helper;
+using AccessControl.API.Helpers;
 using Marten;
 using MediatR;
 using AccessControl.API.Enums;

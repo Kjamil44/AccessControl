@@ -3,7 +3,6 @@ using AccessControl.API.Filters;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
 using AccessControl.API.Services.Infrastructure.Messaging;
-using AccessControl.Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

@@ -1,6 +1,4 @@
-﻿using AccessControl.API.Enums;
-
-namespace AccessControl.API.Helper
+﻿namespace AccessControl.API.Helpers
 {
     public class HelperClass
     {

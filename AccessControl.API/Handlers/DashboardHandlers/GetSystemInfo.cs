@@ -1,7 +1,7 @@
 ﻿using AccessControl.API.Models;
 using Marten;
 using MediatR;
-using static AccessControl.API.Helper.HelperClass;
+using static AccessControl.API.Helpers.HelperClass;
 
 namespace AccessControl.API.Handlers.DashboardHandlers
 {

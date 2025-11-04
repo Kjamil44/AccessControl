@@ -6,6 +6,9 @@ import { DeleteLockComponent } from '../delete-lock/delete-lock.component';
 import { EditLockComponent } from '../edit-lock/edit-lock.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api'; // ⬅️ add this
+// If you have a Lock/Unlock dialog component, import it too:
+// import { LockUnlockComponent } from '../lock-unlock/lock-unlock.component';
 
 @Component({
   selector: 'app-locks-list',
@@ -14,46 +17,47 @@ import { Router } from '@angular/router';
   providers: [DialogService]
 })
 export class LocksListComponent implements OnInit {
-  locks: any[] = []
-  lockIsPresent: boolean = false;
-  siteId: any = localStorage.getItem("selectedSiteId"); 
-  siteName: any = localStorage.getItem("selectedSiteName"); 
+  locks: any[] = [];
+  lockIsPresent = false;
+  siteId: any = localStorage.getItem('selectedSiteId');
+  siteName: any = localStorage.getItem('selectedSiteName');
   site: any;
 
-
-  constructor(private accessService: AccessControlService, private dialog: DialogService, private router: Router) { }
+  constructor(
+    private accessService: AccessControlService,
+    private dialog: DialogService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.accessService.getWithParams(`api/locks`, "").subscribe({
+    this.accessService.getWithParams(`api/locks`, '').subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
       },
-      error: (response) => {
+      error: () => {
         this.lockIsPresent = false;
       }
-    })
+    });
   }
 
   showLocks(site: any) {
-    this.siteName = site.displayName; 
+    this.siteName = site.displayName;
     this.siteId = site.siteId;
     this.site = site;
 
-    let request = this.siteName !== "All Sites" ? {
-      siteId: this.siteId
-    } : "";
+    const request = this.siteName !== 'All Sites' ? { siteId: this.siteId } : '';
 
     this.accessService.getWithParams(`api/locks`, request).subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
       },
-      error: (response) => {
-        this.locks = []
+      error: () => {
+        this.locks = [];
         this.lockIsPresent = false;
       }
-    })
+    });
   }
 
   onCreate() {
@@ -61,12 +65,10 @@ export class LocksListComponent implements OnInit {
       header: 'Create Lock',
       width: '610px',
       height: '320px',
-      baseZIndex: 10000,
+      baseZIndex: 10000
     });
 
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 
   onEdit(lock: any) {
@@ -75,41 +77,59 @@ export class LocksListComponent implements OnInit {
       width: '610px',
       height: '250px',
       baseZIndex: 10000,
-      data: {
-        lock: lock
-      }
+      data: { lock }
     });
 
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 
   onEditAccess(lock: any) {
-    if(lock.numberOfCardholdersPerSite < 1 || lock.numberOfSchedulesPerSite < 1){
-      this.accessService.createInfoNotification("At least one Cardholder and one Schedule are required to assign access to the Lock.");
-    }
-    else{
-      this.router.navigate([`/locks/edit-access/${lock.lockId}`]);
+    if (lock.numberOfCardholdersPerSite < 1 || lock.numberOfSchedulesPerSite < 1) {
+      this.accessService.createInfoNotification(
+        'At least one Cardholder and one Schedule are required to assign access to the Lock.'
+      );
+    } else {
+      this.router.navigate([`/locks/${lock.lockId}/edit-access`]);
     }
   }
 
   onDelete(lock: any) {
-    let adjustableHeight = lock.numberOfAllowedUsers > 0 ? '300px' : '250px';
+    const adjustableHeight = lock.numberOfAllowedUsers > 0 ? '300px' : '250px';
     const ref = this.dialog.open(DeleteLockComponent, {
       header: 'Delete Lock',
       width: '470px',
       height: adjustableHeight,
       baseZIndex: 10000,
-      data: {
-        lock: lock,
-        siteName: this.siteName
-      }
+      data: { lock, siteName: this.siteName }
     });
 
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 
+  // NEW: Toggle Lock/Unlock dialog
+  onToggleLock(lock: any) {
+    // If you have a dedicated dialog component:
+    // const ref = this.dialog.open(LockUnlockComponent, {
+    //   header: lock.isLocked ? 'Unlock Lock' : 'Lock Lock',
+    //   width: '480px',
+    //   baseZIndex: 10000,
+    //   data: { lock }
+    // });
+    // ref.onClose.subscribe((didChange) => { if (didChange) this.ngOnInit(); });
+
+    // If you prefer to call an API directly instead of a dialog, stub shown below:
+    const nextState = !lock.isLocked;
+    this.accessService.create(`api/locks/${lock.lockId}/toggle`, { isLocked: nextState })
+      .subscribe({
+        next: () => {
+          lock.isLocked = nextState; // optimistic UI
+          this.accessService.createSuccessNotification(
+            `Lock ${nextState ? 'locked' : 'unlocked'} successfully.`
+          );
+        },
+        error: () => {
+          this.accessService.createErrorNotification('Failed to toggle lock.');
+        }
+      });
+  }
 }

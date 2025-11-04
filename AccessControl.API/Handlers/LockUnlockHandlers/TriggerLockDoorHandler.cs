@@ -76,6 +76,10 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
 
                     var allowedUserSchedule = await _session.LoadAsync<Schedule>(allowedUser.ScheduleId);
 
+                    if (allowedUserSchedule.StartTime >= request.MomentaryTriggerDate &&
+                        allowedUserSchedule.EndTime <= request.MomentaryTriggerDate)
+                        throw new CoreException($"The Lock triggered date is not corresponding to the Allowed User's dedicated Schedule.");
+
                     if (allowedUserSchedule.Type == ScheduleType.Standard)
                     {
                         var dayOfTrigger = request.MomentaryTriggerDate.DayOfWeek;
@@ -83,10 +87,6 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                         if (!triggerIsInAllowedUserWeekDay)
                             throw new CoreException($"The Lock triggered week day is not corresponding to the Allowed User's dedicated Schedule.");
                     }
-
-                    if (allowedUserSchedule.StartTime >= request.MomentaryTriggerDate &&
-                        allowedUserSchedule.EndTime <= request.MomentaryTriggerDate)
-                        throw new CoreException($"The Lock triggered date is not corresponding to the Allowed User's dedicated Schedule.");
                 }
             }
         }
