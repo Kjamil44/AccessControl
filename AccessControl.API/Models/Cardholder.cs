@@ -11,13 +11,13 @@ namespace AccessControl.API.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => $"{FirstName.Trim()} {LastName.Trim()}";
-        public int CardNumber { get; set; }
+        public string CardNumber { get; set; }
         public DateTime ActivationDate { get; set; }
         public DateTime ExpirationDate { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateModified { get; set; }
 
-        public Cardholder(Guid siteId, string firstName, string lastName, int cardNumber)
+        public Cardholder(Guid siteId, string firstName, string lastName, string cardNumber)
         {
             SiteId = siteId;
             FirstName = firstName;
@@ -29,7 +29,7 @@ namespace AccessControl.API.Models
             DateModified = DateTime.UtcNow;
         }
 
-        public void UpdateCardholder(string firstName, string lastName, int cardNumber)
+        public void UpdateCardholder(string firstName, string lastName, string cardNumber)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -37,7 +37,7 @@ namespace AccessControl.API.Models
             DateModified = DateTime.UtcNow;
         }
 
-        public bool ValidateCardNumber(int cardNumber)
+        public bool ValidateCardNumber(string cardNumber)
         {
             return CardNumber == cardNumber;
         }

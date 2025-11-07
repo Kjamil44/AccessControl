@@ -64,7 +64,7 @@ namespace AccessControl.API.Models
             AllowedUsers.Remove(allowedUser);  
         }
 
-        public void TriggerLock(int cardNumber)
+        public void TriggerLock(string cardNumber)
         {
             DateModified = DateTime.UtcNow;
             IsLocked = true;

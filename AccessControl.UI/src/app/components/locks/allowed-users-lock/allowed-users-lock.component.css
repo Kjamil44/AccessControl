@@ -3,6 +3,17 @@
     font-weight: bold;
 }
 
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 600;
+}
+
+.card-header .pi {
+    font-size: 1.1rem;
+}
+
 ul {
     list-style-type: disc !important;
 }
@@ -44,15 +55,19 @@ li::marker {
 }
 
 .left-card {
-    flex: 0 0 90%; /* Adjust the left card width to 60% */
+    flex: 0 0 90%;
+    /* Adjust the left card width to 60% */
 
     margin-right: 20px;
 }
 
 .right-card {
-    flex: 0 0 800px; /* Fixed width of 400px */
-    max-width: 700px; /* Ensures right card stays at 400px */
-    flex-shrink: 0; /* Prevent shrinking */
+    flex: 0 0 800px;
+    /* Fixed width of 400px */
+    max-width: 700px;
+    /* Ensures right card stays at 400px */
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 /* Responsive design */
@@ -61,7 +76,8 @@ li::marker {
         flex-direction: column;
     }
 
-    .left-card, .right-card {
+    .left-card,
+    .right-card {
         width: 100%;
         margin-right: 0;
         margin-top: 20px;
@@ -83,45 +99,57 @@ li::marker {
     align-items: center;
     padding: 10px;
     border-radius: 5px;
-    background-color: #f5f5f5; /* Light background for better contrast */
-    margin-bottom: 10px; /* Spacing between items */
+    background-color: #f5f5f5;
+    /* Light background for better contrast */
+    margin-bottom: 10px;
+    /* Spacing between items */
 }
 
 .cardholder-item:hover,
 .schedule-item:hover {
-    background-color: #e0e0e0; /* Slightly darker on hover */
+    background-color: #e0e0e0;
+    /* Slightly darker on hover */
 }
 
 .cardholder-item i,
 .schedule-item i {
-    margin-right: 10px; /* Space between icon and text */
-    color: #007bff; /* Optional: customize icon color */
+    margin-right: 10px;
+    /* Space between icon and text */
+    color: #007bff;
+    /* Optional: customize icon color */
 }
 
 .cardholder-item span,
 .schedule-item span {
-    display: block; /* Display each info line in a block for clarity */
-    margin-bottom: 5px; /* Space between lines */
+    display: block;
+    /* Display each info line in a block for clarity */
+    margin-bottom: 5px;
+    /* Space between lines */
 }
 
 .schedule-item span {
-    display: block; /* Ensures each item is on a new line */
-    margin-bottom: 5px; /* Space between lines */
+    display: block;
+    /* Ensures each item is on a new line */
+    margin-bottom: 5px;
+    /* Space between lines */
 }
 
 .schedule-weekdays,
 .schedule-time {
-    margin-left: 20px; /* Optional: add left margin for better alignment */
+    margin-left: 20px;
+    /* Optional: add left margin for better alignment */
 }
 
 /* Responsive styling for smaller screens */
 @media (max-width: 600px) {
     .p-list {
-        padding: 10px; /* Adjust padding for smaller screens */
+        padding: 10px;
+        /* Adjust padding for smaller screens */
     }
 }
 
-.cardholder-table, .schedule-table {
+.cardholder-table,
+.schedule-table {
     margin-top: 15px;
     width: 100%;
 }
@@ -130,6 +158,7 @@ li::marker {
     margin-bottom: 20px;
 }
 
-.p-table td, .p-table th {
+.p-table td,
+.p-table th {
     padding: 8px;
 }

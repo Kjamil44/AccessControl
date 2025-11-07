@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AccessControlService } from 'src/app/services/access-control.service';
-import { AllowedUsersLockComponent } from '../allowed-users-lock/allowed-users-lock.component';
 import { CreateLockComponent } from '../create-lock/create-lock.component';
 import { DeleteLockComponent } from '../delete-lock/delete-lock.component';
 import { EditLockComponent } from '../edit-lock/edit-lock.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/api'; // ⬅️ add this
-// If you have a Lock/Unlock dialog component, import it too:
-// import { LockUnlockComponent } from '../lock-unlock/lock-unlock.component';
+import { LockUnlockComponent } from '../lock-unlock/lock-unlock.component';
 
 @Component({
   selector: 'app-locks-list',
@@ -106,30 +103,15 @@ export class LocksListComponent implements OnInit {
     ref.onClose.subscribe(() => this.ngOnInit());
   }
 
-  // NEW: Toggle Lock/Unlock dialog
-  onToggleLock(lock: any) {
-    // If you have a dedicated dialog component:
-    // const ref = this.dialog.open(LockUnlockComponent, {
-    //   header: lock.isLocked ? 'Unlock Lock' : 'Lock Lock',
-    //   width: '480px',
-    //   baseZIndex: 10000,
-    //   data: { lock }
-    // });
-    // ref.onClose.subscribe((didChange) => { if (didChange) this.ngOnInit(); });
+  onToggleLockUnlock(lock: any) {
+    const ref = this.dialog.open(LockUnlockComponent, {
+      header: lock.isLocked ? 'Trigger Unlock' : 'Trigger Lock',
+      width: '480px',
+      height: '450px',
+      baseZIndex: 10000,
+      data: { lock }
+    });
 
-    // If you prefer to call an API directly instead of a dialog, stub shown below:
-    const nextState = !lock.isLocked;
-    this.accessService.create(`api/locks/${lock.lockId}/toggle`, { isLocked: nextState })
-      .subscribe({
-        next: () => {
-          lock.isLocked = nextState; // optimistic UI
-          this.accessService.createSuccessNotification(
-            `Lock ${nextState ? 'locked' : 'unlocked'} successfully.`
-          );
-        },
-        error: () => {
-          this.accessService.createErrorNotification('Failed to toggle lock.');
-        }
-      });
+    ref.onClose.subscribe((didChange) => { if (didChange) this.ngOnInit(); });
   }
 }

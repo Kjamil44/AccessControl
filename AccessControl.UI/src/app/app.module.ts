@@ -59,6 +59,8 @@ import { TagModule } from 'primeng/tag';
 import { MenuModule } from 'primeng/menu';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
+import { LockUnlockComponent } from './components/locks/lock-unlock/lock-unlock.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,8 @@ import { TooltipModule } from 'primeng/tooltip';
     DashboardComponent,
     LoginComponent,
     RegisterComponent,
-    FooterComponent
+    FooterComponent,
+    LockUnlockComponent
   ],
   imports: [
     BrowserModule,
@@ -123,7 +126,8 @@ import { TooltipModule } from 'primeng/tooltip';
     TagModule,
     MenuModule,
     SplitButtonModule,
-    TooltipModule
+    TooltipModule,
+    InputSwitchModule
   ],
   providers: [
     MessageService,

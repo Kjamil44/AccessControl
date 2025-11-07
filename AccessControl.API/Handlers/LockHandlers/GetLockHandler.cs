@@ -18,6 +18,7 @@ namespace AccessControl.API.Handlers.LockHandlers
             public Guid SiteId { get; set; }
             public string SiteDisplayName { get; set; }
             public string DisplayName { get; set; }
+            public bool IsLocked { get; set; }
             public class Item
             {
                 public Guid CardholderId { get; set; }
@@ -74,7 +75,8 @@ namespace AccessControl.API.Handlers.LockHandlers
                         };
                     }),
                     DateCreated = lockFromDb.DateCreated,
-                    DateModified = lockFromDb.DateModified
+                    DateModified = lockFromDb.DateModified,
+                    IsLocked = lockFromDb.IsLocked,
                 };
             }
         }

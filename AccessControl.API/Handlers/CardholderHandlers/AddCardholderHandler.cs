@@ -12,7 +12,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
             public Guid SiteId { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
-            public int CardNumber { get; set; }
+            public string CardNumber { get; set; }
         }
         public class Response
         { 

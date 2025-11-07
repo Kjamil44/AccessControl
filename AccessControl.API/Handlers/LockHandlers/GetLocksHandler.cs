@@ -25,6 +25,7 @@ namespace AccessControl.API.Handlers.LockHandlers
                 public DateTime DateCreated { get; set; }
                 public DateTime DateModified { get; set; }
                 public string? SiteName { get; set; }
+                public bool IsLocked { get; set; }
             }
             public IEnumerable<Item> Items { get; set; } = Enumerable.Empty<Item>();
 
@@ -70,7 +71,8 @@ namespace AccessControl.API.Handlers.LockHandlers
                         NumberOfSchedulesPerSite = schedules.Where(y => y.SiteId == x.SiteId).Count(),
                         DateCreated = x.DateCreated,
                         DateModified = x.DateModified,
-                        SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId)?.DisplayName
+                        SiteName = sites.FirstOrDefault(y => y.SiteId == x.SiteId)?.DisplayName,
+                        IsLocked = x.IsLocked,
                     })
                 };
             }

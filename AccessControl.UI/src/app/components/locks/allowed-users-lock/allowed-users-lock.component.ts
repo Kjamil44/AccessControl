@@ -102,7 +102,6 @@ export class AllowedUsersLockComponent implements OnInit {
       next: data => {
         user.scheduleName = this.schedules.find(schedule => schedule.scheduleId === data.scheduleId)?.displayName;
         user.editing = false;
-        console.log(user);
         this.accessService.createSuccessNotification("Allowed User's Schedule updated successfully!");
       },
       error: error => {

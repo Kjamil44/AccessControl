@@ -15,11 +15,12 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
             {
                 public Guid LockId { get; set; }
                 public DateTime MomentaryTriggerDate { get; set; }
-                public int CardNumber { get; set; }
+                public string CardNumber { get; set; }
             }
 
             public class Response
             {
+                public bool IsLocked { get; set; }
             }
 
             public class Handler : IRequestHandler<Request, Response>
@@ -50,7 +51,10 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                     await _dispatcher.DispatchAsync(lockToUpdate.DomainEvents);
                     lockToUpdate.ClearDomainEvents();
 
-                    return new Response();
+                    return new Response
+                    {
+                        IsLocked = lockToUpdate.IsLocked,
+                    };
                 }
 
                 private async Task<Cardholder> CheckIfCardNumberBelongsToAllowedUserToLock(Request request, Lock lockToUpdate)
@@ -76,7 +80,8 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
 
                     var allowedUserSchedule = await _session.LoadAsync<Schedule>(allowedUser.ScheduleId);
 
-                    if (allowedUserSchedule.StartTime >= request.MomentaryTriggerDate &&
+                    //TODO: Make to IF;s for Temp and Standard Schedule, For temp just check on todays Date and the Mommentary Time (not date), the If below should be placed in the Standard type if
+                    if (allowedUserSchedule.StartTime <= request.MomentaryTriggerDate &&
                         allowedUserSchedule.EndTime <= request.MomentaryTriggerDate)
                         throw new CoreException($"The Lock triggered date is not corresponding to the Allowed User's dedicated Schedule.");
 

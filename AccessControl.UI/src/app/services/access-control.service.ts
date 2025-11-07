@@ -72,6 +72,10 @@ export class AccessControlService {
     return this.http.put<any>(`${this.baseApiUrl}/${url}/${id}`, request);
   }
 
+  updateAction(url: string, id: string, action: 'lock' | 'unlock', request: any): Observable<any> {
+    return this.http.put<any>(`${this.baseApiUrl}/${url}/${id}/${action}`, request);
+  }
+
   delete(url: string, id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseApiUrl}/${url}/${id}`);
   }

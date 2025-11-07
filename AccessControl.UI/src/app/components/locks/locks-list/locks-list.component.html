@@ -38,18 +38,19 @@
             <td>{{ lock.dateModified | date:'dd MMMM yyyy' }}</td>
             <td class="actions-cell">
                 <div class="actions-row">
-                    <p-button icon="pi pi-user-edit" [rounded]="true" [text]="true" size="small" pTooltip="Edit Access"
+                    <p-button icon="pi pi-user-edit" [rounded]="true" [text]="true" size="large" pTooltip="Edit Access"
                         tooltipPosition="top" aria-label="Edit Access" (onClick)="onEditAccess(lock)"></p-button>
 
-                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" size="small" pTooltip="Edit"
+                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" size="large" pTooltip="Edit"
                         tooltipPosition="top" aria-label="Edit" (onClick)="onEdit(lock)"></p-button>
 
                     <p-button [icon]="lock.isLocked ? 'pi pi-unlock' : 'pi pi-lock'" [rounded]="true" [text]="true"
-                        size="small" [severity]="lock.isLocked ? 'warning' : 'help'"
-                        [pTooltip]="lock.isLocked ? 'Unlock' : 'Lock'" tooltipPosition="top"
-                        [attr.aria-label]="lock.isLocked ? 'Unlock' : 'Lock'" (onClick)="onToggleLock(lock)"></p-button>
+                        size="large" [severity]="lock.isLocked ? 'warning' : 'help'"
+                        [pTooltip]="lock.isLocked ? 'Trigger Unlock' : 'Trigger Lock'" tooltipPosition="top"
+                        [attr.aria-label]="lock.isLocked ? 'Trigger Unlock' : 'Trigger Lock'"
+                        (onClick)="onToggleLockUnlock(lock)"></p-button>
 
-                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" size="small" severity="danger"
+                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" size="large" severity="danger"
                         pTooltip="Delete" tooltipPosition="top" aria-label="Delete"
                         (onClick)="onDelete(lock)"></p-button>
                 </div>

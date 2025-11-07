@@ -27,7 +27,6 @@ export class SchedulesListComponent implements OnInit {
         this.scheduleIsPresent = true;
       },
       error: (response) => {
-        console.log(response)
         this.scheduleIsPresent = false;
       }
     })

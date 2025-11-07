@@ -1,0 +1,85 @@
+/* Center the title + current status line */
+.dialog-header-center {
+  margin-top: 10px;
+  text-align: center;
+}
+.status-line { margin-top: 8px; }
+
+/* Centered toggle block */
+.toggle-section {
+  margin: 16px auto 10px;
+  max-width: 420px;
+  text-align: center;
+}
+.section-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.toggle-control {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+}
+.toggle-text {
+  font-weight: 600;
+}
+.hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-secondary-color, #6b7280);
+  font-size: .9rem;
+}
+
+/* Prominent card-number panel */
+.cardnum-section {
+  margin: 12px auto 0;
+  max-width: 480px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--surface-50, #fafafa);
+  border: 1px solid var(--surface-200, #e5e7eb);
+}
+.cardnum-section.disabled {
+  opacity: .65;
+}
+.cardnum-header {
+  display: grid;
+  justify-items: center;
+  row-gap: 2px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.cardnum-title {
+  font-weight: 600;
+}
+.cardnum-subhint {
+  color: var(--text-secondary-color, #6b7280);
+  font-size: .85rem;
+}
+
+/* Digits in the center, roomy */
+.digits-row {
+  display: flex;
+  justify-content: center;
+  gap: .45rem;
+}
+.digit {
+  width: 2.3rem;
+  height: 2.6rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+/* Validation + footer alignment */
+.error-note {
+  margin-top: .6rem;
+  color: var(--p-red-500, #ef4444);
+  text-align: center;
+  font-size: .92rem;
+}
+.footer-center {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+}

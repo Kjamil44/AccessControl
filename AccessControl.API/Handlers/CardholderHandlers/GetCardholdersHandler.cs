@@ -21,7 +21,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                 public string LastName { get; set; }
                 public string FullName { get; set; }
                 public string? SiteName { get; set; }
-                public int CardNumber { get; set; }
+                public string CardNumber { get; set; }
                 public DateTime ActivationDate { get; set; }
                 public DateTime ExpirationDate { get; set; }
                 public DateTime DateModified { get; set; }
