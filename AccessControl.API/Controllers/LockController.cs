@@ -5,7 +5,6 @@ using AccessControl.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static AccessControl.API.Handlers.LockUnlockHandlers.TriggerLockDoorHandler;
 
 namespace AccessControl.API.Controllers
 {
@@ -58,6 +57,13 @@ namespace AccessControl.API.Controllers
         //Lock/Unlock Door Triggers
         [HttpPut("{lockId}/lock")]
         public async Task<TriggerLockDoor.Response> TriggerLockDoor(Guid lockId, [FromBody] TriggerLockDoor.Request request)
+        {
+            request.LockId = lockId;
+            return await _sender.Send(request);
+        }
+
+        [HttpPut("{lockId}/unlock")]
+        public async Task<TriggerUnlockDoor.Response> TriggerUnlockDoor(Guid lockId, [FromBody] TriggerUnlockDoor.Request request)
         {
             request.LockId = lockId;
             return await _sender.Send(request);

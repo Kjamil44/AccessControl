@@ -3,7 +3,7 @@ using MassTransit;
 
 namespace AccessControl.Messaging.Consumers
 {
-    public class TriggerLockConsumer : IConsumer<TriggerLock>
+    public class LockTriggerConsumer : IConsumer<TriggerLock>
     {
         public async Task Consume(ConsumeContext<TriggerLock> ctx)
         {

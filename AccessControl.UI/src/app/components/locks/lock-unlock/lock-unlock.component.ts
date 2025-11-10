@@ -98,7 +98,6 @@ export class LockUnlockComponent implements OnInit {
         this.closeLockUnlockDialog();
       },
       error: error => {
-        debugger
         this.accessService.createErrorNotification(error.message)
         this.closeLockUnlockDialog();
       }

@@ -24,7 +24,9 @@ namespace AccessControl.API.Services.Infrastructure.Messaging
                         await endpoint.Send(new TriggerLock(d.LockId, d.CardNumber, Guid.NewGuid()), ct);
                         break;
 
-                        // TODO: map other domain events here as you add them
+                    case UnlockTriggeredDomainEvent d:
+                        await endpoint.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid()), ct);
+                        break;
                 }
             }
         }

@@ -71,6 +71,14 @@ namespace AccessControl.API.Models
 
             Raise(new LockTriggeredDomainEvent(LockId, cardNumber));
         }
+
+        public void TriggerUnlock(string cardNumber)
+        {
+            DateModified = DateTime.UtcNow;
+            IsLocked = false;
+
+            Raise(new UnlockTriggeredDomainEvent(LockId, cardNumber));
+        }
     }
     public class AllowedUser
     {

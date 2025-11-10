@@ -6,7 +6,8 @@ Host.CreateDefaultBuilder(args)
   {
       services.AddMassTransit(x =>
       {
-          x.AddConsumer<TriggerLockConsumer>();
+          x.AddConsumer<LockTriggerConsumer>();
+          x.AddConsumer<UnlockTriggerConsumer>();
 
           x.UsingRabbitMq((context, cfg) =>
           {
@@ -14,7 +15,12 @@ Host.CreateDefaultBuilder(args)
 
               cfg.ReceiveEndpoint("trigger-lock", e =>
               {
-                  e.ConfigureConsumer<TriggerLockConsumer>(context);
+                  e.ConfigureConsumer<LockTriggerConsumer>(context);
+              });
+
+              cfg.ReceiveEndpoint("trigger-unlock", e =>
+              {
+                  e.ConfigureConsumer<UnlockTriggerConsumer>(context);
               });
           });
       });

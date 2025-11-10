@@ -2,6 +2,7 @@ using AccessControl.API;
 using AccessControl.API.Filters;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
+using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -62,6 +63,8 @@ builder.Services.AddAuthentication(opt =>
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
+
+builder.Services.AddScoped<ILockUnlockService, LockUnlockService>();
 
 // HttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

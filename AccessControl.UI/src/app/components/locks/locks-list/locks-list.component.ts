@@ -112,6 +112,6 @@ export class LocksListComponent implements OnInit {
       data: { lock }
     });
 
-    ref.onClose.subscribe((didChange) => { if (didChange) this.ngOnInit(); });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 }
