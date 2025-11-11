@@ -14,18 +14,16 @@ namespace AccessControl.API.Services.Infrastructure.Messaging
 
         public async Task DispatchAsync(IEnumerable<IDomainEvent> events, CancellationToken ct = default)
         {
-            var endpoint = await _sender.GetSendEndpoint(new Uri("queue:trigger-lock"));
-
             foreach (var e in events)
             {
                 switch (e)
                 {
                     case LockTriggeredDomainEvent d:
-                        await endpoint.Send(new TriggerLock(d.LockId, d.CardNumber, Guid.NewGuid()), ct);
+                        await _sender.Send(new TriggerLock(d.LockId, d.CardNumber, Guid.NewGuid(), d.IsAllowed), ct);
                         break;
 
                     case UnlockTriggeredDomainEvent d:
-                        await endpoint.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid()), ct);
+                        await _sender.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid()), ct);
                         break;
                 }
             }

@@ -4,6 +4,7 @@ using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
 using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
+using AccessControl.Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -65,6 +66,7 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 
 builder.Services.AddScoped<ILockUnlockService, LockUnlockService>();
+builder.Services.AddScoped<IAccessValidator, AccessValidator>();
 
 // HttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -72,7 +74,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 //MassTransit Domain Event Dispatcher
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
-//TODO: RabbitMQ Configuration
+//RabbitMQ Configuration
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
@@ -87,6 +89,9 @@ builder.Services.AddMassTransit(x =>
         cfg.ConfigureEndpoints(context);
     });
 });
+
+EndpointConvention.Map<TriggerLock>(new Uri("queue:trigger-lock"));
+EndpointConvention.Map<TriggerUnlock>(new Uri("queue:trigger-unlock"));
 
 builder.Services.AddSignalR();
 
