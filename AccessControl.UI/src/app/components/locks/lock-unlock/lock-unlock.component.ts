@@ -80,7 +80,7 @@ export class LockUnlockComponent implements OnInit {
 
     if (this.form.invalid || !this.toggleChanged) return;
 
-    const desiredState = this.form.value.lockState === 'Locked' ? 'lock' : 'unlock'; 
+    const desiredState = this.form.value.lockState === 'Locked' ? 'lock' : 'unlock';
 
     const cardNumber = [
       this.form.value.d1, this.form.value.d2, this.form.value.d3,
@@ -94,7 +94,10 @@ export class LockUnlockComponent implements OnInit {
 
     this.accessService.updateAction(`api/locks`, this.lock.lockId, desiredState, request).subscribe({
       next: data => {
-        this.accessService.createSuccessNotification(`${this.lock.displayName} ${data.isLocked ? 'locked' : 'unlocked'} successfully!`)
+        if (data.isLocked)
+          this.accessService.createDoorLockedNotification(`${this.lock.displayName} locked successfully!`);
+        else
+          this.accessService.createDoorUnlockedNotification(`${this.lock.displayName} unlocked successfully!`);
         this.closeLockUnlockDialog();
       },
       error: error => {

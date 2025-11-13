@@ -1,4 +1,28 @@
 <tab-menu *ngIf="isMainContent"></tab-menu>
-<p-toast />
+<!-- Default toast for all existing messages -->
+<p-toast></p-toast>
+
+<!-- Unlock-only toast with custom template -->
+<p-toast key="access" position="top-right">
+  <ng-template let-message pTemplate="message">
+    <div class="flex items-center" style="display:flex; align-items:center; gap:.5rem;">
+      <app-card-unlock-animation
+        [size]="48"
+        [duration]="900"
+        [state]="message?.data?.state || 'unlocked'"
+        [playKey]="message.id">
+      </app-card-unlock-animation>
+
+      <div style="display:flex; flex-direction:column;">
+        <div style="font-weight:600;">
+          {{ message.summary || (message?.data?.state==='locked' ? 'Door locked.' : 'Door unlocked.') }}
+        </div>
+        <small style="opacity:.8;">{{ message.detail }}</small>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
+
+
 <router-outlet></router-outlet>
 <app-footer *ngIf="isMainContent"></app-footer>

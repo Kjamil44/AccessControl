@@ -72,12 +72,12 @@ namespace AccessControl.API.Models
             Raise(new LockTriggeredDomainEvent(LockId, cardNumber, isAllowed));
         }
 
-        public void TriggerUnlock(string cardNumber)
+        public void TriggerUnlock(string cardNumber, bool isAllowed = true)
         {
             DateModified = DateTime.UtcNow;
             IsLocked = false;
 
-            Raise(new UnlockTriggeredDomainEvent(LockId, cardNumber));
+            Raise(new UnlockTriggeredDomainEvent(LockId, cardNumber, isAllowed));
         }
     }
     public class AllowedUser

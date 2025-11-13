@@ -61,6 +61,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { LockUnlockComponent } from './components/locks/lock-unlock/lock-unlock.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { CardUnlockAnimationComponent } from './components/common/card-unlock-animation/card-unlock-animation/card-unlock-animation.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     LoginComponent,
     RegisterComponent,
     FooterComponent,
-    LockUnlockComponent
+    LockUnlockComponent,
+    CardUnlockAnimationComponent
   ],
   imports: [
     BrowserModule,

@@ -23,7 +23,7 @@ namespace AccessControl.API.Services.Infrastructure.Messaging
                         break;
 
                     case UnlockTriggeredDomainEvent d:
-                        await _sender.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid()), ct);
+                        await _sender.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid(), d.IsAllowed), ct);
                         break;
                 }
             }

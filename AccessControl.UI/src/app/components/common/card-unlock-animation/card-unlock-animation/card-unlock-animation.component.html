@@ -1,0 +1,18 @@
+<div class="toast-anim" [style.--size.px]="size" [style.--dur.ms]="duration" [class.unlocked]="state==='unlocked'">
+  <div class="door">
+    <div class="reader">
+      <span class="led"></span>
+    </div>
+  </div>
+
+  <!-- Swiping card -->
+  <div class="card" [class]="swipeClass" aria-hidden="true">
+    <div class="stripe"></div>
+  </div>
+
+  <!-- Lock status -->
+  <div class="lock" aria-label="Lock state">
+    <div class="shackle"></div>
+    <div class="body"></div>
+  </div>
+</div>

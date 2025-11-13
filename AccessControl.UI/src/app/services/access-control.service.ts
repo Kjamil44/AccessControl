@@ -104,4 +104,26 @@ export class AccessControlService {
       detail: message
     });
   }
+
+  public createDoorUnlockedNotification(detail?: string, summary?: string) {
+    this.messageService.add({
+      key: 'access',
+      severity: 'success',
+      summary: summary ?? 'Door unlocked.',
+      detail: detail ?? '',
+      life: 3000,
+      data: { state: 'unlocked' }
+    });
+  }
+
+  public createDoorLockedNotification(detail?: string, summary?: string) {
+    this.messageService.add({
+      key: 'access',
+      severity: 'success',
+      summary: summary ?? 'Door locked.',
+      detail: detail ?? '',
+      life: 3000,
+      data: { state: 'locked' }
+    });
+  }
 }

@@ -25,13 +25,13 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
         {
             private readonly IDocumentSession _session;
             private readonly IDomainEventDispatcher _dispatcher;
-            ILockUnlockService _lockUnlockService;
+            private readonly IAccessValidator _accessValidator;
 
-            public Handler(IDocumentSession session, IDomainEventDispatcher dispatcher, ILockUnlockService lockUnlockService)
+            public Handler(IDocumentSession session, IDomainEventDispatcher dispatcher, IAccessValidator accessValidator)
             {
                 _session = session;
                 _dispatcher = dispatcher;
-                _lockUnlockService = lockUnlockService;
+                _accessValidator = accessValidator;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -40,16 +40,18 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                 if (lockToUpdate == null)
                     throw new CoreException("Lock not found");
 
-                var cardholder = await _lockUnlockService.EnsureCardholderAllowedAsync(request.CardNumber, lockToUpdate);
+                var validation = await _accessValidator.ValidateUnlockTriggerAsync(lockToUpdate, request.CardNumber, request.MomentaryTriggerDate);
 
-                await _lockUnlockService.EnsureScheduleActiveAsync(request.MomentaryTriggerDate, lockToUpdate, cardholder);
-
-                lockToUpdate.TriggerUnlock(request.CardNumber);
+                lockToUpdate.TriggerUnlock(request.CardNumber, validation.IsAllowed);
                 _session.Store(lockToUpdate);
-                await _session.SaveChangesAsync();
 
                 await _dispatcher.DispatchAsync(lockToUpdate.DomainEvents);
                 lockToUpdate.ClearDomainEvents();
+
+                if (!validation.IsAllowed)
+                    throw new CoreException(validation.Reason ?? "Unlock Trigger Denied");
+
+                await _session.SaveChangesAsync();
 
                 return new Response
                 {
