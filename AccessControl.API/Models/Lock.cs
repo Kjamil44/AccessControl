@@ -64,20 +64,20 @@ namespace AccessControl.API.Models
             AllowedUsers.Remove(allowedUser);  
         }
 
-        public void TriggerLock(string cardNumber, bool isAllowed = true)
+        public void TriggerLock(string cardNumber, bool isAllowed = true, string reason = "")
         {
             DateModified = DateTime.UtcNow;
             IsLocked = true;
 
-            Raise(new LockTriggeredDomainEvent(LockId, cardNumber, isAllowed));
+            Raise(new LockTriggeredDomainEvent(LockId, cardNumber, isAllowed, reason));
         }
 
-        public void TriggerUnlock(string cardNumber, bool isAllowed = true)
+        public void TriggerUnlock(string cardNumber, bool isAllowed = true, string reason = "")
         {
             DateModified = DateTime.UtcNow;
             IsLocked = false;
 
-            Raise(new UnlockTriggeredDomainEvent(LockId, cardNumber, isAllowed));
+            Raise(new UnlockTriggeredDomainEvent(LockId, cardNumber, isAllowed, reason));
         }
     }
     public class AllowedUser

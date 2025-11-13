@@ -42,7 +42,7 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
 
                 var validation = await _accessValidator.ValidateUnlockTriggerAsync(lockToUpdate, request.CardNumber, request.MomentaryTriggerDate);
 
-                lockToUpdate.TriggerUnlock(request.CardNumber, validation.IsAllowed);
+                lockToUpdate.TriggerUnlock(request.CardNumber, validation.IsAllowed, validation.Reason);
                 _session.Store(lockToUpdate);
 
                 await _dispatcher.DispatchAsync(lockToUpdate.DomainEvents);

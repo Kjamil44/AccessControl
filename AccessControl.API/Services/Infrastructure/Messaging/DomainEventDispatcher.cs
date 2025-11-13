@@ -19,11 +19,11 @@ namespace AccessControl.API.Services.Infrastructure.Messaging
                 switch (e)
                 {
                     case LockTriggeredDomainEvent d:
-                        await _sender.Send(new TriggerLock(d.LockId, d.CardNumber, Guid.NewGuid(), d.IsAllowed), ct);
+                        await _sender.Send(new TriggerLock(d.LockId, d.CardNumber, Guid.NewGuid(), d.IsAllowed, d.Reason), ct);
                         break;
 
                     case UnlockTriggeredDomainEvent d:
-                        await _sender.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid(), d.IsAllowed), ct);
+                        await _sender.Send(new TriggerUnlock(d.LockId, d.CardNumber, Guid.NewGuid(), d.IsAllowed, d.Reason), ct);
                         break;
                 }
             }
