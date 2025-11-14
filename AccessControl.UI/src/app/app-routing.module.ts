@@ -9,6 +9,7 @@ import { AllowedUsersLockComponent } from './components/locks/allowed-users-lock
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/common/login/login.component';
 import { RegisterComponent } from './components/common/register/register.component';
+import { LiveEventsComponent } from './components/live-events/live-events.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'schedules',
     component: SchedulesListComponent
+  },
+  {
+    path: 'live-events',
+    component: LiveEventsComponent
   }
 ]
 

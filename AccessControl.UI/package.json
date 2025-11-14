@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^17.3.6",
     "@angular/platform-browser-dynamic": "^17.3.6",
     "@angular/router": "^17.3.6",
+    "@microsoft/signalr": "^10.0.0",
     "@progress/kendo-angular-buttons": "^15.5.0",
     "@progress/kendo-angular-common": "^15.5.0",
     "@progress/kendo-angular-dateinputs": "^15.5.0",

@@ -39,7 +39,8 @@ export class TabMenuComponent implements OnInit {
       { label: 'Sites', icon: 'pi pi-home', routerLink: 'sites' },
       { label: 'Locks', icon: 'pi pi-lock', routerLink: 'locks' },
       { label: 'Cardholders', icon: 'pi pi-id-card', routerLink: 'cardholders' },
-      { label: 'Schedules', icon: 'pi pi-calendar-clock', routerLink: 'schedules' }
+      { label: 'Schedules', icon: 'pi pi-calendar-clock', routerLink: 'schedules' },
+      { label: 'Live Events', icon: 'pi pi-megaphone', routerLink: 'live-events' }
     ]
   }
 

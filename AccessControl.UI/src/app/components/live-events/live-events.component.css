@@ -1,0 +1,14 @@
+/* live-events.component.css */
+.header {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: .5rem;
+}
+
+.title{
+    color: rgb(255, 255, 255);
+}
+
+.header .actions { margin-left: auto; }
+.title { margin: 0; }
+.w-100 { width: 100%; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+.message-cell { max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

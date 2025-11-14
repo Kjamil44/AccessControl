@@ -1,5 +1,7 @@
-﻿using AccessControl.API.Exceptions;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
 using Marten;
@@ -26,12 +28,15 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
             private readonly IDocumentSession _session;
             private readonly IDomainEventDispatcher _dispatcher;
             private readonly IAccessValidator _accessValidator;
+            private readonly ILiveEventPublisher _liveEventPublisher;
 
-            public Handler(IDocumentSession session, IDomainEventDispatcher dispatcher, IAccessValidator accessValidator)
+            public Handler(IDocumentSession session, IDomainEventDispatcher dispatcher,
+                IAccessValidator accessValidator, ILiveEventPublisher liveEventPublisher)
             {
                 _session = session;
                 _dispatcher = dispatcher;
                 _accessValidator = accessValidator;
+                _liveEventPublisher = liveEventPublisher;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -48,6 +53,8 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                 await _dispatcher.DispatchAsync(lockToUpdate.DomainEvents);
                 lockToUpdate.ClearDomainEvents();
 
+                await PublishLiveEvent(lockToUpdate, validation);
+
                 if (!validation.IsAllowed)
                     throw new CoreException(validation.Reason ?? "Lock Trigger Denied");
 
@@ -57,6 +64,19 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                 {
                     IsLocked = lockToUpdate.IsLocked,
                 };
+
+                async Task PublishLiveEvent(Lock lockToUpdate, AccessValidationResult validation)
+                {
+                    var liveEventMessageType = validation.IsAllowed ? LiveEventMessageType.LockTriggerGranted : LiveEventMessageType.LockTriggerDenied;
+                    string liveEventMessage = $"Lock Trigger is {(validation.IsAllowed ? "granted" : "denied")}";
+
+                    await _liveEventPublisher.PublishAsync(lockToUpdate.SiteId,
+                        lockToUpdate.LockId,
+                        "Lock", 
+                        liveEventMessageType,
+                        lockToUpdate.DisplayName,
+                        liveEventMessage);
+                }
             }
         }
     }

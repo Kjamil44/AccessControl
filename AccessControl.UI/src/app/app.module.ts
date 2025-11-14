@@ -62,6 +62,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { LockUnlockComponent } from './components/locks/lock-unlock/lock-unlock.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CardUnlockAnimationComponent } from './components/common/card-unlock-animation/card-unlock-animation/card-unlock-animation.component';
+import { LiveEventsComponent } from './components/live-events/live-events.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { CardUnlockAnimationComponent } from './components/common/card-unlock-an
     RegisterComponent,
     FooterComponent,
     LockUnlockComponent,
-    CardUnlockAnimationComponent
+    CardUnlockAnimationComponent,
+    LiveEventsComponent
   ],
   imports: [
     BrowserModule,
