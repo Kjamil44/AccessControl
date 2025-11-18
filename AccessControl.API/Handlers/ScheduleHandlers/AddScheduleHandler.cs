@@ -2,6 +2,7 @@
 using AccessControl.API.Exceptions;
 using AccessControl.API.Helpers;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
 
@@ -24,7 +25,14 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
+
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var schedule = new Schedule();
@@ -48,6 +56,15 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                 }
 
                 _session.Store(schedule);
+
+                await _liveEventPublisher.PublishAsync(
+                    schedule.SiteId,
+                    schedule.ScheduleId,
+                    "Schedule",
+                    LiveEventMessageType.ScheduleCreated,
+                    schedule.DisplayName,
+                    $"{(request.IsTemporary ? "Temporary" : "Standard")} Schedule was created");
+
                 await _session.SaveChangesAsync();
 
                 return new Response();

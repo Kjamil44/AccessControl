@@ -1,6 +1,9 @@
-﻿using AccessControl.API.Exceptions;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
+using MassTransit;
 using MediatR;
 
 namespace AccessControl.API.Handlers.ScheduleHandlers
@@ -18,7 +21,14 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
+
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var scheduleToRemove = await _session.LoadAsync<Schedule>(request.ScheduleId);
@@ -28,23 +38,31 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                 var locks = await _session.Query<Lock>()
                     .ToListAsync();
 
-                locks.ToList().ForEach(x =>
+                foreach (var item in locks)
                 {
-                    var allowedUsers = x.AllowedUsers
-                     .Where(u => u.ScheduleId == request.ScheduleId)
-                     .ToList();
+                    var allowedUsers = item.AllowedUsers
+                        .Where(u => u.ScheduleId == request.ScheduleId)
+                        .ToList();
 
                     if (allowedUsers != null)
                     {
                         allowedUsers.ForEach(y =>
                         {
-                            x.RemoveAccessFromLock(y);
+                            item.RemoveAccessFromLock(y);
                         });
-                        _session.Store(x);
+                        _session.Store(item);
                     }
-                });
-
+                }
                 _session.Delete(scheduleToRemove);
+
+                await _liveEventPublisher.PublishAsync(
+                    scheduleToRemove.SiteId,
+                    scheduleToRemove.ScheduleId,
+                    "Schedule",
+                    LiveEventMessageType.ScheduleDeleted,
+                    scheduleToRemove.DisplayName,
+                    "Schedule deleted");
+
                 await _session.SaveChangesAsync();
                 return new Response();
             }

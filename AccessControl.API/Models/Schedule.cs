@@ -20,6 +20,7 @@ namespace AccessControl.API.Models
 
         public void CreateStandard(Guid siteId, IEnumerable<DayOfWeek> listOfDays, string displayName, DateTime startTime, DateTime endTime)
         {
+            Type = ScheduleType.Standard;
             SiteId = siteId;
             ListOfDays = listOfDays;
             DisplayName = displayName;

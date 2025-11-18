@@ -1,5 +1,7 @@
-﻿using AccessControl.API.Exceptions;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
 
@@ -18,7 +20,14 @@ namespace AccessControl.API.Handlers.CardholderHandlers
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
+
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var cardholder = await _session.LoadAsync<Cardholder>(request.CardholderId);
@@ -29,20 +38,30 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                 var locks = await _session.Query<Lock>()
                     .ToListAsync();
 
-                locks.ToList().ForEach(x =>
+                foreach (var item in locks)
                 {
-                    var allowedUser = x.AllowedUsers
-                     .FirstOrDefault(u => u.CardholderId == request.CardholderId);
+                    var allowedUser = item.AllowedUsers
+                        .FirstOrDefault(u => u.CardholderId == request.CardholderId);
 
                     if (allowedUser != null)
                     {
-                        x.RemoveAccessFromLock(allowedUser);
-                        _session.Store(x);
+                        item.RemoveAccessFromLock(allowedUser);
+                        _session.Store(item);
                     }
-                });
+                }
 
                 _session.Delete(cardholder);
+
+                await _liveEventPublisher.PublishAsync(
+                    cardholder.SiteId,
+                    cardholder.CardholderId,
+                    "Cardholder",
+                    LiveEventMessageType.CardholderDeleted,
+                    cardholder.FullName,
+                    "Cardholder deleted");
+
                 await _session.SaveChangesAsync();
+
                 return new Response();
             }
         }

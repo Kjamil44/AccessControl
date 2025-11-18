@@ -1,5 +1,7 @@
-﻿using AccessControl.API.Exceptions;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
 
@@ -15,13 +17,21 @@ namespace AccessControl.API.Handlers.CardholderHandlers
             public string LastName { get; set; }
             public string CardNumber { get; set; }
         }
+
         public class Response
         {
         }
+
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -41,7 +51,17 @@ namespace AccessControl.API.Handlers.CardholderHandlers
 
                 cardholder.UpdateCardholder(request.FirstName, request.LastName, request.CardNumber);
                 _session.Store(cardholder);
+
+                await _liveEventPublisher.PublishAsync(
+                    cardholder.SiteId,
+                    cardholder.CardholderId,
+                    "Cardholder",
+                    LiveEventMessageType.CardholderUpdated,
+                    cardholder.FullName,
+                    "Cardholder was updated");
+
                 await _session.SaveChangesAsync();
+
                 return new Response();
             }
         }
