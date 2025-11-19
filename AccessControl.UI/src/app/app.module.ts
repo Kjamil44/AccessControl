@@ -63,6 +63,7 @@ import { LockUnlockComponent } from './components/locks/lock-unlock/lock-unlock.
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CardUnlockAnimationComponent } from './components/common/card-unlock-animation/card-unlock-animation/card-unlock-animation.component';
 import { LiveEventsComponent } from './components/live-events/live-events.component';
+import { CoreErrorInterceptor } from './services/core-error-interceptor';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,7 @@ import { LiveEventsComponent } from './components/live-events/live-events.compon
     FooterComponent,
     LockUnlockComponent,
     CardUnlockAnimationComponent,
-    LiveEventsComponent
+    LiveEventsComponent,
   ],
   imports: [
     BrowserModule,
@@ -131,12 +132,13 @@ import { LiveEventsComponent } from './components/live-events/live-events.compon
     MenuModule,
     SplitButtonModule,
     TooltipModule,
-    InputSwitchModule
+    InputSwitchModule,
   ],
   providers: [
     MessageService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
-  bootstrap: [AppComponent]
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: CoreErrorInterceptor, multi: true },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
-
+export class AppModule {}

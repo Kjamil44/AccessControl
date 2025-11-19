@@ -28,13 +28,13 @@ export class EditLockComponent implements OnInit {
     const data = {
       "displayName": this.formGroup.value.displayName
     }
-    this.accessService.update(`api/locks/update`, this.lock.lockId, data).subscribe({
+    this.accessService.update(`api/locks`, this.lock.lockId, data).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Lock edited successfully!")
         this.closeEditDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeEditDialog()
       }
     })

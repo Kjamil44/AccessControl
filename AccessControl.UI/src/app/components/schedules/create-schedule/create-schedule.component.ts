@@ -41,8 +41,8 @@ export class CreateScheduleComponent implements OnInit {
       next: (response) => {
         this.sites = response.data;
       },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
       }
     })
   }
@@ -57,14 +57,14 @@ export class CreateScheduleComponent implements OnInit {
       "endTime": this.formGroup.value.endTime,
       "isTemporary":  this.formGroup.value.isTemporary
     };
-    this.accessService.create(`api/schedules/create`, data)
+    this.accessService.create(`api/schedules`, data)
       .subscribe({
         next: data => {
           this.accessService.createSuccessNotification("Schedule created successfully!");
           this.closeCreateDialog();
         },
-        error: error => {
-          this.accessService.createErrorNotification(error.message);
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
           this.closeCreateDialog();
         }
       });

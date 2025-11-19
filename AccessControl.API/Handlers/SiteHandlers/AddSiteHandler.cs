@@ -1,5 +1,6 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
@@ -8,7 +9,7 @@ namespace AccessControl.API.Handlers.SiteHandlers
 {
     public class AddSite
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid UserId { get; set; }
             public string DisplayName { get; set; }
@@ -40,8 +41,6 @@ namespace AccessControl.API.Handlers.SiteHandlers
                     LiveEventMessageType.SiteCreated,
                     site.DisplayName,
                     "Site created");
-
-                await _session.SaveChangesAsync();
 
                 return new Response();
             }

@@ -26,14 +26,14 @@ export class CreateSiteComponent implements OnInit {
       "displayName": this.formGroup.value.displayName,
     }
 
-    this.accessService.create('api/sites/create', data)
+    this.accessService.create('api/sites', data)
       .subscribe({
         next: data => {
           this.accessService.createSuccessNotification("Site created successfully!")
           this.closeCreateDialog();
         },
-        error: error => {
-          this.accessService.createErrorNotification(`Failed to Create Site: ${error.message}`);
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(`Failed to Create Site: ${err.message}`);
           this.closeCreateDialog();
         }
       })

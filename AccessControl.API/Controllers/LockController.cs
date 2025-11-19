@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace AccessControl.API.Controllers
 {
     [Route("api/locks")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
-    [AllowAnonymous]
     public class LockController : ControllerBase
     {
         private readonly ISender _sender;
@@ -27,17 +26,17 @@ namespace AccessControl.API.Controllers
         [HttpGet("{lockId}")]
         public async Task<GetLock.Response> GetLock(Guid lockId) => await _sender.Send(new GetLock.Request { LockId = lockId });
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<AddLock.Response> CreateLock( [FromBody] AddLock.Request newLock) => await _sender.Send(newLock);
 
-        [HttpPut("update/{lockId}")]
+        [HttpPut("{lockId}")]
         public async Task<UpdateLock.Response> UpdateLock(Guid lockId, [FromBody] UpdateLock.Request newLock)
         {
             newLock.LockId = lockId;
             return await _sender.Send(newLock);
         }       
 
-        [HttpDelete("delete/{lockId}")]
+        [HttpDelete("{lockId}")]
         public async Task<DeleteLock.Response> DeleteLock(Guid lockId) =>
                await _sender.Send(new DeleteLock.Request { LockId = lockId });
 

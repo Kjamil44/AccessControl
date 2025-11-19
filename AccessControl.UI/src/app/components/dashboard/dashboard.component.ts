@@ -37,8 +37,8 @@ export class DashboardComponent implements OnInit {
       next: (response) => {
         this.updateDashboardData(response.data);
       },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message);
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     });
 

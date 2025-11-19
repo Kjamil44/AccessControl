@@ -1,6 +1,7 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
@@ -9,7 +10,7 @@ namespace AccessControl.API.Handlers.LockHandlers
 {
     public class UpdateLock
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid LockId { get; set; }
             public string DisplayName { get; set; }
@@ -44,8 +45,6 @@ namespace AccessControl.API.Handlers.LockHandlers
                     LiveEventMessageType.LockUpdated,
                     lockToUpdate.DisplayName,
                     "Lock name was updated");
-
-                await _session.SaveChangesAsync();
 
                 return new Response();
             }

@@ -27,8 +27,8 @@ export class CreateLockComponent implements OnInit {
       next: (response) => {
         this.sites = response.data;
       },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
       }
     })
   }
@@ -39,14 +39,14 @@ export class CreateLockComponent implements OnInit {
       "displayName": this.formGroup.value.displayName,
     }
 
-    this.accessService.create(`api/locks/create`, data)
+    this.accessService.create(`api/locks`, data)
       .subscribe({
         next: data => {
           this.accessService.createSuccessNotification("Lock created successfully!")
           this.closeCreateDialog()
         },
-        error: error => {
-          this.accessService.createErrorNotification(error.message)
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message)
           this.closeCreateDialog()
         }
       })

@@ -62,14 +62,14 @@ export class EditScheduleComponent implements OnInit {
       "endTime": this.formGroup.value.endTime
     };
 
-    this.accessService.update(`api/schedules/update`, this.schedule.scheduleId, data).subscribe({
+    this.accessService.update(`api/schedules`, this.schedule.scheduleId, data).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Schedule edited successfully!")
         this.closeEditDialog()
 
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeEditDialog()
       }
     })

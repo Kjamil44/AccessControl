@@ -29,8 +29,8 @@ export class TabMenuComponent implements OnInit {
         this.username = response.data.username;
         this.userInitials = this.getInitials(this.username);
       },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message);
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     });
 

@@ -35,13 +35,13 @@ export class EditCardholderComponent implements OnInit {
       "cardNumber": this.formGroup.value.cardNumber
     }
 
-    this.accessService.update(`api/cardholders/update`, this.cardholder.cardholderId, data).subscribe({
+    this.accessService.update(`api/cardholders`, this.cardholder.cardholderId, data).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Cardholer edited successfully!")
         this.closeEditDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeEditDialog()
       }
     })

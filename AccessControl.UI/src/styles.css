@@ -115,3 +115,56 @@ body.main-content .title {
     color: white;
     font-size: 1.5rem;
 }
+
+
+.actions-row {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    flex-wrap: wrap;
+}
+
+/* small, consistent hitbox for icon buttons */
+.actions-row .p-button {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* optional: make icons slightly smaller if you like */
+.actions-row .p-button-icon {
+    font-size: 0.95rem;
+}
+
+/* Gentle gray hover for text-style, rounded icon buttons in the Actions cell */
+.actions-row .p-button.p-button-text:not(.p-disabled):hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    /* light gray */
+    transition: background-color 120ms ease;
+}
+
+.actions-row .p-button.p-button-text:not(.p-disabled):active {
+    background-color: rgba(0, 0, 0, 0.12);
+    /* pressed state a bit darker */
+}
+
+/* Keep the circular feel consistent (just in case theme overrides it) */
+.actions-row .p-button.p-button-rounded {
+    border-radius: 9999px;
+}
+
+/* Optional: keyboard focus ring for accessibility */
+.actions-row .p-button:focus-visible {
+    outline: 2px solid rgba(25, 118, 210, 0.6);
+    outline-offset: 2px;
+}
+
+/* Optional: nicer hover in dark mode */
+@media (prefers-color-scheme: dark) {
+    .actions-row .p-button.p-button-text:not(.p-disabled):hover {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .actions-row .p-button.p-button-text:not(.p-disabled):active {
+        background-color: rgba(255, 255, 255, 0.14);
+    }
+}

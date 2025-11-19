@@ -31,8 +31,8 @@ export class LoginComponent {
           this.authService.storeToken(data.token);
           this.router.navigate([`/dashboard`]);
         },
-        error: error => {
-          this.accessService.createErrorNotification(error.message);
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
         }
       });;
   }

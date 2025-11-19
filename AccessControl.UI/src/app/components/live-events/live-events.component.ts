@@ -100,7 +100,7 @@ export class LiveEventsComponent implements OnInit, OnDestroy {
             .map((e: any) => ({
               ...e,
               dateCreated: new Date(e.dateCreated),
-              entityType: simpleType(e.entityType)   
+              entityType: simpleType(e.entityType),
             }))
             .sort(
               (a, b) =>
@@ -111,7 +111,8 @@ export class LiveEventsComponent implements OnInit, OnDestroy {
 
           this.startHubIfNeeded();
         },
-        error: (err) => {
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
           console.log('[LiveEvents] initial load failed', err);
           this.startHubIfNeeded();
         },

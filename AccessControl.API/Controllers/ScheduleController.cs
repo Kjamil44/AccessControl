@@ -23,18 +23,18 @@ namespace AccessControl.API.Controllers
         [HttpGet("{scheduleId}")]
         public async Task<GetSchedule.Response> GetSchedule(Guid scheduleId) => await _sender.Send(new GetSchedule.Request { ScheduleId = scheduleId });
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<AddSchedule.Response> AddSchedule([FromBody] AddSchedule.Request newSchedule) =>
                await _sender.Send(newSchedule);
 
-        [HttpPut("update/{scheduleId}")]
+        [HttpPut("{scheduleId}")]
         public async Task<UpdateSchedule.Response> UpdateSchedule(Guid scheduleId, [FromBody] UpdateSchedule.Request newSchedule)
         {
             newSchedule.ScheduleId = scheduleId;
             return await _sender.Send(newSchedule);
         }
 
-        [HttpDelete("delete/{scheduleId}")]
+        [HttpDelete("{scheduleId}")]
         public async Task<DeleteSchedule.Response> DeleteSchedule(Guid scheduleId) => await _sender.Send(new DeleteSchedule.Request { ScheduleId = scheduleId });
     }
 }

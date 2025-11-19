@@ -32,13 +32,13 @@ export class EditSiteComponent implements OnInit {
       "displayName": this.formGroup.value.displayName
     }
 
-    this.accessService.update('api/sites/update', this.site.siteId, data).subscribe({
+    this.accessService.update('api/sites', this.site.siteId, data).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Site edited successfully!")
         this.closeCreateDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification(`Failed to Update Site: ${error.message}`)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeCreateDialog()
       }
     })

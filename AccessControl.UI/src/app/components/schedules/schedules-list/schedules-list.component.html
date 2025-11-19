@@ -1,42 +1,87 @@
 <site-selector (site)="showSchedules($event)"></site-selector>
 <div class="k-d-flex k-align-items-center">
-    <i class="pi pi-calendar-clock icon"></i>
-    <h2 class="title">Schedules</h2>
-    <div style="margin-left:auto; padding-bottom: 15px;">
-        <p-button size="large" (click)="onCreate()" severity="success">Create
-            Schedule</p-button>
-    </div>
+  <i class="pi pi-calendar-clock icon"></i>
+  <h2 class="title">Schedules</h2>
+  <div style="margin-left: auto; padding-bottom: 15px">
+    <p-button size="large" (click)="onCreate()" severity="success"
+      >Create Schedule</p-button
+    >
+  </div>
 </div>
-<p-table [value]="schedules" styleClass="p-datatable-gridlines p-datatable-striped"
-    [tableStyle]="{ 'min-width': '50rem' }" selectionMode="single">
-    <ng-template pTemplate="header">
-        <tr>
-            <th pSortableColumn="displayName">Schedule Name <p-sortIcon field="displayName" /></th>
-            <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
-            <th pSortableColumn="type">Type <p-sortIcon field="type" /></th>
-            <th pSortableColumn="listOfDays">Week Days <p-sortIcon field="listOfDays" /></th>
-            <th pSortableColumn="startTime">Start Time <p-sortIcon field="startTime" /></th>
-            <th pSortableColumn="endTime">End Time <p-sortIcon field="endTime" /></th>
-            <th style="width: 12.5rem;">Actions</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-schedule>
-        <tr [pSelectableRow]="schedule">
-            <td>{{ schedule.displayName }}</td>
-            <td>{{ schedule.siteName }}</td>
-            <td>{{ schedule.type }}</td>
-            <td>{{ schedule.listOfDays }}</td>
-            <td> {{ schedule.type === 'Standard' ? (schedule.startTime | date:'dd MMMM YYYY, HH:mm:ss') : (schedule.startTime | date:'HH:mm') }}</td>
-            <td> {{ schedule.type === 'Standard' ? (schedule.endTime | date:'dd MMMM YYYY, HH:mm:ss') : (schedule.endTime | date:'HH:mm') }}</td>
-            <td>
-                <p-button label="Edit"  size="small" (click)="onEdit(schedule)"></p-button>
-                <p-button label="Delete" size="small" (click)="onDelete(schedule)" severity="danger" class="delete-button"></p-button>
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="7" class="no-data-text">No schedules available</td>
-        </tr>
-    </ng-template>
+<p-table
+  [value]="schedules"
+  styleClass="p-datatable-gridlines p-datatable-striped"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  selectionMode="single"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="displayName">
+        Schedule Name <p-sortIcon field="displayName" />
+      </th>
+      <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
+      <th pSortableColumn="type">Type <p-sortIcon field="type" /></th>
+      <th pSortableColumn="listOfDays">
+        Week Days <p-sortIcon field="listOfDays" />
+      </th>
+      <th pSortableColumn="startTime">
+        Start Time <p-sortIcon field="startTime" />
+      </th>
+      <th pSortableColumn="endTime">End Time <p-sortIcon field="endTime" /></th>
+      <th style="width: 10 rem">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-schedule>
+    <tr [pSelectableRow]="schedule">
+      <td>{{ schedule.displayName }}</td>
+      <td>{{ schedule.siteName }}</td>
+      <td>{{ schedule.type }}</td>
+      <td>{{ schedule.listOfDays }}</td>
+      <td>
+        {{
+          schedule.type === "Standard"
+            ? (schedule.startTime | date : "dd MMMM YYYY, HH:mm:ss")
+            : (schedule.startTime | date : "HH:mm")
+        }}
+      </td>
+      <td>
+        {{
+          schedule.type === "Standard"
+            ? (schedule.endTime | date : "dd MMMM YYYY, HH:mm:ss")
+            : (schedule.endTime | date : "HH:mm")
+        }}
+      </td>
+      <td class="actions-cell">
+        <div class="actions-row">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            pTooltip="Edit"
+            tooltipPosition="top"
+            aria-label="Edit"
+            (onClick)="onEdit(schedule)"
+          ></p-button>
+
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            severity="danger"
+            pTooltip="Delete"
+            tooltipPosition="top"
+            aria-label="Delete"
+            (onClick)="onDelete(schedule)"
+          ></p-button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7" class="no-data-text">No schedules available</td>
+    </tr>
+  </ng-template>
 </p-table>

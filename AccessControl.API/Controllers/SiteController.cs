@@ -19,21 +19,21 @@ namespace AccessControl.API.Controllers
         [HttpGet("{siteId}")]
         public async Task<GetSite.Response> GetSite(Guid siteId) => await _sender.Send(new GetSite.Request { SiteId = siteId });
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<AddSite.Response> CreateSite(Guid userId, [FromBody] AddSite.Request newSite)
         {
             newSite.UserId = userId;
             return await _sender.Send(newSite);
         }
 
-        [HttpPut("update/{siteId}")]
+        [HttpPut("{siteId}")]
         public async Task<UpdateSite.Response> UpdateSite(Guid siteId, [FromBody] UpdateSite.Request newSite)
         {
             newSite.SiteId = siteId;
             return await _sender.Send(newSite);
         }
 
-        [HttpDelete("delete/{siteId}")]
+        [HttpDelete("{siteId}")]
         public async Task<DeleteSite.Response> DeleteSite(Guid siteId) => await _sender.Send(new DeleteSite.Request { SiteId = siteId });
     }
 }

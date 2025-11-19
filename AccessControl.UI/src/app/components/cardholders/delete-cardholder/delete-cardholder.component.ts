@@ -23,13 +23,13 @@ export class DeleteCardholderComponent implements OnInit {
 
 
   deleteCardholder() {
-    this.accessService.delete(`api/cardholders/delete`, this.cardholder.cardholderId).subscribe({
+    this.accessService.delete(`api/cardholders`, this.cardholder.cardholderId).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Cardholder deleted successfully!")
         this.closeDeleteDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeDeleteDialog()
       }
     })

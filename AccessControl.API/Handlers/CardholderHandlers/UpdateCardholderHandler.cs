@@ -1,6 +1,7 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
@@ -9,7 +10,7 @@ namespace AccessControl.API.Handlers.CardholderHandlers
 {
     public class UpdateCardholder
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid SiteId { get; set; }
             public Guid CardholderId { get; set; }
@@ -59,8 +60,6 @@ namespace AccessControl.API.Handlers.CardholderHandlers
                     LiveEventMessageType.CardholderUpdated,
                     cardholder.FullName,
                     "Cardholder was updated");
-
-                await _session.SaveChangesAsync();
 
                 return new Response();
             }

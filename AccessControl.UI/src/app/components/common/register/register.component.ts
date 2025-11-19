@@ -37,10 +37,8 @@ export class RegisterComponent {
             this.authService.storeToken(data.token);
             this.router.navigate([`/dashboard`]);
           },
-          error: error => {
-            console.log(error)
-            this.accessService.createErrorNotification(error.message);
-            //navigate
+          error: (err: Error) => {
+            this.accessService.createErrorNotification(err.message);
           }
         });;
     }

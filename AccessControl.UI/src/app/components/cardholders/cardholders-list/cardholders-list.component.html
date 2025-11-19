@@ -1,44 +1,79 @@
 <site-selector (site)="showCardholders($event)"></site-selector>
 <div class="k-d-flex k-align-items-center">
-    <i class="pi pi-id-card icon"></i>
-    <h2 class="title">Cardholders</h2>
-    <div style="margin-left:auto; padding-bottom: 15px;">
-        <p-button size="large" (click)="onCreate()" severity="success">Create
-            Cardholder</p-button>
-    </div>
+  <i class="pi pi-id-card icon"></i>
+  <h2 class="title">Cardholders</h2>
+  <div style="margin-left: auto; padding-bottom: 15px">
+    <p-button size="large" (click)="onCreate()" severity="success"
+      >Create Cardholder</p-button
+    >
+  </div>
 </div>
-<p-table [value]="cardholders" 
-         styleClass="p-datatable-gridlines p-datatable-striped" 
-         [tableStyle]="{ 'min-width': '50rem' }"
-         selectionMode="single">
-    <ng-template pTemplate="header">
-        <tr>
-            <th pSortableColumn="firstName">First Name <p-sortIcon field="firstName" /></th>
-            <th pSortableColumn="lastName">Last Name <p-sortIcon field="lastName" /></th>
-            <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
-            <th pSortableColumn="cardNumber">Card Number <p-sortIcon field="cardNumber" /></th>
-            <th pSortableColumn="activationDate">Activation Date <p-sortIcon field="activationDate" /></th>
-            <th pSortableColumn="expirationDate">Expiration Date <p-sortIcon field="expirationDate" /></th>
-            <th  style="width: 12.5rem;">Actions</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-cardholder>
-        <tr [pSelectableRow]="cardholder">
-            <td>{{ cardholder.firstName }}</td>
-            <td>{{ cardholder.lastName }}</td>
-            <td>{{ cardholder.siteName }}</td>
-            <td>{{ cardholder.cardNumber }}</td>
-            <td>{{ cardholder.activationDate | date:'dd MMMM YYYY' }}</td>
-            <td>{{ cardholder.expirationDate | date:'dd MMMM YYYY' }}</td>
-            <td>
-                <p-button label="Edit"  size="small" (click)="onEdit(cardholder)"></p-button>
-                <p-button label="Delete" size="small" (click)="onDelete(cardholder)" severity="danger" class="delete-button"></p-button>
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="7" class="no-data-text">No cardholders available</td>
-        </tr>
-    </ng-template>
+<p-table
+  [value]="cardholders"
+  styleClass="p-datatable-gridlines p-datatable-striped"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  selectionMode="single"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="firstName">
+        First Name <p-sortIcon field="firstName" />
+      </th>
+      <th pSortableColumn="lastName">
+        Last Name <p-sortIcon field="lastName" />
+      </th>
+      <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
+      <th pSortableColumn="cardNumber">
+        Card Number <p-sortIcon field="cardNumber" />
+      </th>
+      <th pSortableColumn="activationDate">
+        Activation Date <p-sortIcon field="activationDate" />
+      </th>
+      <th pSortableColumn="expirationDate">
+        Expiration Date <p-sortIcon field="expirationDate" />
+      </th>
+      <th style="width: 10rem">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-cardholder>
+    <tr [pSelectableRow]="cardholder">
+      <td>{{ cardholder.firstName }}</td>
+      <td>{{ cardholder.lastName }}</td>
+      <td>{{ cardholder.siteName }}</td>
+      <td>{{ cardholder.cardNumber }}</td>
+      <td>{{ cardholder.activationDate | date : "dd MMMM YYYY" }}</td>
+      <td>{{ cardholder.expirationDate | date : "dd MMMM YYYY" }}</td>
+      <td class="actions-cell">
+        <div class="actions-row">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            pTooltip="Edit"
+            tooltipPosition="top"
+            aria-label="Edit"
+            (onClick)="onEdit(cardholder)"
+          ></p-button>
+
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            severity="danger"
+            pTooltip="Delete"
+            tooltipPosition="top"
+            aria-label="Delete"
+            (onClick)="onDelete(cardholder)"
+          ></p-button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7" class="no-data-text">No cardholders available</td>
+    </tr>
+  </ng-template>
 </p-table>

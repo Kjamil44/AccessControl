@@ -21,8 +21,8 @@ export class SitesListComponent implements OnInit {
       next: (response) => {
         this.sites = response.data;
       },
-      error: (response) => {
-        this.accessService.createErrorNotification("Incorrect api endpoint");
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     })
   }

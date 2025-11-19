@@ -1,6 +1,7 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
@@ -11,7 +12,7 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
 {
     public class TriggerUnlockDoor
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid LockId { get; set; }
             public DateTime MomentaryTriggerDate { get; set; }
@@ -30,7 +31,7 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
             private readonly IAccessValidator _accessValidator;
             private readonly ILiveEventPublisher _liveEventPublisher;
 
-            public Handler(IDocumentSession session, IDomainEventDispatcher dispatcher, 
+            public Handler(IDocumentSession session, IDomainEventDispatcher dispatcher,
                 IAccessValidator accessValidator, ILiveEventPublisher liveEventPublisher)
             {
                 _session = session;
@@ -58,15 +59,13 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                 if (!validation.IsAllowed)
                     throw new CoreException(validation.Reason ?? "Unlock Trigger Denied");
 
-                await _session.SaveChangesAsync();
-
                 return new Response
                 {
                     IsLocked = lockToUpdate.IsLocked,
                 };
             }
 
-            async Task PublishLiveEvent(Lock lockToUpdate, AccessValidationResult validation)
+            private async Task PublishLiveEvent(Lock lockToUpdate, AccessValidationResult validation)
             {
                 var liveEventMessageType = validation.IsAllowed ? LiveEventMessageType.UnlockTriggerGranted : LiveEventMessageType.UnlockTriggerDenied;
                 string liveEventMessage = $"Unlock Trigger is {(validation.IsAllowed ? "granted" : "denied")}";

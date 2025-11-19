@@ -23,13 +23,13 @@ export class DeleteSiteComponent implements OnInit{
   }
 
   deleteSite() {
-    this.accessService.delete('api/sites/delete', this.site.siteId).subscribe({
+    this.accessService.delete('api/sites', this.site.siteId).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Site deleted successfully!")
         this.closeDeleteDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification("Failed to delete Site: Lock, Cardholder or Schedule still exist on Site!")
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err)
         this.closeDeleteDialog()
       }
     })

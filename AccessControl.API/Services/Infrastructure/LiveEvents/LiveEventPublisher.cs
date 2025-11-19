@@ -41,7 +41,6 @@ namespace AccessControl.API.Services.Infrastructure.LiveEvents
             };
 
             _session.Store(liveEvent);
-            await _session.SaveChangesAsync();
 
             await _hub.Clients.All.SendAsync("liveEvent", new
             {

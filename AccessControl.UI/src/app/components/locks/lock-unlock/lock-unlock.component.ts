@@ -100,8 +100,8 @@ export class LockUnlockComponent implements OnInit {
           this.accessService.createDoorUnlockedNotification(`${this.lock.displayName} unlocked successfully!`);
         this.closeLockUnlockDialog();
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) =>  {
+        this.accessService.createErrorNotification(err.message)
         this.closeLockUnlockDialog();
       }
     })

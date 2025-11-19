@@ -1,38 +1,68 @@
-<!-- TODO: Temporary added, remove after creatig list/all in every other page -->
 <div class="k-d-flex k-align-items-center">
-    <i class="pi pi-home icon"></i>
-    <h2 class="title">Sites</h2>
-    <div style="margin-left:auto; padding-bottom: 15px;">
-        <p-button size="large" (click)="onCreate()" severity="success">Create
-            Site</p-button>
-    </div>
+  <i class="pi pi-home icon"></i>
+  <h2 class="title">Sites</h2>
+  <div style="margin-left: auto; padding-bottom: 15px">
+    <p-button size="large" (click)="onCreate()" severity="success"
+      >Create Site</p-button
+    >
+  </div>
 </div>
-<p-table [value]="sites" 
-         styleClass="p-datatable-gridlines p-datatable-striped" 
-         [tableStyle]="{ 'min-width': '50rem' }"
-         selectionMode="single">
-    <ng-template pTemplate="header">
-        <tr>
-            <th pSortableColumn="displayName">Site Name <p-sortIcon field="displayName" /></th>
-            <th pSortableColumn="dateCreated">Date Created <p-sortIcon field="dateCreated" /></th>
-            <th pSortableColumn="dateModified">Date Modified <p-sortIcon field="dateModified" /></th>
-            <th  style="width: 12.5rem;">Actions</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-site>
-        <tr [pSelectableRow]="site">
-            <td>{{ site.displayName }}</td>
-            <td>{{ site.dateCreated | date:'dd MMMM YYYY' }}</td>
-            <td>{{ site.dateModified | date:'dd MMMM YYYY' }}</td>
-            <td>
-                <p-button label="Edit"  size="small" (click)="onEdit(site)"></p-button>
-                <p-button label="Delete" size="small" (click)="onDelete(site)" severity="danger" class="delete-button"></p-button>
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="4" class="no-data-text">No sites available</td>
-        </tr>
-    </ng-template>
+<p-table
+  [value]="sites"
+  styleClass="p-datatable-gridlines p-datatable-striped"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  selectionMode="single"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="displayName">
+        Site Name <p-sortIcon field="displayName" />
+      </th>
+      <th pSortableColumn="dateCreated">
+        Date Created <p-sortIcon field="dateCreated" />
+      </th>
+      <th pSortableColumn="dateModified">
+        Date Modified <p-sortIcon field="dateModified" />
+      </th>
+      <th style="width: 10rem">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-site>
+    <tr [pSelectableRow]="site">
+      <td>{{ site.displayName }}</td>
+      <td>{{ site.dateCreated | date : "dd MMMM YYYY" }}</td>
+      <td>{{ site.dateModified | date : "dd MMMM YYYY" }}</td>
+      <td class="actions-cell">
+        <div class="actions-row">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            pTooltip="Edit"
+            tooltipPosition="top"
+            aria-label="Edit"
+            (onClick)="onEdit(site)"
+          ></p-button>
+
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            severity="danger"
+            pTooltip="Delete"
+            tooltipPosition="top"
+            aria-label="Delete"
+            (onClick)="onDelete(site)"
+          ></p-button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4" class="no-data-text">No sites available</td>
+    </tr>
+  </ng-template>
 </p-table>

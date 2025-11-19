@@ -1,6 +1,7 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MassTransit;
@@ -10,7 +11,7 @@ namespace AccessControl.API.Handlers.AllowedUserHandlers
 {
     public class EditAccessToLock
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid SiteId { get; set; }
             public Guid LockId { get; set; }
@@ -62,8 +63,6 @@ namespace AccessControl.API.Handlers.AllowedUserHandlers
                     LiveEventMessageType.LockAccessListUpdated,
                     lockFromDb.DisplayName,
                     $"Updated schedule for {cardholder.FullName} (lock access).");
-
-                await _session.SaveChangesAsync();
 
                 return new Response
                 {

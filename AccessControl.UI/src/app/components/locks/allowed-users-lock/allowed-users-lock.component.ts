@@ -61,8 +61,8 @@ export class AllowedUsersLockComponent implements OnInit {
 
               this.userIsPresent = this.users.length > 0;
             },
-            error: (response) => {
-              this.accessService.createErrorNotification("No Schedules found, please Add Schedule for Lock!");
+            error: (err: Error) => {
+              this.accessService.createErrorNotification(err.message);
             }
           });
           
@@ -71,13 +71,13 @@ export class AllowedUsersLockComponent implements OnInit {
               this.cardholders = response.data;
               
             },
-            error: (response) => {
-              this.accessService.createErrorNotification("No Cardholders found, please Add Cardholder for Lock!");
+            error: (err: Error) => {
+              this.accessService.createErrorNotification(err.message);
             }
           });
         },
-        error: (response) => {
-          this.accessService.createErrorNotification("Incorrect api endpoint");
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
         }
       });
     });
@@ -104,8 +104,8 @@ export class AllowedUsersLockComponent implements OnInit {
         user.editing = false;
         this.accessService.createSuccessNotification("Allowed User's Schedule updated successfully!");
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message);
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     });
   }
@@ -118,8 +118,8 @@ export class AllowedUsersLockComponent implements OnInit {
         this.userIsPresent = this.users.length > 0;
         this.accessService.createSuccessNotification("Allowed User removed successfully!");
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message);
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     });
   }
@@ -135,8 +135,8 @@ export class AllowedUsersLockComponent implements OnInit {
         this.accessService.createSuccessNotification("User assigned successfully!");
         this.closeDialog();
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message);
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
         this.closeDialog();
       }
     });

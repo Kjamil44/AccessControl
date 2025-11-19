@@ -23,8 +23,8 @@ export class SiteSelectorComponent  implements OnInit {
 
         this.selectedSite = { siteId: null, displayName: 'All Sites' };
       },
-      error: (response) => {
-        this.accessService.createErrorNotification("Incorrect api endpoint");
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     })
   }

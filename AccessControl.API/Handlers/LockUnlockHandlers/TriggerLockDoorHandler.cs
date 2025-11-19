@@ -1,6 +1,7 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
@@ -11,7 +12,7 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
 {
     public class TriggerLockDoor
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid LockId { get; set; }
             public DateTime MomentaryTriggerDate { get; set; }
@@ -58,25 +59,23 @@ namespace AccessControl.API.Handlers.LockUnlockHandlers
                 if (!validation.IsAllowed)
                     throw new CoreException(validation.Reason ?? "Lock Trigger Denied");
 
-                await _session.SaveChangesAsync();
-
                 return new Response
                 {
                     IsLocked = lockToUpdate.IsLocked,
                 };
+            }
 
-                async Task PublishLiveEvent(Lock lockToUpdate, AccessValidationResult validation)
-                {
-                    var liveEventMessageType = validation.IsAllowed ? LiveEventMessageType.LockTriggerGranted : LiveEventMessageType.LockTriggerDenied;
-                    string liveEventMessage = $"Lock Trigger is {(validation.IsAllowed ? "granted" : "denied")}";
+            private async Task PublishLiveEvent(Lock lockToUpdate, AccessValidationResult validation)
+            {
+                var liveEventMessageType = validation.IsAllowed ? LiveEventMessageType.LockTriggerGranted : LiveEventMessageType.LockTriggerDenied;
+                string liveEventMessage = $"Lock Trigger is {(validation.IsAllowed ? "granted" : "denied")}";
 
-                    await _liveEventPublisher.PublishAsync(lockToUpdate.SiteId,
-                        lockToUpdate.LockId,
-                        "Lock", 
-                        liveEventMessageType,
-                        lockToUpdate.DisplayName,
-                        liveEventMessage);
-                }
+                await _liveEventPublisher.PublishAsync(lockToUpdate.SiteId,
+                    lockToUpdate.LockId,
+                    "Lock",
+                    liveEventMessageType,
+                    lockToUpdate.DisplayName,
+                    liveEventMessage);
             }
         }
     }

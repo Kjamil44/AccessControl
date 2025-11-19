@@ -22,13 +22,13 @@ export class DeleteLockComponent implements OnInit {
   }
 
   deleteLock() {
-    this.accessService.delete(`api/locks/delete`, this.lock.lockId).subscribe({
+    this.accessService.delete(`api/locks`, this.lock.lockId).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Lock deleted successfully!")
         this.closeDeleteDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeDeleteDialog()
       }
     })

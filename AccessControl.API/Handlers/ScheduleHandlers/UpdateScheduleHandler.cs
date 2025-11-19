@@ -2,6 +2,7 @@
 using AccessControl.API.Exceptions;
 using AccessControl.API.Helpers;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
@@ -10,7 +11,7 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
 {
     public class UpdateSchedule
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid SiteId { get; set; }
             public Guid ScheduleId { get; set; }
@@ -60,8 +61,6 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                      LiveEventMessageType.ScheduleDeleted,
                      schedule.DisplayName,
                      "Schedule updated");
-
-                await _session.SaveChangesAsync();
 
                 return new Response();
             }

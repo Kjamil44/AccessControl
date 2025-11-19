@@ -32,7 +32,8 @@ export class LocksListComponent implements OnInit {
         this.locks = response.data;
         this.lockIsPresent = true;
       },
-      error: () => {
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
         this.lockIsPresent = false;
       }
     });
@@ -50,7 +51,8 @@ export class LocksListComponent implements OnInit {
         this.locks = response.data;
         this.lockIsPresent = true;
       },
-      error: () => {
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
         this.locks = [];
         this.lockIsPresent = false;
       }

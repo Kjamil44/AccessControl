@@ -1,6 +1,7 @@
 ﻿using AccessControl.API.Enums;
 using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MassTransit;
@@ -10,7 +11,7 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
 {
     public class DeleteSchedule
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid SiteId { get; set; }
             public Guid ScheduleId { get; set; }
@@ -63,7 +64,6 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                     scheduleToRemove.DisplayName,
                     "Schedule deleted");
 
-                await _session.SaveChangesAsync();
                 return new Response();
             }
         }

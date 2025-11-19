@@ -22,13 +22,13 @@ export class DeleteScheduleComponent  implements OnInit  {
   }
   
   deleteSchedule() {
-    this.accessService.delete(`api/schedules/delete`, this.schedule.scheduleId).subscribe({
+    this.accessService.delete(`api/schedules`, this.schedule.scheduleId).subscribe({
       next: data => {
         this.accessService.createSuccessNotification("Schedule deleted successfully!")
         this.closeDeleteDialog()
       },
-      error: error => {
-        this.accessService.createErrorNotification(error.message)
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message)
         this.closeDeleteDialog()
       }
     })
