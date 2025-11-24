@@ -54,6 +54,10 @@ namespace AccessControl.API.Services.Infrastructure.LiveEvents
                 liveEvent.MessageType,
                 liveEvent.DateCreated
             });
+
+            if (liveEvent.MessageType == LiveEventMessageType.LockTriggerDenied ||
+                liveEvent.MessageType == LiveEventMessageType.UnlockTriggerDenied)
+                await _session.SaveChangesAsync();
         }
 
         private string GetUserIdFromToken()

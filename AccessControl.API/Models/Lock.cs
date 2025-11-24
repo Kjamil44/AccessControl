@@ -66,16 +66,22 @@ namespace AccessControl.API.Models
 
         public void TriggerLock(string cardNumber, bool isAllowed = true, string reason = "")
         {
-            DateModified = DateTime.UtcNow;
-            IsLocked = true;
+            if (isAllowed)
+            {
+                DateModified = DateTime.UtcNow;
+                IsLocked = true;
+            }
 
             Raise(new LockTriggeredDomainEvent(LockId, cardNumber, isAllowed, reason));
         }
 
         public void TriggerUnlock(string cardNumber, bool isAllowed = true, string reason = "")
         {
-            DateModified = DateTime.UtcNow;
-            IsLocked = false;
+            if (isAllowed)
+            {
+                DateModified = DateTime.UtcNow;
+                IsLocked = false;
+            }
 
             Raise(new UnlockTriggeredDomainEvent(LockId, cardNumber, isAllowed, reason));
         }

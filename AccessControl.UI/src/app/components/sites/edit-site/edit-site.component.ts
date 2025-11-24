@@ -34,7 +34,7 @@ export class EditSiteComponent implements OnInit {
 
     this.accessService.update('api/sites', this.site.siteId, data).subscribe({
       next: data => {
-        this.accessService.createSuccessNotification("Site edited successfully!")
+        this.accessService.createSuccessNotification("Site updated successfully!")
         this.closeCreateDialog()
       },
       error: (err: Error) => {

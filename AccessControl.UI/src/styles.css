@@ -3,168 +3,300 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+:root {
+  --blue: #56a6f7;
+  --blue-deep: #3d8eea;
+}
+
 body.main-content {
-    background-color: #56a6f7;
-    color: #333;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    padding-bottom: 5rem;
+  /* base gradient */
+  background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08),
+      rgba(0, 0, 0, 0.04)
+    ),
+    linear-gradient(180deg, var(--blue) 0%, var(--blue-deep) 100%);
+  /* tiny speckle/noise */
+  background-image: radial-gradient(
+      rgba(255, 255, 255, 0.06) 1px,
+      transparent 1px
+    ),
+    radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.04)),
+    linear-gradient(180deg, var(--blue) 0%, var(--blue-deep) 100%);
+  background-size: 3px 3px, 5px 5px, 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  color: #333;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  padding-bottom: 5rem;
+  background-attachment: fixed;
 }
 
 body.main-content .title {
-    font-size: 28px;
-    margin: 0;
+  font-size: 28px;
+  margin: 0;
 }
 
 /* Login And Register form*/
 .login-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    /* Hide overflow to prevent scrollbars */
-    background: url('assets/images/bg-1.jpg') no-repeat center center fixed;
-    background-size: cover;
-    padding-right: 25vh;
-    box-sizing: border-box;
-    background-size: cover;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  /* Hide overflow to prevent scrollbars */
+  background: url("assets/images/bg-1.jpg") no-repeat center center fixed;
+  background-size: cover;
+  padding-right: 25vh;
+  box-sizing: border-box;
+  background-size: cover;
 }
 
 .login-card {
-    width: 300px;
-    padding: 2rem;
-    margin-right: 5rem;
+  width: 300px;
+  padding: 2rem;
+  margin-right: 5rem;
 }
 
 .register-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 100vh;
-    background: url('assets/images/bg-1.jpg') no-repeat center center fixed;
-    padding-right: 25vh;
-    box-sizing: border-box;
-    background-size: cover;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100vh;
+  background: url("assets/images/bg-1.jpg") no-repeat center center fixed;
+  padding-right: 25vh;
+  box-sizing: border-box;
+  background-size: cover;
 }
 
 .register-card {
-    width: 350px;
-    padding: 2rem;
+  width: 350px;
+  padding: 2rem;
 }
 
 /* Grid/Table styles */
 .no-data-text {
-    text-align: center;
-    padding: 1rem;
-    font-size: 1.2rem;
-    color: #777;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+  color: #777;
 }
 
 /* dialog form styles */
 
 .form-row {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* Align items vertically */
-    /* Ensure items are spaced evenly */
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Align items vertically */
+  /* Ensure items are spaced evenly */
 }
 
 .form-group {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .form-group label {
-    margin-right: 1rem;
-    font-size: medium;
+  margin-right: 1rem;
+  font-size: medium;
 }
 
 .form-group input {
-    /* Push the input to the far right */
-    width: 350px;
-    /* Set width for the input */
-    margin-left: 106px;
+  /* Push the input to the far right */
+  width: 350px;
+  /* Set width for the input */
+  margin-left: 106px;
+}
+
+.form-group input.form-control {
+  width: 350px;
+  margin-left: 106px;
 }
 
 .form-control {
-    font-weight: normal;
-    font-size: medium;
+  font-weight: normal;
+  font-size: medium;
 }
 
 /* dialog styles */
 
 .p-dialog-footer {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 1rem;
-    width: 100%;
-    border-top: 1px solid #ccc;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  width: 100%;
+  border-top: 1px solid #ccc;
 }
 
 .p-dialog .p-dialog-header {
-    background-color: rgb(0, 0, 0);
-    color: white
+  background-color: rgb(0, 0, 0);
+  color: white;
 }
 
 .icon {
-    float: left;
-    padding: 5px;
-    color: white;
-    font-size: 1.5rem;
+  float: left;
+  padding: 5px;
+  color: white;
+  font-size: 1.5rem;
 }
 
-
 .actions-row {
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
 }
 
 /* small, consistent hitbox for icon buttons */
 .actions-row .p-button {
-    width: 2rem;
-    height: 2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 /* optional: make icons slightly smaller if you like */
 .actions-row .p-button-icon {
-    font-size: 0.95rem;
+  font-size: 0.95rem;
 }
 
 /* Gentle gray hover for text-style, rounded icon buttons in the Actions cell */
 .actions-row .p-button.p-button-text:not(.p-disabled):hover {
-    background-color: rgba(0, 0, 0, 0.06);
-    /* light gray */
-    transition: background-color 120ms ease;
+  background-color: rgba(0, 0, 0, 0.06);
+  /* light gray */
+  transition: background-color 120ms ease;
 }
 
 .actions-row .p-button.p-button-text:not(.p-disabled):active {
-    background-color: rgba(0, 0, 0, 0.12);
-    /* pressed state a bit darker */
+  background-color: rgba(0, 0, 0, 0.12);
+  /* pressed state a bit darker */
 }
 
 /* Keep the circular feel consistent (just in case theme overrides it) */
 .actions-row .p-button.p-button-rounded {
-    border-radius: 9999px;
+  border-radius: 9999px;
 }
 
 /* Optional: keyboard focus ring for accessibility */
 .actions-row .p-button:focus-visible {
-    outline: 2px solid rgba(25, 118, 210, 0.6);
-    outline-offset: 2px;
+  outline: 2px solid rgba(25, 118, 210, 0.6);
+  outline-offset: 2px;
 }
 
 /* Optional: nicer hover in dark mode */
 @media (prefers-color-scheme: dark) {
-    .actions-row .p-button.p-button-text:not(.p-disabled):hover {
-        background-color: rgba(255, 255, 255, 0.08);
-    }
+  .actions-row .p-button.p-button-text:not(.p-disabled):hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
 
-    .actions-row .p-button.p-button-text:not(.p-disabled):active {
-        background-color: rgba(255, 255, 255, 0.14);
-    }
+  .actions-row .p-button.p-button-text:not(.p-disabled):active {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+}
+
+.p-card,
+.p-datatable,
+.card,
+.page-section {
+  background: #fff !important;
+  border: 1px solid #eef2f7 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06) !important;
+}
+
+/* =========================
+   Modern PrimeNG DataTable
+   ========================= */
+
+/* Container: rounded + shadow */
+.p-datatable {
+  border: 1px solid #eef2f7;
+  border-radius: 12px; /* <— rounded */
+  overflow: hidden; /* keep corners clean */
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+}
+
+/* Header cells: sticky + subtle bg */
+.p-datatable .p-datatable-thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fbfbfd;
+  color: #475569;
+  font-weight: 700;
+  border-bottom: 1px solid #eef2f7;
+  padding: 0.75rem 0.9rem;
+  white-space: nowrap;
+}
+
+/* Body cells */
+.p-datatable .p-datatable-tbody > tr > td {
+  border-bottom: 1px solid #f3f4f6;
+  padding: 0.75rem 0.9rem;
+  vertical-align: middle;
+}
+
+/* Row hover */
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: #f9fafb;
+}
+
+/* Optional: zebra striping for readability */
+.p-datatable .p-datatable-tbody > tr:nth-child(odd) {
+  background: #ffffff;
+}
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background: #fcfcfe;
+}
+
+/* Selected row (if you use selection) */
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  background: #eef5ff !important;
+  color: inherit;
+}
+
+/* Sort icons alignment */
+.p-sortable-column .p-sortable-column-icon {
+  margin-left: 0.35rem;
+  opacity: 0.7;
+}
+
+/* Table footer (if used) */
+.p-datatable .p-datatable-tfoot > tr > td {
+  background: #fbfbfd;
+  border-top: 1px solid #eef2f7;
+  font-weight: 600;
+}
+
+/* Paginator: compact + rounded buttons */
+.p-paginator {
+  border-top: 1px solid #eef2f7;
+  padding: 0.4rem 0.6rem;
+  background: #fff;
+}
+.p-paginator .p-paginator-pages .p-paginator-page,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+  border-radius: 8px;
+}
+.p-paginator .p-paginator-page.p-highlight {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+/* Responsive scroll tables: keep rounding on the wrapper too */
+.p-datatable-wrapper {
+  border-radius: 12px; /* mirrors table radius */
+  overflow: hidden; /* hide inner square corners */
+}
+
+/* Small variant polish (p-datatable-sm) */
+.p-datatable.p-datatable-sm .p-datatable-thead > tr > th,
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
+  padding: 0.55rem 0.7rem;
 }

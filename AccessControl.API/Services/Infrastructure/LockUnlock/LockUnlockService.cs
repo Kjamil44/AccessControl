@@ -23,7 +23,7 @@ namespace AccessControl.API.Services.Infrastructure.LockUnlock
 
             var cardholder = cardholders.FirstOrDefault(x => x.ValidateCardNumber(cardNumber));
             if (cardholder == null)
-                throw new CoreException($"Cardholder with the CardNumber: {cardNumber} is not Allowed User to Lock.");
+                throw new CoreException($"Cardholder with the given Card Number is not Allowed User to Lock.");
 
             return cardholder;
         }

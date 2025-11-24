@@ -1,35 +1,170 @@
 <div class="surface-border">
-    <form [formGroup]="formGroup">
-        <div class="form-group">
-            <div class="form-row">
-                <label for="firstName">First Name</label>
-                <input id="firstName" type="text" pInputText formControlName="firstName" class="form-control"
-                    placeholder="First Name">
-            </div>
-            <div class="form-row">       
-                <label for="lastName">Last Name</label>
-                <input id="lastName" type="text" pInputText formControlName="lastName" class="form-control"
-                    placeholder="Last Name">
-            </div>
-            <div class="form-row">
-                <label for="cardNumber">Card Number</label>
-                <input id="cardNumber" type="text" pInputText formControlName="cardNumber" class="form-control"
-                    placeholder="Card Number">
-            </div>
-            <div class="form-row">
-                <label for="site" class="site">Site</label>
-                <p-dropdown 
-                        [options]="sites" 
-                        formControlName="site"
-                        optionLabel="displayName" 
-                        placeholder="Select a Site"
-                        class="form-control"
-                        appendTo="body"/>       
-            </div>
+  <form [formGroup]="formGroup">
+    <div class="form-group">
+      <div class="form-row">
+        <label for="firstName">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          pInputText
+          formControlName="firstName"
+          class="form-control"
+          placeholder="First Name"
+        />
+      </div>
+
+      <div class="form-row">
+        <label for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          pInputText
+          formControlName="lastName"
+          class="form-control"
+          placeholder="Last Name"
+        />
+      </div>
+
+      <div class="form-row">
+        <label id="cardnumLabel"
+          >Card Number
+          <span class="info-icon">
+            <i
+              class="pi pi-question-circle"
+              pTooltip="Card Number expires one year after the cardholder’s creation date."
+              tooltipPosition="right"
+            ></i> </span
+        ></label>
+
+        <div
+          class="cardnum-wrap"
+          role="group"
+          aria-labelledby="cardnumLabel"
+          [class.disabled]="!toggleChanged"
+        >
+          <div class="digits-row">
+            <input
+              id="d1"
+              pInputText
+              class="digit"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              formControlName="d1"
+              [disabled]="!toggleChanged"
+              (input)="autoAdvance($event, 'd2')"
+              (keydown)="onDigitKeydown($event, null, 'd2')"
+              (paste)="onPaste($event)"
+            />
+
+            <input
+              id="d2"
+              pInputText
+              class="digit"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              formControlName="d2"
+              [disabled]="!toggleChanged"
+              (input)="autoAdvance($event, 'd3')"
+              (keydown)="onDigitKeydown($event, 'd1', 'd3')"
+            />
+
+            <input
+              id="d3"
+              pInputText
+              class="digit"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              formControlName="d3"
+              [disabled]="!toggleChanged"
+              (input)="autoAdvance($event, 'd4')"
+              (keydown)="onDigitKeydown($event, 'd2', 'd4')"
+            />
+
+            <input
+              id="d4"
+              pInputText
+              class="digit"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              formControlName="d4"
+              [disabled]="!toggleChanged"
+              (input)="autoAdvance($event, 'd5')"
+              (keydown)="onDigitKeydown($event, 'd3', 'd5')"
+            />
+
+            <input
+              id="d5"
+              pInputText
+              class="digit"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              formControlName="d5"
+              [disabled]="!toggleChanged"
+              (input)="autoAdvance($event, 'd6')"
+              (keydown)="onDigitKeydown($event, 'd4', 'd6')"
+            />
+
+            <input
+              id="d6"
+              pInputText
+              class="digit"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              formControlName="d6"
+              [disabled]="!toggleChanged"
+              (input)="autoAdvance($event, null)"
+              (keydown)="onDigitKeydown($event, 'd5', null)"
+            />
+          </div>
+
+          <small class="cardnum-subhint">
+            {{
+              toggleChanged
+                ? "Type one digit per box."
+                : "Digits enable after you change the status above."
+            }}
+          </small>
         </div>
-    </form>
+
+        <!-- keep a hidden synced control to preserve your API and validators -->
+        <input type="hidden" formControlName="cardNumber" />
+      </div>
+
+      <div class="form-row">
+        <label for="site" class="site">Site</label>
+        <p-dropdown
+          [options]="sites"
+          formControlName="site"
+          optionLabel="displayName"
+          placeholder="Select a Site"
+          class="form-control"
+          appendTo="body"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+  </form>
 </div>
+
 <div class="p-dialog-footer">
-    <button pButton type="button" (click)="closeCreateDialog()" label="Back" class="p-button-secondary"></button>
-    <button pButton type="button" (click)="createCardholder()" label="Create" class="p-button-primary"></button>
+  <button
+    pButton
+    type="button"
+    (click)="closeCreateDialog()"
+    label="Back"
+    class="p-button-secondary"
+  ></button>
+  <button
+    pButton
+    type="button"
+    (click)="createCardholder()"
+    label="Create"
+    class="p-button-primary"
+  ></button>
 </div>

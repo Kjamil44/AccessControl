@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
     this.data = [
       {
         label: 'Site',
-        icon: 'pi pi-home',
+        icon: 'pi pi-building',
         expanded: true,
         children: [
           {

@@ -30,7 +30,7 @@ export class EditLockComponent implements OnInit {
     }
     this.accessService.update(`api/locks`, this.lock.lockId, data).subscribe({
       next: data => {
-        this.accessService.createSuccessNotification("Lock edited successfully!")
+        this.accessService.createSuccessNotification("Lock updated successfully!")
         this.closeEditDialog()
       },
       error: (err: Error) => {

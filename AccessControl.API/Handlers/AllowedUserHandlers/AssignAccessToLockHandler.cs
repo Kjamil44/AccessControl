@@ -52,25 +52,25 @@ namespace AccessControl.API.Handlers.AllowedUserHandlers
                 var isPresent = lockFromDb.AllowedUsers
                     .Any(x => x.CardholderId == request.CardholderId);
 
-                if (!isPresent)
+                if (isPresent)
+                    throw new CoreException($"{cardholder.FullName} is already in the list of allowed users for lock access.");
+
+                var allowedUser = new AllowedUser
                 {
-                    var allowedUser = new AllowedUser
-                    {
-                        CardholderId = request.CardholderId,
-                        ScheduleId = request.ScheduleId
-                    };
+                    CardholderId = request.CardholderId,
+                    ScheduleId = request.ScheduleId
+                };
 
-                    lockFromDb.AssignAccessToLock(allowedUser);
-                    _session.Store(lockFromDb);
+                lockFromDb.AssignAccessToLock(allowedUser);
+                _session.Store(lockFromDb);
 
-                    await _liveEventPublisher.PublishAsync(
-                        lockFromDb.SiteId,
-                        lockFromDb.LockId,
-                        "Lock",
-                        LiveEventMessageType.LockAccessListUpdated,
-                        lockFromDb.DisplayName,
-                        $"Assigned Lock access to {cardholder.FullName} (Schedule: {schedule.DisplayName}).");
-                }    
+                await _liveEventPublisher.PublishAsync(
+                    lockFromDb.SiteId,
+                    lockFromDb.LockId,
+                    "Lock",
+                    LiveEventMessageType.LockAccessListUpdated,
+                    lockFromDb.DisplayName,
+                    $"Assigned Lock access to {cardholder.FullName} (Schedule: {schedule.DisplayName}).");
 
                 return new Response();
             }

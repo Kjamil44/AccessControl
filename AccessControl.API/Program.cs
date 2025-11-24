@@ -62,7 +62,6 @@ builder.Services.AddAuthentication(opt =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["SecurityKey"]))
     };
 
-    // OPTIONAL: if the hub is [Authorize] and you pass token via query (SignalR)
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = ctx =>
@@ -74,18 +73,35 @@ builder.Services.AddAuthentication(opt =>
             return Task.CompletedTask;
         }
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = ctx =>
+        {
+            ctx.HandleResponse();
+
+            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            ctx.Response.ContentType = "application/json";
+            return ctx.Response.WriteAsJsonAsync(CoreError.CreateUnauthorized());
+        },
+        OnForbidden = ctx =>
+        {
+            ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+            ctx.Response.ContentType = "application/json";
+            return ctx.Response.WriteAsJsonAsync(new CoreError("Forbidden.", 403));
+        }
+    };
 });
 
 // DI
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<ILiveEventPublisher, LiveEventPublisher>();
 builder.Services.AddScoped<ILockUnlockService, LockUnlockService>();
 builder.Services.AddScoped<IAccessValidator, AccessValidator>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MartenUnitOfWorkBehavior<,>));
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MartenSaveChangesBehavior<,>));
 
 const string FrontendCors = "FrontendCors";
 builder.Services.AddCors(opts =>
@@ -139,7 +155,6 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// NEW style endpoint mapping (don’t use UseEndpoints here)
 app.MapControllers();
 app.MapHub<LiveEventsHub>("/hubs/live-events");
 

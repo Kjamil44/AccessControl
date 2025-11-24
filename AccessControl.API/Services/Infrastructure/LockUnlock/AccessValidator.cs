@@ -1,4 +1,5 @@
-﻿using AccessControl.API.Models;
+﻿using AccessControl.API.Exceptions;
+using AccessControl.API.Models;
 
 namespace AccessControl.API.Services.Infrastructure.LockUnlock
 {

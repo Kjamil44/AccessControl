@@ -1,4 +1,5 @@
-﻿using AccessControl.API.Models;
+﻿using AccessControl.API.Exceptions;
+using AccessControl.API.Models;
 
 namespace AccessControl.API.Services.Infrastructure.LockUnlock
 {
@@ -7,7 +8,5 @@ namespace AccessControl.API.Services.Infrastructure.LockUnlock
         public Task<AccessValidationResult> ValidateLockTriggerAsync(Lock @lock, string cardNumber, DateTime mommentaryTriggerDate);
         public Task<AccessValidationResult> ValidateUnlockTriggerAsync(Lock @lock, string cardNumber, DateTime mommentaryTriggerDate);
     }
-
-    public record AccessValidationResult(bool IsAllowed, string? Reason = null);
 }
 
