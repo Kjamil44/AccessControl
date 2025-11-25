@@ -64,6 +64,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CardUnlockAnimationComponent } from './components/common/card-unlock-animation/card-unlock-animation/card-unlock-animation.component';
 import { LiveEventsComponent } from './components/live-events/live-events.component';
 import { CoreErrorInterceptor } from './services/core-error-interceptor';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AppSpinnerComponent } from './components/common/app-spinner/app-spinner.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +96,7 @@ import { CoreErrorInterceptor } from './services/core-error-interceptor';
     LockUnlockComponent,
     CardUnlockAnimationComponent,
     LiveEventsComponent,
+    AppSpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -133,6 +136,7 @@ import { CoreErrorInterceptor } from './services/core-error-interceptor';
     SplitButtonModule,
     TooltipModule,
     InputSwitchModule,
+    ProgressSpinnerModule
   ],
   providers: [
     MessageService,

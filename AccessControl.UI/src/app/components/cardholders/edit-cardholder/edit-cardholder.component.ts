@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-edit-cardholder',
@@ -15,6 +16,7 @@ export class EditCardholderComponent implements OnInit {
   constructor(
     private dialogref: DynamicDialogRef,
     private accessService: AccessControlService,
+    public spinner: SpinnerService,
     private config: DynamicDialogConfig
   ) {
     this.formGroup = new FormGroup({
@@ -33,15 +35,20 @@ export class EditCardholderComponent implements OnInit {
   }
 
   editCardholder() {
-    debugger;
     const data = {
       firstName: this.formGroup.value.firstName,
       lastName: this.formGroup.value.lastName,
       cardNumber: this.formGroup.controls['cardNumber'].value,
     };
 
-    this.accessService
-      .update(`api/cardholders`, this.cardholder.cardholderId, data)
+    this.spinner
+      .with(
+        this.accessService.update(
+          `api/cardholders`,
+          this.cardholder.cardholderId,
+          data
+        )
+      )
       .subscribe({
         next: (data) => {
           this.accessService.createSuccessNotification(

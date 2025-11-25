@@ -2,23 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-create-lock',
   templateUrl: './create-lock.component.html',
-  styleUrls: ['./create-lock.component.css']
+  styleUrls: ['./create-lock.component.css'],
 })
 export class CreateLockComponent implements OnInit {
   sites: any[] = [];
-  siteId: any
+  siteId: any;
   formGroup: FormGroup;
 
-  constructor(private accessService: AccessControlService,
+  constructor(
+    private accessService: AccessControlService,
     private dialogref: DynamicDialogRef,
-    private config: DynamicDialogConfig) {
+    public spinner: SpinnerService,
+    private config: DynamicDialogConfig
+  ) {
     this.formGroup = new FormGroup({
       displayName: new FormControl(),
-      site: new FormControl()
+      site: new FormControl(),
     });
   }
 
@@ -28,28 +32,29 @@ export class CreateLockComponent implements OnInit {
         this.sites = response.data;
       },
       error: (err: Error) => {
-        this.accessService.createErrorNotification(err.message)
-      }
-    })
+        this.accessService.createErrorNotification(err.message);
+      },
+    });
   }
 
   createLock() {
     const data = {
-      "siteId": this.formGroup.value.site.siteId,
-      "displayName": this.formGroup.value.displayName,
-    }
-
-    this.accessService.create(`api/locks`, data)
-      .subscribe({
-        next: data => {
-          this.accessService.createSuccessNotification("Lock created successfully!")
-          this.closeCreateDialog()
-        },
-        error: (err: Error) => {
-          this.accessService.createErrorNotification(err.message)
-          this.closeCreateDialog()
-        }
-      })
+      siteId: this.formGroup.value.site.siteId,
+      displayName: this.formGroup.value.displayName,
+    };
+    
+    this.spinner.with(this.accessService.create(`api/locks`, data)).subscribe({
+      next: (data) => {
+        this.accessService.createSuccessNotification(
+          'Lock created successfully!'
+        );
+        this.closeCreateDialog();
+      },
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
+        this.closeCreateDialog();
+      },
+    });
   }
 
   closeCreateDialog() {

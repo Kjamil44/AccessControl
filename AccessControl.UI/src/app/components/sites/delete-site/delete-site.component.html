@@ -4,5 +4,5 @@
 </div>
 <div class="p-dialog-footer">
     <button pButton type="button" (click)="closeDeleteDialog()" label="Back" class="p-button-secondary"></button>
-    <p-button (click)="deleteSite()" label="Delete" severity="danger" />
+    <p-button (click)="deleteSite()" label="Delete" severity="danger" [loading]="(spinner.visible$ | async) ?? false"/>
 </div>

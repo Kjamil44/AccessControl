@@ -2,9 +2,14 @@
   <i class="pi pi-megaphone icon"></i>
   <h2 class="title">Live Events</h2>
   <div style="margin-left: auto; padding-bottom: 15px">
-    <p-button size="large" (click)="clearAllFilters()" severity="secondary"
-      >Clear Filters</p-button
+    <button
+      pButton
+      icon="pi pi-filter-slash"
+      (click)="clearAllFilters()"
+      class="btn-create btn-clear-filter"
     >
+      Clear Filters
+    </button>
   </div>
 </div>
 

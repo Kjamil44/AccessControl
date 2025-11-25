@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-create-cardholder',
@@ -17,6 +18,7 @@ export class CreateCardholderComponent implements OnInit {
   constructor(
     private accessService: AccessControlService,
     private dialogref: DynamicDialogRef,
+    public spinner: SpinnerService,
     private config: DynamicDialogConfig
   ) {
     this.formGroup = new FormGroup({
@@ -140,7 +142,7 @@ export class CreateCardholderComponent implements OnInit {
     if (this.formGroup.invalid) {
       this.formGroup.markAllAsTouched();
       this.accessService.createErrorNotification(
-        'Please enter a 6-digit Card Number.'
+        'Please enter a 6-digit Card number.'
       );
       return;
     }
@@ -152,18 +154,20 @@ export class CreateCardholderComponent implements OnInit {
       cardNumber: this.formGroup.value.cardNumber,
     };
 
-    this.accessService.create(`api/cardholders`, data).subscribe({
-      next: () => {
-        this.accessService.createSuccessNotification(
-          'Cardholder created successfully!'
-        );
-        this.closeCreateDialog();
-      },
-      error: (err: Error) => {
-        this.accessService.createErrorNotification(err.message);
-        this.closeCreateDialog();
-      },
-    });
+    this.spinner
+      .with(this.accessService.create(`api/cardholders`, data))
+      .subscribe({
+        next: () => {
+          this.accessService.createSuccessNotification(
+            'Cardholder created successfully!'
+          );
+          this.closeCreateDialog();
+        },
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
+          this.closeCreateDialog();
+        },
+      });
   }
 
   closeCreateDialog() {

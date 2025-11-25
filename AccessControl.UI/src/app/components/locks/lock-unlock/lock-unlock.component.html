@@ -1,11 +1,11 @@
 <form [formGroup]="form" class="lock-unlock-form">
   <!-- Header / message - same visual style as your delete dialog -->
   <div class="dialog-header-center">
-    <i class="pi pi-lock" style="font-size: 1.0rem; margin-right:.35rem;"></i>
+    <i class="pi pi-lock" style="font-size: 1rem; margin-right: 0.35rem"></i>
     <label>{{ lock?.displayName }}</label>
     <div class="status-line">
-      <label style="font-style: italic;">
-        Current status: <b>{{ lock?.isLocked ? 'Locked' : 'Unlocked' }}</b>
+      <label style="font-style: italic">
+        Current status: <b>{{ lock?.isLocked ? "Locked" : "Unlocked" }}</b>
       </label>
     </div>
   </div>
@@ -17,11 +17,9 @@
       <p-inputSwitch formControlName="lockState" (onChange)="onToggleChanged()" [trueValue]="'Locked'"
         [falseValue]="'Unlocked'">
       </p-inputSwitch>
-      <span class="toggle-text">{{ form.get('lockState')?.value }}</span>
+      <span class="toggle-text">{{ form.get("lockState")?.value }}</span>
     </div>
-    <small class="hint">
-      Flip the toggle to change the lock state.
-    </small>
+    <small class="hint"> Flip the toggle to change the lock state. </small>
   </div>
 
   <!-- Card number section (prominent panel) -->
@@ -29,7 +27,11 @@
     <div class="cardnum-header">
       <span id="cardnumLabel" class="cardnum-title">Enter 6-digit card number</span>
       <small class="cardnum-subhint">
-        {{ toggleChanged ? 'Type one digit per box.' : 'Digits enable after you change the status above.' }}
+        {{
+        toggleChanged
+        ? "Type one digit per box."
+        : "Digits enable after you change the status above."
+        }}
       </small>
     </div>
 
@@ -62,8 +64,8 @@
   <!-- Footer buttons -->
   <div class="p-dialog-footer footer-center">
     <p-button type="button" (click)="onBack()" label="Back" severity="secondary"></p-button>
-    <p-button label="Confirm" type="button" (click)="onConfirm()" [disabled]="form.invalid || !toggleChanged"
-      class="p-button-primary">
+    <p-button label="Confirm" type="button" (click)="onConfirm()" [loading]="(spinner.visible$ | async) ?? false"
+      [disabled]="form.invalid || !toggleChanged || ((spinner.visible$ | async) ?? false)" class="p-button-primary">
     </p-button>
   </div>
 </form>

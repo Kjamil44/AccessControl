@@ -6,6 +6,7 @@
 :root {
   --blue: #56a6f7;
   --blue-deep: #3d8eea;
+  --blue-ring: rgba(86, 166, 247, 0.25);
 }
 
 body.main-content {
@@ -184,17 +185,6 @@ body.main-content .title {
   outline-offset: 2px;
 }
 
-/* Optional: nicer hover in dark mode */
-@media (prefers-color-scheme: dark) {
-  .actions-row .p-button.p-button-text:not(.p-disabled):hover {
-    background-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .actions-row .p-button.p-button-text:not(.p-disabled):active {
-    background-color: rgba(255, 255, 255, 0.14);
-  }
-}
-
 .p-card,
 .p-datatable,
 .card,
@@ -299,4 +289,72 @@ body.main-content .title {
 .p-datatable.p-datatable-sm .p-datatable-thead > tr > th,
 .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
   padding: 0.55rem 0.7rem;
+}
+
+/* =========================
+   Brand-blue Primary Button
+   ========================= */
+
+:root {
+  /* tweak if you want a softer focus ring */
+  --blue-ring: rgba(86, 166, 247, 0.25);
+}
+
+/* Toolbar wrapper (filters left, button right) */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 0.75rem 0;
+}
+@media (max-width: 768px) {
+  .table-toolbar {
+    flex-wrap: wrap;
+  }
+  .table-toolbar .right {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* Primary "Create" button */
+.btn-create.p-button {
+  background: var(--blue);
+  border: 1px solid transparent;
+  color: #fff;
+  border-radius: 12px; /* match table/pill radius */
+  padding: 0.6rem 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+.btn-create.p-button:hover {
+  background: var(--blue-deep);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transform: translateY(-1px);
+}
+.btn-create.p-button:active {
+  filter: brightness(0.98);
+}
+.btn-create .p-button-icon {
+  margin-right: 0.5rem;
+}
+
+/* Accessible focus ring */
+.btn-create.p-button:focus-visible {
+  outline: 2px solid var(--blue-ring);
+  outline-offset: 2px;
+}
+
+/* Optional: compact size if you ever need it */
+.btn-create--sm.p-button {
+  padding: 0.45rem 0.8rem;
+  border-radius: 12px;
+}
+
+.btn-clear-filter{
+  background:gray !important;
 }

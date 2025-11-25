@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-edit-schedule',
@@ -28,6 +29,7 @@ export class EditScheduleComponent implements OnInit {
   constructor(
     private dialogref: DynamicDialogRef,
     private accessService: AccessControlService,
+    public spinner: SpinnerService,
     private config: DynamicDialogConfig
   ) {
     this.formGroup = new FormGroup({
@@ -71,8 +73,14 @@ export class EditScheduleComponent implements OnInit {
       endTime: this.formGroup.value.endTime,
     };
 
-    this.accessService
-      .update(`api/schedules`, this.schedule.scheduleId, data)
+    this.spinner
+      .with(
+        this.accessService.update(
+          `api/schedules`,
+          this.schedule.scheduleId,
+          data
+        )
+      )
       .subscribe({
         next: (data) => {
           this.accessService.createSuccessNotification(

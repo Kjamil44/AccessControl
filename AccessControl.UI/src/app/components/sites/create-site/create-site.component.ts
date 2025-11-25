@@ -2,41 +2,49 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-create-site',
   templateUrl: './create-site.component.html',
-  styleUrls: ['./create-site.component.css']
+  styleUrls: ['./create-site.component.css'],
 })
 export class CreateSiteComponent implements OnInit {
   displayCreateDialog: boolean = false;
   formGroup: FormGroup;
 
-  constructor(private fb: FormBuilder, private accessService: AccessControlService, private dialogref: DynamicDialogRef) {
+  constructor(
+    private fb: FormBuilder,
+    private accessService: AccessControlService,
+    public spinner: SpinnerService,
+    private dialogref: DynamicDialogRef
+  ) {
     this.formGroup = this.fb.group({
-      displayName: ['']
+      displayName: [''],
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   createSite() {
     const data = {
-      "displayName": this.formGroup.value.displayName,
-    }
+      displayName: this.formGroup.value.displayName,
+    };
 
-    this.accessService.create('api/sites', data)
-      .subscribe({
-        next: data => {
-          this.accessService.createSuccessNotification("Site created successfully!")
-          this.closeCreateDialog();
-        },
-        error: (err: Error) => {
-          this.accessService.createErrorNotification(`Failed to Create Site: ${err.message}`);
-          this.closeCreateDialog();
-        }
-      })
+    this.spinner.with(this.accessService.create('api/sites', data)).subscribe({
+      next: (data) => {
+        this.accessService.createSuccessNotification(
+          'Site created successfully!'
+        );
+        this.closeCreateDialog();
+      },
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(
+          `Failed to Create Site: ${err.message}`
+        );
+        this.closeCreateDialog();
+      },
+    });
   }
 
   closeCreateDialog() {

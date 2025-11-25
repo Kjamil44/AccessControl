@@ -166,5 +166,6 @@
     (click)="createCardholder()"
     label="Create"
     class="p-button-primary"
+    [loading]="(spinner.visible$ | async) ?? false"
   ></button>
 </div>

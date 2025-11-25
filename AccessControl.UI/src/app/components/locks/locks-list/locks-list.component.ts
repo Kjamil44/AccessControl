@@ -74,7 +74,7 @@ export class LocksListComponent implements OnInit {
     const ref = this.dialog.open(EditLockComponent, {
       header: `Edit Lock from ${this.siteName}`,
       width: '610px',
-      height: '250px',
+      height: '280px',
       baseZIndex: 10000,
       data: { lock }
     });

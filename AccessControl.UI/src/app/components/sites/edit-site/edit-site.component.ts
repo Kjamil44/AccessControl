@@ -2,23 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-edit-site',
   templateUrl: './edit-site.component.html',
-  styleUrls: ['./edit-site.component.css']
+  styleUrls: ['./edit-site.component.css'],
 })
 export class EditSiteComponent implements OnInit {
   site: any;
   submitted = false;
   formGroup: FormGroup;
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private dialogref: DynamicDialogRef,
     private accessService: AccessControlService,
-    private config: DynamicDialogConfig) {
+    public spinner: SpinnerService,
+    private config: DynamicDialogConfig
+  ) {
     this.formGroup = this.fb.group({
-      displayName: ['']
+      displayName: [''],
     });
   }
 
@@ -29,23 +33,26 @@ export class EditSiteComponent implements OnInit {
 
   editSite() {
     const data = {
-      "displayName": this.formGroup.value.displayName
-    }
+      displayName: this.formGroup.value.displayName,
+    };
 
-    this.accessService.update('api/sites', this.site.siteId, data).subscribe({
-      next: data => {
-        this.accessService.createSuccessNotification("Site updated successfully!")
-        this.closeCreateDialog()
-      },
-      error: (err: Error) => {
-        this.accessService.createErrorNotification(err.message)
-        this.closeCreateDialog()
-      }
-    })
+    this.spinner
+      .with(this.accessService.update('api/sites', this.site.siteId, data))
+      .subscribe({
+        next: (data) => {
+          this.accessService.createSuccessNotification(
+            'Site updated successfully!'
+          );
+          this.closeCreateDialog();
+        },
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
+          this.closeCreateDialog();
+        },
+      });
   }
 
   closeCreateDialog() {
     this.dialogref.close();
   }
-
 }

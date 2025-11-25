@@ -1,5 +1,6 @@
 import { Component, Renderer2, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { SpinnerService } from './services/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
   title = 'AccessControl.UI';
   isMainContent: boolean = false;
 
-  constructor(private router: Router, private renderer: Renderer2) {
+  constructor(private router: Router, private renderer: Renderer2, public spinner: SpinnerService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isMainContent = !['/', '/login', '/register'].includes(event.urlAfterRedirects);

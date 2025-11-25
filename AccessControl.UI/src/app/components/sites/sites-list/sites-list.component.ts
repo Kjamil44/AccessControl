@@ -44,7 +44,7 @@ export class SitesListComponent implements OnInit {
     const ref = this.dialog.open(EditSiteComponent, {
       header: 'Edit Site',
       width: '600px',
-      height: '250px',
+      height: '280px',
       baseZIndex: 10000,
       data: {
         site: site

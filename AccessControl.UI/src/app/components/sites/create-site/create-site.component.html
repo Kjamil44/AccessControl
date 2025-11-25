@@ -11,5 +11,5 @@
 </div>
 <div class="p-dialog-footer">
     <button pButton type="button" (click)="closeCreateDialog()" label="Back" class="p-button-secondary"></button>
-    <button pButton type="button" (click)="createSite()" label="Create" class="p-button-primary"></button>
+    <button pButton type="button" (click)="createSite()" label="Create" class="p-button-primary" [loading]="(spinner.visible$ | async) ?? false"></button>
 </div>
