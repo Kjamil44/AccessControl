@@ -5,6 +5,10 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessControl.API", "AccessControl.API\AccessControl.API.csproj", "{CB255513-9E41-49F4-BBA4-89E8CA5A7934}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Contracts", "AccessControl.Contracts\AccessControl.Contracts.csproj", "{5AC7648C-D488-2148-F5BA-21224C97EF38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessControl.Messaging", "AccessControl.Messaging\AccessControl.Messaging.csproj", "{89A81848-B0ED-60B9-D258-28C6594C6D67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{CB255513-9E41-49F4-BBA4-89E8CA5A7934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB255513-9E41-49F4-BBA4-89E8CA5A7934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB255513-9E41-49F4-BBA4-89E8CA5A7934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AC7648C-D488-2148-F5BA-21224C97EF38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AC7648C-D488-2148-F5BA-21224C97EF38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AC7648C-D488-2148-F5BA-21224C97EF38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AC7648C-D488-2148-F5BA-21224C97EF38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89A81848-B0ED-60B9-D258-28C6594C6D67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89A81848-B0ED-60B9-D258-28C6594C6D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89A81848-B0ED-60B9-D258-28C6594C6D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89A81848-B0ED-60B9-D258-28C6594C6D67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

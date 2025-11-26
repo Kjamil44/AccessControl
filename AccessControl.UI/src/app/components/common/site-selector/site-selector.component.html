@@ -1,8 +1,16 @@
-<label style="color: white; font-size:larger">Filter By Site: </label>
-<p-dropdown 
-    [options]="sites" 
-    [(ngModel)]="selectedSite" 
+<div class="site-pill">
+  <i class="pi pi-building"></i>
+  <p-dropdown
+    [options]="sites"
+    [(ngModel)]="selectedSite"
     (onChange)="setSiteId($event)"
-    optionLabel="displayName" 
-    placeholder="Select a Site"/>
-
+    (onClear)="clearSelectedSite()"
+    optionLabel="displayName"
+    placeholder="All Sites"
+    [filter]="true"
+    [showClear]="true"
+    appendTo="body"
+    styleClass="site-pill__dd"
+    panelStyleClass="site-dd-panel"
+  ></p-dropdown>
+</div>

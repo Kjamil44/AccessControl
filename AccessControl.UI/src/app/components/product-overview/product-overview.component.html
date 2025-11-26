@@ -1,0 +1,99 @@
+<!-- product-overview.component.html -->
+
+<div class="hero">
+  <div class="hero__logo-wrap">
+    <img [src]="logoSrc" alt="Access Control Logo" class="hero__logo" />
+  </div>
+  <div class="hero__text">
+    <h1 class="hero__title">Access Control</h1>
+    <p class="hero__subtitle">Smart Lock Management System</p>
+  </div>
+</div>
+
+<!-- Feature highlights -->
+<div class="features">
+  <div
+    class="feature"
+    *ngFor="let f of featureBullets; let i = index"
+    [style.animationDelay.ms]="100 * i"
+  >
+    <i class="{{ f.icon }}"></i>
+    <div>
+      <h4>{{ f.title }}</h4>
+      <p>{{ f.desc }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Two cards grid -->
+<div class="grid">
+  <!-- Welcome -->
+  <p-card class="standard-card welcome-card">
+    <div class="welcome">
+      <h2>Welcome to Access Control</h2>
+
+      <p>
+        <strong>AccessControl</strong> is a smart lock management system built
+        for both <em>security</em> and <em>speed</em>. It gives you a clear,
+        modern UI for managing <strong>Sites</strong>, <strong>Locks</strong>,
+        <strong>Cardholders</strong>, and <strong>Schedules</strong>—and a
+        robust, cloud-ready backend that scales.
+      </p>
+
+      <p>
+        Under the hood we run on <strong>.NET 8</strong> and
+        <strong>Angular + PrimeNG</strong>. Commands and queries are cleanly
+        separated with <strong>MediatR</strong> and <strong>CQRS</strong>, while
+        <strong>MassTransit</strong> + <strong>RabbitMQ</strong> power our
+        event-driven workflows (from live events to async processing).
+        Authentication uses <strong>JWT</strong>, and data is stored in
+        <strong>MartenDB</strong> on <strong>PostgreSQL</strong> for flexible,
+        document-first modeling.
+      </p>
+
+      <p class="welcome-highlights">
+        The result: <strong>predictable operations</strong>,
+        <strong>auditable activity</strong>, and
+        <strong>fast iteration</strong> when your access rules evolve.
+      </p>
+
+      <ul class="bullets">
+        <li><strong>Site:</strong> Your physical locations.</li>
+        <li><strong>Lock:</strong> Controlled entry points per site.</li>
+        <li><strong>Cardholders:</strong> People with permissions.</li>
+        <li><strong>Schedules:</strong> Time windows for allowed access.</li>
+      </ul>
+    </div>
+  </p-card>
+
+  <!-- Organization Chart -->
+  <p-card class="standard-card organization-card">
+    <div class="org">
+      <h2>Hierarchy</h2>
+      <p-organizationChart [value]="orgData">
+        <ng-template let-node pTemplate="default">
+          <div class="node">
+            <i class="{{ node.icon }}"></i>
+            <span>{{ node.label }}</span>
+          </div>
+        </ng-template>
+      </p-organizationChart>
+    </div>
+  </p-card>
+</div>
+
+<!-- CTA strip -->
+<div class="cta">
+  <div class="cta__text">
+    <h3>Ready to manage access with confidence?</h3>
+    <p>Start by creating a Site, adding Locks, and inviting Cardholders.</p>
+  </div>
+  <button
+    pButton
+    type="button"
+    icon="pi pi-plus"
+    label="Create Your First Site"
+    class="btn-create"
+    (click)="onSiteCreate()"
+  ></button>
+</div>

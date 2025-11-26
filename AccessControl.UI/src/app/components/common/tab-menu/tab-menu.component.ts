@@ -29,17 +29,19 @@ export class TabMenuComponent implements OnInit {
         this.username = response.data.username;
         this.userInitials = this.getInitials(this.username);
       },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message);
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
       }
     });
 
     this.items = [
       { label: 'Dashboard', icon: 'pi pi-chart-line', routerLink: 'dashboard' },
-      { label: 'Sites', icon: 'pi pi-home', routerLink: 'sites' },
+      { label: 'Sites', icon: 'pi pi-building', routerLink: 'sites' },
       { label: 'Locks', icon: 'pi pi-lock', routerLink: 'locks' },
       { label: 'Cardholders', icon: 'pi pi-id-card', routerLink: 'cardholders' },
-      { label: 'Schedules', icon: 'pi pi-calendar-clock', routerLink: 'schedules' }
+      { label: 'Schedules', icon: 'pi pi-calendar-clock', routerLink: 'schedules' },
+      { label: 'Live Events', icon: 'pi pi-megaphone', routerLink: 'live-events' },
+      { label: 'About', icon: 'pi pi-info-circle', routerLink: 'about' },
     ]
   }
 

@@ -1,0 +1,17 @@
+<!-- Nothing rendered if not visible -->
+<ng-container *ngIf="visible">
+  <div
+    class="spinner-host"
+    [class.overlay]="overlay"
+    [class.fullscreen]="fullscreen"
+  >
+    <p-progressSpinner
+      [style.width.px]="size"
+      [style.height.px]="size"
+      [strokeWidth]="strokeWidth"
+      animationDuration=".7s"
+    ></p-progressSpinner>
+
+    <div class="spinner-message" *ngIf="message">{{ message }}</div>
+  </div>
+</ng-container>

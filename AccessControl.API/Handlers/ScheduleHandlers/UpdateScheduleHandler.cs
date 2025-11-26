@@ -1,6 +1,9 @@
-﻿using AccessControl.API.Exceptions;
-using AccessControl.API.Helper;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
+using AccessControl.API.Helpers;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
 
@@ -8,7 +11,7 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
 {
     public class UpdateSchedule
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid SiteId { get; set; }
             public Guid ScheduleId { get; set; }
@@ -23,7 +26,13 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -44,7 +53,15 @@ namespace AccessControl.API.Handlers.ScheduleHandlers
                     request.EndTime.ToUniversalTime());
 
                 _session.Store(schedule);
-                await _session.SaveChangesAsync();
+
+                await _liveEventPublisher.PublishAsync(
+                     schedule.SiteId,
+                     schedule.ScheduleId,
+                     "Schedule",
+                     LiveEventMessageType.ScheduleDeleted,
+                     schedule.DisplayName,
+                     "Schedule updated");
+
                 return new Response();
             }
         }

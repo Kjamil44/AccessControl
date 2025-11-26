@@ -1,43 +1,66 @@
 <site-selector (site)="showLocks($event)"></site-selector>
+
 <div class="k-d-flex k-align-items-center">
     <i class="pi pi-lock icon"></i>
     <h2 class="title">Locks</h2>
     <div style="margin-left:auto; padding-bottom: 15px;">
-        <p-button size="large" (click)="onCreate()" severity="success">Create
-            Lock</p-button>
+        <button pButton icon="pi pi-plus" (click)="onCreate()" class="btn-create">Create Lock</button>
     </div>
 </div>
-<p-table [value]="locks" 
-         styleClass="p-datatable-gridlines p-datatable-striped" 
-         [tableStyle]="{ 'min-width': '50rem' }"
-         selectionMode="single">
+
+<p-table [value]="locks" styleClass="p-datatable-gridlines p-datatable-striped" [tableStyle]="{ 'min-width': '50rem' }"
+    selectionMode="single">
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="displayName">Lock Name <p-sortIcon field="displayName" /></th>
             <th pSortableColumn="siteName">Site <p-sortIcon field="siteName" /></th>
-            <th pSortableColumn="numberOfAllowedUsers">Users with Access <p-sortIcon field="numberOfAllowedUsers" /></th>
+            <th pSortableColumn="numberOfAllowedUsers">Users with Access <p-sortIcon field="numberOfAllowedUsers" />
+            </th>
+            <th pSortableColumn="isLocked" style="width: 9rem;">Status <p-sortIcon field="isLocked" /></th>
             <th pSortableColumn="dateCreated">Date Created <p-sortIcon field="dateCreated" /></th>
             <th pSortableColumn="dateModified">Date Modified <p-sortIcon field="dateModified" /></th>
-            <th  style="width: 12.5rem;">Actions</th>
+            <th style="width: 16rem;">Actions</th>
         </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-lock>
         <tr [pSelectableRow]="lock">
             <td>{{ lock.displayName }}</td>
             <td>{{ lock.siteName }}</td>
             <td>{{ lock.numberOfAllowedUsers }}</td>
-            <td>{{ lock.dateCreated | date:'dd MMMM YYYY' }}</td>
-            <td>{{ lock.dateModified | date:'dd MMMM YYYY' }}</td>
             <td>
-                <p-button label="Edit Access"  size="small" (click)="onEditAccess(lock)" severity="secondary"></p-button>
-                <p-button label="Edit"  size="small" (click)="onEdit(lock)"></p-button>
-                <p-button label="Delete" size="small" (click)="onDelete(lock)" severity="danger" class="delete-button"></p-button>
+                <p-tag [value]="lock.isLocked ? 'Locked' : 'Unlocked'" [severity]="lock.isLocked ? 'danger' : 'success'"
+                    styleClass="status-tag">
+                    <i [ngClass]="lock.isLocked ? 'pi pi-lock' : 'pi pi-unlock'" class="mr-1"></i>
+                </p-tag>
+            </td>
+            <td>{{ lock.dateCreated | date:'dd MMMM yyyy' }}</td>
+            <td>{{ lock.dateModified | date:'dd MMMM yyyy' }}</td>
+            <td class="actions-cell">
+                <div class="actions-row">
+                    <p-button icon="pi pi-user-edit" [rounded]="true" [text]="true" size="large" pTooltip="Edit Access"
+                        tooltipPosition="top" aria-label="Edit Access" (onClick)="onEditAccess(lock)"></p-button>
+
+                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" size="large" pTooltip="Edit"
+                        tooltipPosition="top" aria-label="Edit" (onClick)="onEdit(lock)"></p-button>
+
+                    <p-button [icon]="lock.isLocked ? 'pi pi-unlock' : 'pi pi-lock'" [rounded]="true" [text]="true"
+                        size="large" [severity]="lock.isLocked ? 'warning' : 'help'"
+                        [pTooltip]="lock.isLocked ? 'Trigger Unlock' : 'Trigger Lock'" tooltipPosition="top"
+                        [attr.aria-label]="lock.isLocked ? 'Trigger Unlock' : 'Trigger Lock'"
+                        (onClick)="onToggleLockUnlock(lock)"></p-button>
+
+                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" size="large" severity="danger"
+                        pTooltip="Delete" tooltipPosition="top" aria-label="Delete"
+                        (onClick)="onDelete(lock)"></p-button>
+                </div>
             </td>
         </tr>
     </ng-template>
+
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="6" class="no-data-text">No locks available</td>
+            <td colspan="7" class="no-data-text">No locks available</td>
         </tr>
     </ng-template>
 </p-table>

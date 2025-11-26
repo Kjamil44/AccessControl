@@ -18,13 +18,14 @@ namespace AccessControl.API.Handlers.LockHandlers
             public Guid SiteId { get; set; }
             public string SiteDisplayName { get; set; }
             public string DisplayName { get; set; }
+            public bool IsLocked { get; set; }
             public class Item
             {
                 public Guid CardholderId { get; set; }
                 public Guid ScheduleId { get; set; }
                 public string CardholderName { get; set; }
                 public string ScheduleName { get; set; }
-                public List<Days> ScheduleDays { get; set; } = new List<Days>();
+                public List<DayOfWeek> ScheduleDays { get; set; } = new List<DayOfWeek>();
             }
             public IEnumerable<Item> AssignedUsers { get; set; }
             public DateTime DateCreated { get; set; }
@@ -74,7 +75,8 @@ namespace AccessControl.API.Handlers.LockHandlers
                         };
                     }),
                     DateCreated = lockFromDb.DateCreated,
-                    DateModified = lockFromDb.DateModified
+                    DateModified = lockFromDb.DateModified,
+                    IsLocked = lockFromDb.IsLocked,
                 };
             }
         }

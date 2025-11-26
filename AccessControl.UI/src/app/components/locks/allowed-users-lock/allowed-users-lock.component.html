@@ -1,109 +1,181 @@
-<div class="card-container" style="display: flex; justify-content: space-between; align-items: flex-start;">
-    <!-- Left Side: Original p-card for editing access -->
-    <div class="left-card" style="flex: 1; margin-right: 20px;">
-        <p-card header="Edit Access to Lock - {{ lock?.displayName }}">
-            <form [formGroup]="formGroup" class="p-fluid" style="max-height: 500px; overflow-y: auto;">
-                <div class="p-field">
-                    <label *ngIf="userIsPresent" class="labelFirst">Assigned Users</label>
-                    <div *ngIf="userIsPresent; else noUsersTemplate">
-                        <ol class="p-list">
-                            <li *ngFor="let user of users" [class.selected]="isUserSelected(user)">
-                                <span><b>Cardholder:</b> {{ user.cardholderName }}, <b>Schedule: </b></span>
-                                <div class="dropdown-container" *ngIf="user.editing; else viewModeTemplate">
-                                    <p-dropdown [options]="schedules" [formControl]="user.scheduleControl"
-                                        optionLabel="displayName" placeholder="Select a Schedule"></p-dropdown>
-                                </div>
-                                <ng-template #viewModeTemplate>
-                                    <span> {{ user.scheduleName }}</span>
-                                </ng-template>
-                                <div class="actions">
-                                    <p-button *ngIf="!user.editing" icon="pi pi-pencil"
-                                        (click)="editUser(user)"></p-button>
-                                    <p-button *ngIf="!user.editing" icon="pi pi-trash" severity="danger"
-                                        (click)="removeUser(user, $event)"></p-button>
-                                    <p-button *ngIf="user.editing" icon="pi pi-check" severity="success"
-                                        (click)="saveEdit(user)"></p-button>
-                                    <p-button *ngIf="user.editing" icon="pi pi-times"
-                                        (click)="cancelEdit(user)"></p-button>
-                                </div>
-                            </li>
-                        </ol>
+<div class="page">
+
+  <div class="page__header">
+    <div class="card-header">
+      <i class="pi pi-user-edit icon"></i>
+      <span>Edit Access to Lock — {{ lock?.displayName }}</span>
+    </div>
+  </div>
+
+  <div class="split">
+
+    <!-- LEFT: Edit access -->
+    <div class="panel panel--left">
+      <p-card>
+        <form [formGroup]="formGroup" class="p-fluid form-wrap">
+
+          <!-- Assigned Users -->
+          <div class="block">
+            <label *ngIf="userIsPresent" class="labelFirst block__title">Assigned Users</label>
+
+            <ng-container *ngIf="userIsPresent; else noUsersTemplate">
+              <ol class="p-list user-list">
+                <li *ngFor="let user of users" class="user-row" [class.selected]="isUserSelected(user)">
+                  <div class="user-row__main">
+                    <span class="user-row__who">
+                      <b>Cardholder:</b> {{ user.cardholderName }}
+                    </span>
+                    <span class="user-row__schedule-label"><b>Schedule:</b></span>
+
+                    <!-- Edit mode -->
+                    <div class="user-row__editor" *ngIf="user.editing; else viewModeTemplate">
+                      <p-dropdown
+                        [options]="schedules"
+                        [formControl]="user.scheduleControl"
+                        optionLabel="displayName"
+                        placeholder="Select a Schedule">
+                      </p-dropdown>
                     </div>
-                    <ng-template #noUsersTemplate>
-                        <h3>No users have been assigned</h3>
+
+                    <!-- View mode -->
+                    <ng-template #viewModeTemplate>
+                      <span class="user-row__schedule">{{ user.scheduleName }}</span>
                     </ng-template>
+                  </div>
+
+                  <div class="user-row__actions">
+                    <p-button *ngIf="!user.editing" icon="pi pi-pencil" (click)="editUser(user)"></p-button>
+                    <p-button *ngIf="!user.editing" icon="pi pi-trash" severity="danger" (click)="removeUser(user, $event)"></p-button>
+
+                    <p-button *ngIf="user.editing" icon="pi pi-check" severity="success" (click)="saveEdit(user)"></p-button>
+                    <p-button *ngIf="user.editing" icon="pi pi-times" (click)="cancelEdit(user)"></p-button>
+                  </div>
+                </li>
+              </ol>
+            </ng-container>
+
+            <ng-template #noUsersTemplate>
+              <div class="empty">
+                <i class="pi pi-user-minus"></i>
+                <div>
+                  <h3>No users have been assigned</h3>
+                  <p>Use “Choose New User” to assign a cardholder and schedule.</p>
                 </div>
-                <hr />
-                <div class="p-field">
-                    <p-button [disabled]="clicked" label="Choose New User" (click)="chooseNewUser()"></p-button>
-                    <div *ngIf="show" class="assign-new-user">
-                        <label>Choose a Cardholder from <strong>{{ siteDisplayName }}</strong></label>
-                        <p-dropdown [options]="cardholders" formControlName="cardholder" optionLabel="fullName"
-                            placeholder="Select a Cardholder"></p-dropdown>
-                        <br>
-                        <label>Choose a Schedule from <strong>{{ siteDisplayName }}</strong></label>
-                        <p-dropdown [options]="schedules" formControlName="schedule" optionLabel="displayName"
-                            placeholder="Select a Schedule"></p-dropdown>
-                        <br>
-                        <p-button label="Assign New User" severity="success" (click)="assignUserToLock()"></p-button>
-                    </div>
-                </div>
-                <hr>
-                <p-button label="Back" severity="secondary" (click)="closeDialog()"></p-button>
-            </form>
-        </p-card>
+              </div>
+            </ng-template>
+          </div>
+
+          <hr class="sep" />
+
+          <!-- Add new user -->
+          <div class="block">
+            <div class="row">
+              <p-button [disabled]="clicked" label="Choose New User" (click)="chooseNewUser()"></p-button>
+            </div>
+
+            <div *ngIf="show" class="assign-new-user grid-2">
+              <div class="field">
+                <label>Choose a Cardholder from <strong>{{ siteDisplayName }}</strong></label>
+                <p-dropdown
+                  [options]="cardholders"
+                  formControlName="cardholder"
+                  optionLabel="fullName"
+                  placeholder="Select a Cardholder">
+                </p-dropdown>
+              </div>
+
+              <div class="field">
+                <label>Choose a Schedule from <strong>{{ siteDisplayName }}</strong></label>
+                <p-dropdown
+                  [options]="schedules"
+                  formControlName="schedule"
+                  optionLabel="displayName"
+                  placeholder="Select a Schedule">
+                </p-dropdown>
+              </div>
+
+              <div class="row">
+                <p-button label="Assign New User" severity="success" (click)="assignUserToLock()"></p-button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="sep" />
+
+          <div class="footer-actions">
+            <p-button label="Back" severity="secondary" (click)="goBackToLocksPage()"></p-button>
+          </div>
+
+        </form>
+      </p-card>
     </div>
 
-    <!-- Right Side: Independent p-card for site-wide cardholder and schedule info -->
-    <div class="right-card" style="width: 400px;">
-        <p-card header="Available Cardholders and Schedules on Site - {{ siteDisplayName }}" styleClass="p-datatable-sm">
-            <!-- Cardholders Section -->
-            <div class="p-list">
-                <h4><i class="pi pi-id-card"></i> Cardholders</h4>
-                <p-table [value]="cardholders" class="cardholder-table">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Full Name</th>
-                            <th>Card Number</th>
-                            <th>Expiration Date</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-cardholder>
-                        <tr>
-                            <td>{{ cardholder.fullName }}</td>
-                            <td>{{ cardholder.cardNumber }}</td>
-                            <td>{{ cardholder.expirationDate | date:'dd.MM.YYYY' }}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-    
-            <hr />
-    
-            <!-- Schedules Section -->
-            <div class="p-list">
-                <h4><i class="pi pi-calendar-clock"></i> Schedules</h4>
-                <p-table [value]="schedules" class="schedule-table">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Schedule</th>
-                            <th>Type</th>
-                            <th>Weekdays</th>
-                            <th>Time</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-schedule>
-                        <tr>
-                            <td>{{ schedule.displayName }}</td>
-                            <td>{{ schedule.type }}</td>
-                            <td>{{ schedule.listOfDays.join(', ') }}</td>
-                            <td *ngIf="schedule.type === 'Standard'">{{ schedule.startTime | date:'dd.MM.YYYY, HH:mm' }} - {{ schedule.endTime | date:'dd.MM.YYYY, HH:mm' }}</td>
-                            <td *ngIf="schedule.type === 'Temporary'">{{ schedule.startTime | date:'HH:mm' }} - {{ schedule.endTime | date:'HH:mm' }}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-        </p-card>
+    <!-- RIGHT: Cardholders & Schedules reference -->
+    <div class="panel panel--right">
+      <p-card>
+        <div class="side-header">
+          <i class="pi pi-building"></i>
+          <span>Available Cardholders & Schedules — {{ siteDisplayName }}</span>
+        </div>
+
+        <!-- Cardholders -->
+        <div class="side-block">
+          <h4><i class="pi pi-id-card"></i> Cardholders</h4>
+          <div class="table-wrap">
+            <p-table [value]="cardholders" class="p-datatable-sm cardholder-table" [style]="{ 'min-width': '560px' }">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Full Name</th>
+                  <th>Card Number</th>
+                  <th>Expiration Date</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-cardholder>
+                <tr>
+                  <td>{{ cardholder.fullName }}</td>
+                  <td>{{ cardholder.cardNumber }}</td>
+                  <!-- NOTE: Angular date tokens use lowercase yyyy -->
+                  <td>{{ cardholder.expirationDate | date:'dd.MM.yyyy' }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+        <hr class="sep" />
+
+        <!-- Schedules -->
+        <div class="side-block">
+          <h4><i class="pi pi-calendar-clock"></i> Schedules</h4>
+          <div class="table-wrap">
+            <p-table [value]="schedules" class="p-datatable-sm schedule-table" [style]="{ 'min-width': '720px' }">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Schedule</th>
+                  <th>Type</th>
+                  <th>Weekdays</th>
+                  <th>Time</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-schedule>
+                <tr>
+                  <td>{{ schedule.displayName }}</td>
+                  <td>{{ schedule.type }}</td>
+                  <td>{{ schedule.listOfDays.join(', ') }}</td>
+
+                  <!-- Standard vs Temporary timing -->
+                  <td *ngIf="schedule.type === 'Standard'">
+                    {{ schedule.startTime | date:'dd.MM.yyyy, HH:mm' }} – {{ schedule.endTime | date:'dd.MM.yyyy, HH:mm' }}
+                  </td>
+                  <td *ngIf="schedule.type === 'Temporary'">
+                    {{ schedule.startTime | date:'HH:mm' }} – {{ schedule.endTime | date:'HH:mm' }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </p-card>
     </div>
-    
+  </div>
 </div>

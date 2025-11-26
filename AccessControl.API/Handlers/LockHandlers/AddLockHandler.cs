@@ -1,5 +1,8 @@
-﻿using AccessControl.API.Exceptions;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
 
@@ -7,7 +10,7 @@ namespace AccessControl.API.Handlers.LockHandlers
 {
     public class AddLock
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid SiteId { get; set; }
             public string DisplayName { get; set; }
@@ -18,12 +21,28 @@ namespace AccessControl.API.Handlers.LockHandlers
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
+
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var lockToAdd = new Lock(request.SiteId, request.DisplayName);
+
                 _session.Store(lockToAdd);
-                await _session.SaveChangesAsync();
+
+                await _liveEventPublisher.PublishAsync(
+                    lockToAdd.SiteId,
+                    lockToAdd.LockId,
+                    "Lock",
+                    LiveEventMessageType.LockCreated,
+                    lockToAdd.DisplayName,
+                    "Lock created.");
+
                 return new Response();
             }
         }

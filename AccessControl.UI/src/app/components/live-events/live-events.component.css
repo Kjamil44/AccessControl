@@ -1,0 +1,55 @@
+/* live-events.component.css */
+.header {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: .5rem;
+}
+
+.title{
+    color: rgb(255, 255, 255);
+}
+
+.header .actions { margin-left: auto; }
+.title { margin: 0; }
+.w-100 { width: 100%; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+.message-cell { max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Wrapper defines how tall the whole Live Events block is */
+.live-events-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* adjust the 220px to account for your header / top bar / margins */
+  height: calc(100vh - 220px);
+  min-height: 400px; /* so it doesn't collapse on tiny heights */
+}
+
+/* Make the table stretch inside the wrapper */
+.live-events-wrapper .live-events-table {
+  flex: 1 1 auto;
+}
+
+/* Ensure PrimeNG's internal scroll container can actually scroll */
+:host ::ng-deep .live-events-table .p-datatable-wrapper {
+  height: 100%;
+}
+
+:host ::ng-deep .live-events-table .p-datatable-scrollable-body {
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* Important for flex mode: let the wrapper shrink and become the scroll viewport */
+.live-events-table.p-datatable-flex-scrollable .p-datatable-wrapper {
+  flex-basis: auto !important;
+  height: 0 !important;
+}
+
+/* Make sure the scrollable body can actually scroll vertically */
+
+
+/* If your table is inside a flex parent, this prevents it from eating the height */
+.live-events-table-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 220px);  /* adjust the 220px to your header */
+  min-height: 0;                /* critical for flex + overflow */
+}

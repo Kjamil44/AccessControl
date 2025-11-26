@@ -1,0 +1,33 @@
+.spinner-host {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+/* Dim overlay to cover the parent container */
+.spinner-host.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.12);
+  backdrop-filter: blur(1px);
+  display: flex;
+}
+
+/* Fullscreen when needed */
+.spinner-host.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,.12);
+  display: flex;
+}
+
+.spinner-message {
+  font-size: .9rem;
+  opacity: .9;
+}
+
+/* If you place overlay spinner inside a relative parent, ensure: */
+:host-context(.relative) .spinner-host.overlay { position: absolute; }

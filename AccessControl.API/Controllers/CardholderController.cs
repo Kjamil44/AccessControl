@@ -23,17 +23,17 @@ namespace AccessControl.API.Controllers
         [HttpGet("{cardholderId}")]
         public async Task<GetCardholder.Response> GetCardholder(Guid cardholderId) => await _sender.Send(new GetCardholder.Request { CardholderId = cardholderId });
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<AddCardholder.Response> AddCardholder([FromBody] AddCardholder.Request newCardholder) => await _sender.Send(newCardholder);
 
-        [HttpPut("update/{cardholderId}")]
+        [HttpPut("{cardholderId}")]
         public async Task<UpdateCardholder.Response> UpdateCardholder(Guid cardholderId, [FromBody] UpdateCardholder.Request newCardholder)
         {
             newCardholder.CardholderId = cardholderId;
             return await _sender.Send(newCardholder);
         }
 
-        [HttpDelete("delete/{cardholderId}")]
+        [HttpDelete("{cardholderId}")]
         public async Task<DeleteCardholder.Response> DeleteCardholder(Guid cardholderId) =>
                await _sender.Send(new DeleteCardholder.Request { CardholderId = cardholderId });
     }

@@ -15,12 +15,12 @@
             <div class="form-row">
                 <label for="cardNumber">Card Number</label>
                 <input id="cardNumber" type="text" pInputText formControlName="cardNumber" class="form-control"
-                    placeholder="Card Number">
+                    placeholder="Card Number" pTooltip="Card Number cannot be modified!">
             </div>
         </div>
     </form>
 </div>
 <div class="p-dialog-footer">
     <button pButton type="button" (click)="closeEditDialog()" label="Back" class="p-button-secondary"></button>
-    <button pButton type="button" (click)="editCardholder()" label="Update" class="p-button-primary"></button>
+    <button pButton type="button" (click)="editCardholder()" label="Update" class="p-button-primary" [loading]="(spinner.visible$ | async) ?? false"></button>
 </div>

@@ -1,0 +1,71 @@
+<form [formGroup]="form" class="lock-unlock-form">
+  <!-- Header / message - same visual style as your delete dialog -->
+  <div class="dialog-header-center">
+    <i class="pi pi-lock" style="font-size: 1rem; margin-right: 0.35rem"></i>
+    <label>{{ lock?.displayName }}</label>
+    <div class="status-line">
+      <label style="font-style: italic">
+        Current status: <b>{{ lock?.isLocked ? "Locked" : "Unlocked" }}</b>
+      </label>
+    </div>
+  </div>
+
+  <!-- Centered toggle section -->
+  <div class="toggle-section">
+    <div class="section-title">Set status</div>
+    <div class="toggle-control">
+      <p-inputSwitch formControlName="lockState" (onChange)="onToggleChanged()" [trueValue]="'Locked'"
+        [falseValue]="'Unlocked'">
+      </p-inputSwitch>
+      <span class="toggle-text">{{ form.get("lockState")?.value }}</span>
+    </div>
+    <small class="hint"> Flip the toggle to change the lock state. </small>
+  </div>
+
+  <!-- Card number section (prominent panel) -->
+  <div class="cardnum-section" [class.disabled]="!toggleChanged" role="group" aria-labelledby="cardnumLabel">
+    <div class="cardnum-header">
+      <span id="cardnumLabel" class="cardnum-title">Enter 6-digit card number</span>
+      <small class="cardnum-subhint">
+        {{
+        toggleChanged
+        ? "Type one digit per box."
+        : "Digits enable after you change the status above."
+        }}
+      </small>
+    </div>
+
+    <div class="digits-row">
+      <input pInputText maxlength="1" inputmode="numeric" pattern="[0-9]*" class="digit" formControlName="d1"
+        [disabled]="!toggleChanged" (input)="autoAdvance($event, 'd2')" />
+
+      <input pInputText maxlength="1" inputmode="numeric" pattern="[0-9]*" class="digit" formControlName="d2"
+        [disabled]="!toggleChanged" (input)="autoAdvance($event, 'd3')" />
+
+      <input pInputText maxlength="1" inputmode="numeric" pattern="[0-9]*" class="digit" formControlName="d3"
+        [disabled]="!toggleChanged" (input)="autoAdvance($event, 'd4')" />
+
+      <input pInputText maxlength="1" inputmode="numeric" pattern="[0-9]*" class="digit" formControlName="d4"
+        [disabled]="!toggleChanged" (input)="autoAdvance($event, 'd5')" />
+
+      <input pInputText maxlength="1" inputmode="numeric" pattern="[0-9]*" class="digit" formControlName="d5"
+        [disabled]="!toggleChanged" (input)="autoAdvance($event, 'd6')" />
+
+      <input pInputText maxlength="1" inputmode="numeric" pattern="[0-9]*" class="digit" formControlName="d6"
+        [disabled]="!toggleChanged" (input)="autoAdvance($event, null)" />
+    </div>
+  </div>
+
+  <!-- Validation note -->
+  <div *ngIf="formSubmitted && form.invalid" class="error-note">
+    Please enter all 6 digits to proceed.
+  </div>
+
+  <!-- Footer buttons -->
+  <div class="p-dialog-footer footer-center">
+    <p-button type="button" (click)="onBack()" label="Back" severity="secondary"></p-button>
+    <p-button label="Confirm" type="button" (click)="onConfirm()" [loading]="(spinner.visible$ | async) ?? false"
+      [disabled]="form.invalid || !toggleChanged || ((spinner.visible$ | async) ?? false)" class="p-button-primary">
+    </p-button>
+  </div>
+</form>

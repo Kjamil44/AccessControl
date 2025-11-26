@@ -2,30 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-create-schedule',
   templateUrl: './create-schedule.component.html',
-  styleUrls: ['./create-schedule.component.css']
+  styleUrls: ['./create-schedule.component.css'],
 })
 export class CreateScheduleComponent implements OnInit {
   sites: any[] = [];
   formGroup: FormGroup;
 
   daysInWeek: any[] = [
-    { name: "Monday", value: "Monday" },
-    { name: "Tuesday", value: "Tuesday" },
-    { name: "Wednesday", value: "Wednesday" },
-    { name: "Thursday", value: "Thursday" },
-    { name: "Friday", value: "Friday" },
-    { name: "Saturday", value: "Saturday" },
-    { name: "Sunday", value: "Sunday" }
+    { name: 'Monday', value: 'Monday' },
+    { name: 'Tuesday', value: 'Tuesday' },
+    { name: 'Wednesday', value: 'Wednesday' },
+    { name: 'Thursday', value: 'Thursday' },
+    { name: 'Friday', value: 'Friday' },
+    { name: 'Saturday', value: 'Saturday' },
+    { name: 'Sunday', value: 'Sunday' },
   ];
 
   constructor(
     private accessService: AccessControlService,
-    private dialogref: DynamicDialogRef,
-    private config: DynamicDialogConfig
+    public spinner: SpinnerService,
+    private dialogref: DynamicDialogRef
   ) {
     this.formGroup = new FormGroup({
       displayName: new FormControl(),
@@ -33,7 +34,7 @@ export class CreateScheduleComponent implements OnInit {
       startTime: new FormControl(),
       endTime: new FormControl(),
       site: new FormControl(),
-      isTemporary: new FormControl<boolean>(false)
+      isTemporary: new FormControl<boolean>(false),
     });
   }
 
@@ -42,32 +43,37 @@ export class CreateScheduleComponent implements OnInit {
       next: (response) => {
         this.sites = response.data;
       },
-      error: (response) => {
-        this.accessService.createErrorNotification(response.message)
-      }
-    })
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
+      },
+    });
   }
 
   createSchedule() {
     const selectedDays = this.formGroup.value.days.map((day: any) => day.value);
+
     const data = {
-      "siteId": this.formGroup.value.site.siteId,
-      "displayName": this.formGroup.value.displayName,
-      "listOfDays": selectedDays,
-      "startTime": this.formGroup.value.startTime,
-      "endTime": this.formGroup.value.endTime,
-      "isTemporary":  this.formGroup.value.isTemporary
+      siteId: this.formGroup.value.site.siteId,
+      displayName: this.formGroup.value.displayName,
+      listOfDays: selectedDays,
+      startTime: this.formGroup.value.startTime,
+      endTime: this.formGroup.value.endTime,
+      isTemporary: this.formGroup.value.isTemporary,
     };
-    this.accessService.create(`api/schedules/create`, data)
+
+    this.spinner
+      .with(this.accessService.create(`api/schedules`, data))
       .subscribe({
-        next: data => {
-          this.accessService.createSuccessNotification("Schedule created successfully!");
+        next: (data) => {
+          this.accessService.createSuccessNotification(
+            'Schedule created successfully!'
+          );
           this.closeCreateDialog();
         },
-        error: error => {
-          this.accessService.createErrorNotification(error.message);
+        error: (err: Error) => {
+          this.accessService.createErrorNotification(err.message);
           this.closeCreateDialog();
-        }
+        },
       });
   }
 

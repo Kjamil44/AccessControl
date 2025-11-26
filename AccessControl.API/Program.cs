@@ -1,7 +1,15 @@
-using AccessControl.API;
+﻿using AccessControl.API;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Filters;
+using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
+using AccessControl.API.Services.Infrastructure.LockUnlock;
+using AccessControl.API.Services.Infrastructure.Messaging;
+using AccessControl.API.SignalR;
+using AccessControl.Contracts;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -10,36 +18,38 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddMediatR(typeof(Program));
+// MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-builder.Services.AddControllers(options =>
+// Controllers
+builder.Services.AddControllers(o =>
 {
-    options.ReturnHttpNotAcceptable = true;
-    options.Filters.Add<UserIdValidationFilter>();
+    o.ReturnHttpNotAcceptable = true;
+    o.Filters.Add<UserIdValidationFilter>();
 }).AddNewtonsoftJson();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AccessControl.API", Version = "v1", });
-    c.CustomSchemaIds(type => type.ToString());
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AccessControl.API", Version = "v1" });
+    c.CustomSchemaIds(t => t.ToString());
     c.DescribeAllParametersInCamelCase();
 });
 
-//database
-builder.Services.AddSingleton(x => MartenFactory.CreateDocumentStore())
-                .AddScoped(x => MartenFactory.CreateDocumentSession());
+// Marten
+var db = builder.Configuration["ConnectionString"];
+builder.Services.AddSingleton(_ => MartenFactory.CreateDocumentStore(db))
+                .AddScoped(_ => MartenFactory.CreateDocumentSession(db));
 
-//JWT
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+// JWT
+var jwt = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+})
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -47,23 +57,87 @@ builder.Services.AddAuthentication(opt =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-            .GetBytes(jwtSettings.GetSection("SecurityKey").Value))
+        ValidIssuer = jwt["Issuer"],
+        ValidAudience = jwt["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["SecurityKey"]))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = ctx =>
+        {
+            var accessToken = ctx.Request.Query["access_token"];
+            var path = ctx.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs/live-events"))
+                ctx.Token = accessToken;
+            return Task.CompletedTask;
+        }
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = ctx =>
+        {
+            ctx.HandleResponse();
+
+            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            ctx.Response.ContentType = "application/json";
+            return ctx.Response.WriteAsJsonAsync(CoreError.CreateUnauthorized());
+        },
+        OnForbidden = ctx =>
+        {
+            ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+            ctx.Response.ContentType = "application/json";
+            return ctx.Response.WriteAsJsonAsync(new CoreError("Forbidden.", 403));
+        }
     };
 });
 
+// DI
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IValidationService, ValidationService>();
-
-// HttpContextAccessor
+builder.Services.AddScoped<ILiveEventPublisher, LiveEventPublisher>();
+builder.Services.AddScoped<ILockUnlockService, LockUnlockService>();
+builder.Services.AddScoped<IAccessValidator, AccessValidator>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MartenSaveChangesBehavior<,>));
+
+const string FrontendCors = "FrontendCors";
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy(FrontendCors, p => p
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials());
+});
+
+// MassTransit
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["Rabbit:Host"] ?? "localhost",
+                 builder.Configuration["Rabbit:VHost"] ?? "/",
+                 h => { h.Username(builder.Configuration["Rabbit:User"] ?? "admin"); h.Password(builder.Configuration["Rabbit:Pass"] ?? "admin"); });
+
+        cfg.UseInMemoryOutbox();
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+// Command → queue routing
+EndpointConvention.Map<TriggerLock>(new Uri("queue:trigger-lock"));
+EndpointConvention.Map<TriggerUnlock>(new Uri("queue:trigger-unlock"));
+
+// SignalR
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Dev swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -71,18 +145,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-
 app.UseRouting();
 
-app.UseAuthentication();
+// CORS must be between UseRouting and auth/authorization, BEFORE MapHub/MapControllers
+app.UseCors(FrontendCors);
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.MapControllers();
+app.MapHub<LiveEventsHub>("/hubs/live-events");
 
 app.Run();

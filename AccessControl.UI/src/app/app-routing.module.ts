@@ -9,6 +9,8 @@ import { AllowedUsersLockComponent } from './components/locks/allowed-users-lock
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/common/login/login.component';
 import { RegisterComponent } from './components/common/register/register.component';
+import { LiveEventsComponent } from './components/live-events/live-events.component';
+import { ProductOverviewComponent } from './components/product-overview/product-overview.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,35 +18,41 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
     path: 'sites',
-    component: SitesListComponent
+    component: SitesListComponent,
   },
   {
     path: 'locks',
-    component: LocksListComponent
+    component: LocksListComponent,
   },
   {
-    path: 'locks/edit-access/:id',
-    component: AllowedUsersLockComponent
+    path: 'locks/:id/edit-access',
+    component: AllowedUsersLockComponent,
   },
   {
     path: 'cardholders',
-    component: CardholdersListComponent
+    component: CardholdersListComponent,
   },
   {
     path: 'schedules',
-    component: SchedulesListComponent
-  }
-]
+    component: SchedulesListComponent,
+  },
+  {
+    path: 'live-events',
+    component: LiveEventsComponent,
+  },
+  {
+    path: 'about',
+    component: ProductOverviewComponent,
+  },
+];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forRoot(routes)
-  ],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

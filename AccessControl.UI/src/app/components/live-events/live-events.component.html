@@ -1,0 +1,191 @@
+<div class="k-d-flex k-align-items-center">
+  <i class="pi pi-megaphone icon"></i>
+  <h2 class="title">Live Events</h2>
+  <div style="margin-left: auto; padding-bottom: 15px">
+    <button
+      pButton
+      icon="pi pi-filter-slash"
+      (click)="clearAllFilters()"
+      class="btn-create btn-clear-filter"
+    >
+      Clear Filters
+    </button>
+  </div>
+</div>
+
+<p-table
+  #tbl
+  class="live-events-table"
+  [value]="rows"
+  [paginator]="true"
+  [rows]="25"
+  [rowsPerPageOptions]="[10, 25, 50, 100]"
+  [resizableColumns]="true"
+  [reorderableColumns]="false"
+  [responsiveLayout]="'scroll'"
+  sortField="dateCreated"
+  [sortOrder]="-1"
+  styleClass="p-datatable-striped p-datatable-gridlines"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="dateCreated">
+        Date <p-sortIcon field="dateCreated" />
+      </th>
+      <th pSortableColumn="messageType">
+        Message Type <p-sortIcon field="messageType" />
+      </th>
+      <th pSortableColumn="type">Category <p-sortIcon field="type" /></th>
+      <th pResizableColumn pSortableColumn="name">
+        Name <p-sortIcon field="name" />
+      </th>
+      <th pResizableColumn pSortableColumn="message">
+        Message <p-sortIcon field="message" />
+      </th>
+      <th pSortableColumn="entityType">
+        Entity Type <p-sortIcon field="entityType" />
+      </th>
+      <th pResizableColumn pSortableColumn="entityId">
+        Entity Id <p-sortIcon field="entityId" />
+      </th>
+      <th pResizableColumn pSortableColumn="siteId">
+        Site Id <p-sortIcon field="siteId" />
+      </th>
+    </tr>
+
+    <tr>
+      <th>
+        <p-calendar
+          inputId="f-date"
+          (onSelect)="tbl.filter($event, 'dateCreated', 'dateIs')"
+          (onClearClick)="tbl.filter('', 'dateCreated', 'equals')"
+          [showIcon]="true"
+          [iconDisplay]="'input'"
+          [showButtonBar]="true"
+          [touchUI]="false"
+          dateFormat="yy-mm-dd"
+          [appendTo]="'body'"
+          panelStyleClass="overlay-portal"
+        >
+        </p-calendar>
+      </th>
+
+      <th>
+        <p-dropdown
+          [options]="messageTypeOptions"
+          placeholder="All"
+          (onChange)="tbl.filter($event.value, 'messageType', 'equals')"
+          [showClear]="true"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-100"
+          [appendTo]="'body'"
+          panelStyleClass="overlay-portal"
+        >
+        </p-dropdown>
+      </th>
+
+      <th>
+        <p-dropdown
+          [options]="typeOptions"
+          placeholder="All"
+          (onChange)="tbl.filter($event.value, 'type', 'equals')"
+          [showClear]="true"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-100"
+          [appendTo]="'body'"
+          panelStyleClass="overlay-portal"
+        >
+        </p-dropdown>
+      </th>
+
+      <th>
+        <input
+          pInputText
+          type="text"
+          (input)="applyTextFilter($event, 'name')"
+          placeholder="Filter name"
+          class="w-100"
+        />
+      </th>
+
+      <th>
+        <input
+          pInputText
+          type="text"
+          (input)="applyTextFilter($event, 'message')"
+          placeholder="Filter message"
+          class="w-100"
+        />
+      </th>
+
+      <th>
+        <p-dropdown
+          [options]="entityTypeOptions"
+          placeholder="All"
+          [showClear]="true"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="tbl.filter($event.value, 'entityType', 'equals')"
+          [appendTo]="'body'"
+          panelStyleClass="overlay-portal"
+        >
+        </p-dropdown>
+      </th>
+
+      <th>
+        <input
+          pInputText
+          type="text"
+          (input)="applyTextFilter($event, 'entityId')"
+          placeholder="Filter entity id"
+          class="w-100"
+        />
+      </th>
+
+      <th>
+        <input
+          pInputText
+          type="text"
+          (input)="applyTextFilter($event, 'siteId')"
+          placeholder="Filter site id"
+          class="w-100"
+        />
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-e>
+    <tr>
+      <td>{{ e.dateCreated | date : "yyyy-MM-dd HH:mm:ss" }}</td>
+
+      <td>
+        <p-tag
+          [severity]="
+            e.messageType === 1
+              ? 'success'
+              : e.messageType === 3
+              ? 'info'
+              : e.messageType === 2 || e.messageType === 4
+              ? 'danger'
+              : 'secondary'
+          "
+        >
+          {{ labelOfMessageType(e.messageType) }}
+        </p-tag>
+      </td>
+
+      <td>{{ labelOfType(e.type) }}</td>
+      <td>{{ e.name }}</td>
+      <td class="message-cell" [title]="e.message">{{ e.message }}</td>
+      <td>{{ e.entityType }}</td>
+      <td class="mono">{{ e.entityId }}</td>
+      <td class="mono">{{ e.siteId }}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8" class="p-text-center p-3">No events yet</td>
+    </tr>
+  </ng-template>
+</p-table>

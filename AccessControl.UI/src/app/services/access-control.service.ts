@@ -72,6 +72,10 @@ export class AccessControlService {
     return this.http.put<any>(`${this.baseApiUrl}/${url}/${id}`, request);
   }
 
+  updateAction(url: string, id: string, action: 'lock' | 'unlock', request: any): Observable<any> {
+    return this.http.put<any>(`${this.baseApiUrl}/${url}/${id}/${action}`, request);
+  }
+
   delete(url: string, id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseApiUrl}/${url}/${id}`);
   }
@@ -98,6 +102,28 @@ export class AccessControlService {
       severity: 'info',
       summary: 'Info',
       detail: message
+    });
+  }
+
+  public createDoorUnlockedNotification(detail?: string, summary?: string) {
+    this.messageService.add({
+      key: 'access',
+      severity: 'success',
+      summary: summary ?? 'Door unlocked.',
+      detail: detail ?? '',
+      life: 3000,
+      data: { state: 'unlocked' }
+    });
+  }
+
+  public createDoorLockedNotification(detail?: string, summary?: string) {
+    this.messageService.add({
+      key: 'access',
+      severity: 'success',
+      summary: summary ?? 'Door locked.',
+      detail: detail ?? '',
+      life: 3000,
+      data: { state: 'locked' }
     });
   }
 }

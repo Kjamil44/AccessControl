@@ -1,43 +1,50 @@
-﻿using AccessControl.API.Enums;
-
-namespace AccessControl.API.Helper
+﻿namespace AccessControl.API.Helpers
 {
     public class HelperClass
     {
-        public static List<string> MapWeekDays(IEnumerable<Days> days)
+        public static List<string> MapWeekDays(IEnumerable<DayOfWeek> days)
         {
             var daysList = new List<string>();
             var enumDays = days.ToList();
             enumDays.ForEach(i =>
             {
-                if (i.Equals(Days.MONDAY))
+                if (i.Equals(DayOfWeek.Sunday))
+                    daysList.Add("Sunday");
+                if (i.Equals(DayOfWeek.Monday))
                     daysList.Add("Monday");
-                if (i.Equals(Days.TUESDAY))
+                if (i.Equals(DayOfWeek.Tuesday))
                     daysList.Add("Tuesday");
-                if (i.Equals(Days.WEDNESDAY))
+                if (i.Equals(DayOfWeek.Wednesday))
                     daysList.Add("Wednesday");
-                if (i.Equals(Days.THURSDAY))
+                if (i.Equals(DayOfWeek.Thursday))
                     daysList.Add("Thursday");
-                if (i.Equals(Days.FRIDAY))
+                if (i.Equals(DayOfWeek.Friday))
                     daysList.Add("Friday");
+                if (i.Equals(DayOfWeek.Saturday))
+                    daysList.Add("Saturday");
             });
             return daysList;
         }
-        public static List<Days> MapScheduledDays(List<string> realDays)
+
+        public static List<DayOfWeek> MapScheduledDays(List<string> realDays)
         {
-            var enumDays = new List<Days>();
+            var enumDays = new List<DayOfWeek>();
             realDays.ForEach(i =>
             {
+                if (i == "Sunday")
+                    enumDays.Add(DayOfWeek.Sunday);
                 if (i == "Monday")
-                    enumDays.Add(Days.MONDAY);
+                    enumDays.Add(DayOfWeek.Monday);
                 if (i == "Tuesday")
-                    enumDays.Add(Days.TUESDAY);
+                    enumDays.Add(DayOfWeek.Tuesday);
                 if (i == "Wednesday")
-                    enumDays.Add(Days.WEDNESDAY);
+                    enumDays.Add(DayOfWeek.Wednesday);
                 if (i == "Thursday")
-                    enumDays.Add(Days.THURSDAY);
+                    enumDays.Add(DayOfWeek.Thursday);
                 if (i == "Friday")
-                    enumDays.Add(Days.FRIDAY);
+                    enumDays.Add(DayOfWeek.Friday);
+                if (i == "Saturday")
+                    enumDays.Add(DayOfWeek.Saturday);
             });
 
             return enumDays;

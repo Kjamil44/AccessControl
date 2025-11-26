@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AccessControlService } from 'src/app/services/access-control.service';
-import { AllowedUsersLockComponent } from '../allowed-users-lock/allowed-users-lock.component';
 import { CreateLockComponent } from '../create-lock/create-lock.component';
 import { DeleteLockComponent } from '../delete-lock/delete-lock.component';
 import { EditLockComponent } from '../edit-lock/edit-lock.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Router } from '@angular/router';
+import { LockUnlockComponent } from '../lock-unlock/lock-unlock.component';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-locks-list',
@@ -14,46 +15,53 @@ import { Router } from '@angular/router';
   providers: [DialogService]
 })
 export class LocksListComponent implements OnInit {
-  locks: any[] = []
-  lockIsPresent: boolean = false;
-  siteId: any = localStorage.getItem("selectedSiteId"); 
-  siteName: any = localStorage.getItem("selectedSiteName"); 
+  locks: any[] = [];
+  lockIsPresent = false;
+  siteId: any = localStorage.getItem('selectedSiteId');
+  siteName: any = localStorage.getItem('selectedSiteName');
   site: any;
 
-
-  constructor(private accessService: AccessControlService, private dialog: DialogService, private router: Router) { }
+  constructor(
+    private accessService: AccessControlService,
+    private dialog: DialogService,
+    public spinner: SpinnerService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.accessService.getWithParams(`api/locks`, "").subscribe({
+    this.spinner.show();
+    this.accessService.getWithParams(`api/locks`, '').subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
+        this.spinner.hide();
       },
-      error: (response) => {
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
         this.lockIsPresent = false;
+        this.spinner.hide();
       }
-    })
+    });
   }
 
   showLocks(site: any) {
-    this.siteName = site.displayName; 
+    this.siteName = site.displayName;
     this.siteId = site.siteId;
     this.site = site;
 
-    let request = this.siteName !== "All Sites" ? {
-      siteId: this.siteId
-    } : "";
+    const request = this.siteName !== 'All Sites' ? { siteId: this.siteId } : '';
 
     this.accessService.getWithParams(`api/locks`, request).subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
       },
-      error: (response) => {
-        this.locks = []
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
+        this.locks = [];
         this.lockIsPresent = false;
       }
-    })
+    });
   }
 
   onCreate() {
@@ -61,55 +69,56 @@ export class LocksListComponent implements OnInit {
       header: 'Create Lock',
       width: '610px',
       height: '320px',
-      baseZIndex: 10000,
+      baseZIndex: 10000
     });
 
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 
   onEdit(lock: any) {
     const ref = this.dialog.open(EditLockComponent, {
       header: `Edit Lock from ${this.siteName}`,
       width: '610px',
-      height: '250px',
+      height: '280px',
       baseZIndex: 10000,
-      data: {
-        lock: lock
-      }
+      data: { lock }
     });
 
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 
   onEditAccess(lock: any) {
-    if(lock.numberOfCardholdersPerSite < 1 || lock.numberOfSchedulesPerSite < 1){
-      this.accessService.createInfoNotification("At least one Cardholder and one Schedule are required to assign access to the Lock.");
-    }
-    else{
-      this.router.navigate([`/locks/edit-access/${lock.lockId}`]);
+    if (lock.numberOfCardholdersPerSite < 1 || lock.numberOfSchedulesPerSite < 1) {
+      this.accessService.createInfoNotification(
+        'At least one Cardholder and one Schedule are required to assign access to the Lock.'
+      );
+    } else {
+      this.router.navigate([`/locks/${lock.lockId}/edit-access`]);
     }
   }
 
   onDelete(lock: any) {
-    let adjustableHeight = lock.numberOfAllowedUsers > 0 ? '300px' : '250px';
+    const adjustableHeight = lock.numberOfAllowedUsers > 0 ? '300px' : '250px';
     const ref = this.dialog.open(DeleteLockComponent, {
       header: 'Delete Lock',
       width: '470px',
       height: adjustableHeight,
       baseZIndex: 10000,
-      data: {
-        lock: lock,
-        siteName: this.siteName
-      }
+      data: { lock, siteName: this.siteName }
     });
 
-    ref.onClose.subscribe(() => {
-      this.ngOnInit();
-    });
+    ref.onClose.subscribe(() => this.ngOnInit());
   }
 
+  onToggleLockUnlock(lock: any) {
+    const ref = this.dialog.open(LockUnlockComponent, {
+      header: lock.isLocked ? 'Trigger Unlock' : 'Trigger Lock',
+      width: '480px',
+      height: '450px',
+      baseZIndex: 10000,
+      data: { lock }
+    });
+
+    ref.onClose.subscribe(() => this.ngOnInit());
+  }
 }

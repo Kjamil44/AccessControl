@@ -1,5 +1,8 @@
-﻿using AccessControl.API.Exceptions;
+﻿using AccessControl.API.Enums;
+using AccessControl.API.Exceptions;
 using AccessControl.API.Models;
+using AccessControl.API.Services.Abstractions.Mediation;
+using AccessControl.API.Services.Infrastructure.LiveEvents;
 using Marten;
 using MediatR;
 
@@ -7,7 +10,7 @@ namespace AccessControl.API.Handlers.LockHandlers
 {
     public class UpdateLock
     {
-        public class Request : IRequest<Response>
+        public class Request : ICommand<Response>
         {
             public Guid LockId { get; set; }
             public string DisplayName { get; set; }
@@ -18,7 +21,13 @@ namespace AccessControl.API.Handlers.LockHandlers
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDocumentSession _session;
-            public Handler(IDocumentSession session) => _session = session;
+            private readonly ILiveEventPublisher _liveEventPublisher;
+
+            public Handler(IDocumentSession session, ILiveEventPublisher liveEventPublisher)
+            {
+                _session = session;
+                _liveEventPublisher = liveEventPublisher;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -28,7 +37,15 @@ namespace AccessControl.API.Handlers.LockHandlers
 
                 lockToUpdate.UpdateLock(request.DisplayName);
                 _session.Store(lockToUpdate);
-                await _session.SaveChangesAsync();
+
+                await _liveEventPublisher.PublishAsync(
+                    lockToUpdate.SiteId,
+                    lockToUpdate.LockId,
+                    "Lock",
+                    LiveEventMessageType.LockUpdated,
+                    lockToUpdate.DisplayName,
+                    "Lock name was updated");
+
                 return new Response();
             }
         }

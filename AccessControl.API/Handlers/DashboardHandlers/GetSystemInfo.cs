@@ -1,7 +1,7 @@
 ﻿using AccessControl.API.Models;
 using Marten;
 using MediatR;
-using static AccessControl.API.Helper.HelperClass;
+using static AccessControl.API.Helpers.HelperClass;
 
 namespace AccessControl.API.Handlers.DashboardHandlers
 {
@@ -16,6 +16,7 @@ namespace AccessControl.API.Handlers.DashboardHandlers
             public IEnumerable<ChartData> AllSites { get; set; } = Enumerable.Empty<ChartData>();
             public IEnumerable<ChartData> AllLocksBySite { get; set; } = Enumerable.Empty<ChartData>();
             public IEnumerable<CardholdersByMonthInfo> CardholdersInLastSixMonths { get; set; } = Enumerable.Empty<CardholdersByMonthInfo>();
+            public List<int> LockUnlockStatusCountList { get; set; } 
             public int NumberOfSites { get; set; }
             public int NumberOfLocks { get; set; }
             public int NumberOfCardholders { get; set; }
@@ -90,6 +91,13 @@ namespace AccessControl.API.Handlers.DashboardHandlers
 
                 var allowedUsersCount = allLocks.Select(x => x.AllowedUsers).Count();
 
+                var lockedDoorsCount = allLocks.Where(x => x.IsLocked).Count();
+                var lockUnlockStatusCountList = new List<int>(2)
+                {
+                    lockedDoorsCount,
+                    allLocks.Count() - lockedDoorsCount
+                };
+
                 return new Response
                 {
                     AllSites = sitesForChart,
@@ -99,7 +107,8 @@ namespace AccessControl.API.Handlers.DashboardHandlers
                     NumberOfCardholders = cardholdersCount,
                     NumberOfSchedules = schedulesCount,
                     CardholdersWithAccess = allowedUsersCount,
-                    CardholdersInLastSixMonths = GetCardholdersCountForLastSixMonths(cardholders)
+                    CardholdersInLastSixMonths = GetCardholdersCountForLastSixMonths(cardholders),
+                    LockUnlockStatusCountList = lockUnlockStatusCountList
                 };
             }
 

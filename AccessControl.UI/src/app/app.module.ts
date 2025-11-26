@@ -3,25 +3,17 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { NavigationModule } from '@progress/kendo-angular-navigation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SitesListComponent } from './components/sites/sites-list/sites-list.component';
-import { GridModule } from '@progress/kendo-angular-grid';
-import { ButtonsModule } from '@progress/kendo-angular-buttons';
-import { DialogsModule } from '@progress/kendo-angular-dialog';
 import { CreateSiteComponent } from './components/sites/create-site/create-site.component';
 import { EditSiteComponent } from './components/sites/edit-site/edit-site.component';
-import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DeleteSiteComponent } from './components/sites/delete-site/delete-site.component';
 import { LocksListComponent } from './components/locks/locks-list/locks-list.component';
-import { MenuModule } from '@progress/kendo-angular-menu';
 import { CreateLockComponent } from './components/locks/create-lock/create-lock.component';
 import { DeleteLockComponent } from './components/locks/delete-lock/delete-lock.component';
 import { EditLockComponent } from './components/locks/edit-lock/edit-lock.component';
 import { AllowedUsersLockComponent } from './components/locks/allowed-users-lock/allowed-users-lock.component';
-import { LabelModule } from '@progress/kendo-angular-label';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { CardholdersListComponent } from './components/cardholders/cardholders-list/cardholders-list.component';
@@ -33,7 +25,6 @@ import { CreateScheduleComponent } from './components/schedules/create-schedule/
 import { EditScheduleComponent } from './components/schedules/edit-schedule/edit-schedule.component';
 import { DeleteScheduleComponent } from './components/schedules/delete-schedule/delete-schedule.component';
 import { MatIconModule } from '@angular/material/icon';
-import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
@@ -64,6 +55,18 @@ import { SidebarModule } from 'primeng/sidebar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FooterComponent } from './components/common/footer/footer.component';
+import { TagModule } from 'primeng/tag';
+import { MenuModule } from 'primeng/menu';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TooltipModule } from 'primeng/tooltip';
+import { LockUnlockComponent } from './components/locks/lock-unlock/lock-unlock.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CardUnlockAnimationComponent } from './components/common/card-unlock-animation/card-unlock-animation/card-unlock-animation.component';
+import { LiveEventsComponent } from './components/live-events/live-events.component';
+import { CoreErrorInterceptor } from './services/core-error-interceptor';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AppSpinnerComponent } from './components/common/app-spinner/app-spinner.component';
+import { ProductOverviewComponent } from './components/product-overview/product-overview.component';
 
 @NgModule({
   declarations: [
@@ -90,28 +93,24 @@ import { FooterComponent } from './components/common/footer/footer.component';
     DashboardComponent,
     LoginComponent,
     RegisterComponent,
-    FooterComponent
+    FooterComponent,
+    LockUnlockComponent,
+    CardUnlockAnimationComponent,
+    LiveEventsComponent,
+    AppSpinnerComponent,
+    ProductOverviewComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    NavigationModule,
     BrowserAnimationsModule,
-    GridModule,
     HttpClientModule,
-    ButtonsModule,
-    DialogsModule,
-    DropDownsModule,
     ReactiveFormsModule,
-    InputsModule,
-    MenuModule,
-    LabelModule,
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
     MatIconModule,
-    NotificationModule,
     ButtonModule,
     TableModule,
     DynamicDialogModule,
@@ -133,12 +132,19 @@ import { FooterComponent } from './components/common/footer/footer.component';
     AvatarModule,
     SidebarModule,
     RadioButtonModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    TagModule,
+    MenuModule,
+    SplitButtonModule,
+    TooltipModule,
+    InputSwitchModule,
+    ProgressSpinnerModule
   ],
   providers: [
     MessageService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
-  bootstrap: [AppComponent]
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: CoreErrorInterceptor, multi: true },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
-
+export class AppModule {}

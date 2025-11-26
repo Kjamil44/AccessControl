@@ -1,29 +1,115 @@
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .form-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.form-row .site{
-    position: relative;
-    right: 50px;
+.form-row .site {
+  position: relative;
+  right: 50px;
 }
 
 label {
-    width: 90px; /* Adjust width as necessary */
+  width: 90px; /* Adjust width as necessary */
 }
 
 input {
-    flex: 1;
+  flex: 1;
 }
 
-::ng-deep .surface-border .p-dropdown{
-    left: 52px;  
-    width: 350px;
-  }
+::ng-deep .surface-border .p-dropdown {
+  left: 52px;
+  width: 350px;
+}
+
+.cardnum-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1; /* align with other inputs on the right side */
+}
+
+.cardnum-wrap.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.digits-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.digit {
+  width: 42px; /* compact, but visually consistent */
+  text-align: center;
+  /* make height/appearance match pInputText in your dialog */
+  padding: 0.5rem 0.5rem;
+}
+
+/* optional: keep hint subtle like other helper texts */
+.cardnum-subhint {
+  opacity: 0.8;
+  font-size: 0.8rem;
+}
+
+/* keep the six boxes compact and ignore the global width/margin */
+.form-group .cardnum-wrap .digit,
+.form-group .cardnum-wrap .p-inputtext.digit {
+  width: 42px !important;
+  flex: 0 0 42px !important;
+  margin-left: 0 !important;
+  text-align: center;
+}
+
+/* make the whole digit group align where your other inputs sit */
+.form-row .cardnum-wrap {
+  margin-left: 106px; /* mirrors your global input offset */
+}
+
+/* 1) Align the label exactly like the others */
+.surface-border .form-row > label,
+.surface-border .form-row > #cardnumLabel {
+  width: 90px;            /* same label width as other rows */
+  margin-right: 1rem;     /* same spacing to the right as others */
+  flex: 0 0 90px;         /* prevent stretching */
+}
+
+/* 2) Make the digit group sit where normal inputs sit */
+.surface-border .form-row .cardnum-wrap {
+  width: 350px;           /* same as your normal input width */
+  margin-left: 106px;     /* same offset as your global rule */
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+/* 3) Stretch digits to fill that 350px neatly */
+.surface-border .form-row .digits-row {
+  display: flex;
+  justify-content: space-between;  /* spreads boxes across full width */
+  align-items: center;
+}
+
+/* 4) Size each digit box (tweak 46–52px to taste) */
+.surface-border .form-row .digit,
+.surface-border .form-row .p-inputtext.digit {
+  width: 48px !important;
+  flex: 0 0 48px !important;
+  margin-left: 0 !important;       /* defeat global 106px on inputs */
+  text-align: center;
+  padding: .5rem .5rem;            /* match your pInputText feel */
+}
+
+/* Optional: keep the hint subtle and aligned */
+.surface-border .cardnum-subhint {
+  opacity: .8;
+  font-size: .8rem;
+  line-height: 1;
+}
