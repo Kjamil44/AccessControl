@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { Table, TableModule } from 'primeng/table';
 import { AccessControlService } from 'src/app/services/access-control.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 type MT = LiveEventDto['messageType'];
 type LT = LiveEventDto['type'];
@@ -68,6 +69,7 @@ export class LiveEventsComponent implements OnInit, OnDestroy {
 
   constructor(
     private accessService: AccessControlService,
+    public spinner: SpinnerService,
     private hub: LiveEventsHubService
   ) {}
 
@@ -82,6 +84,7 @@ export class LiveEventsComponent implements OnInit, OnDestroy {
 
   private loadInitial(take: number = 200): void {
     this.loading = true;
+    this.spinner.show();
 
     this.accessService
       .get('api/live-events')
@@ -110,11 +113,13 @@ export class LiveEventsComponent implements OnInit, OnDestroy {
             .slice(0, this.maxRows);
 
           this.startHubIfNeeded();
+          this.spinner.hide();
         },
         error: (err: Error) => {
           this.accessService.createErrorNotification(err.message);
           console.log('[LiveEvents] initial load failed', err);
           this.startHubIfNeeded();
+          this.spinner.hide();
         },
       });
   }

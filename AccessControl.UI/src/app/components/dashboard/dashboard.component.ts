@@ -9,17 +9,18 @@ import { DialogService } from 'primeng/dynamicdialog';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  providers: [DialogService]
+  providers: [DialogService],
 })
 export class DashboardComponent implements OnInit {
   data!: TreeNode[];
 
   siteChartData: any;
   lockChartData: any;
+  lockStatusChartData: any;
   cardholderTimeChartData: any;
   chartOptions: ChartOptions = {
     responsive: true,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
   };
 
   sitesCount!: number;
@@ -30,7 +31,10 @@ export class DashboardComponent implements OnInit {
 
   showNoSitesDialog: boolean = false;
 
-  constructor(private accessService: AccessControlService, private dialog: DialogService) {}
+  constructor(
+    private accessService: AccessControlService,
+    private dialog: DialogService
+  ) {}
 
   ngOnInit() {
     this.accessService.getForDashboard('info').subscribe({
@@ -39,7 +43,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (err: Error) => {
         this.accessService.createErrorNotification(err.message);
-      }
+      },
     });
 
     this.data = [
@@ -54,11 +58,11 @@ export class DashboardComponent implements OnInit {
             icon: 'pi pi-lock',
             children: [
               { label: 'Cardholder', icon: 'pi pi-id-card' },
-              { label: 'Schedule', icon: 'pi pi-calendar-clock' }
-            ]
-          }
-        ]
-      }
+              { label: 'Schedule', icon: 'pi pi-calendar-clock' },
+            ],
+          },
+        ],
+      },
     ];
   }
 
@@ -77,26 +81,49 @@ export class DashboardComponent implements OnInit {
 
     this.siteChartData = {
       labels: siteLabels,
-      datasets: [{
-        data: siteData,
-        backgroundColor: siteColors
-      }]
+      datasets: [
+        {
+          data: siteData,
+          backgroundColor: siteColors,
+        },
+      ],
     };
 
     const lockLabels = data.allLocksBySite.map((lock: any) => lock.displayName);
     const lockData = data.allLocksBySite.map((lock: any) => lock.data);
-    const lockColors = data.allLocksBySite.map((lock: any) => lock.backgroundColor);
+    const lockColors = data.allLocksBySite.map(
+      (lock: any) => lock.backgroundColor
+    );
 
     this.lockChartData = {
       labels: lockLabels,
-      datasets: [{
-        data: lockData,
-        backgroundColor: lockColors
-      }]
+      datasets: [
+        {
+          data: lockData,
+          backgroundColor: lockColors,
+        },
+      ],
     };
 
-    const lastSixMonths = data.cardholdersInLastSixMonths.map((x: any) => x.monthName);
-    const numOfCardholders = data.cardholdersInLastSixMonths.map((x: any) => x.cardholdersCount);
+    const lockUnlockStatusCountList = data.lockUnlockStatusCountList;
+
+    this.lockStatusChartData = {
+      labels: ['Locked', 'Unlocked'],
+      datasets: [
+        {
+          data: lockUnlockStatusCountList, // example values
+          backgroundColor: ['#EF4444', '#22C55E'],
+          hoverBackgroundColor: ['#F87171', '#4ADE80'],
+        },
+      ],
+    };
+
+    const lastSixMonths = data.cardholdersInLastSixMonths.map(
+      (x: any) => x.monthName
+    );
+    const numOfCardholders = data.cardholdersInLastSixMonths.map(
+      (x: any) => x.cardholdersCount
+    );
 
     this.cardholderTimeChartData = {
       labels: lastSixMonths,
@@ -105,18 +132,18 @@ export class DashboardComponent implements OnInit {
           label: 'Cardholders',
           data: numOfCardholders,
           fill: false,
-          borderColor: '#4bc0c0'
-        }
-      ]
+          borderColor: '#4bc0c0',
+        },
+      ],
     };
   }
 
-  navigateToCreateSite(){
+  navigateToCreateSite() {
     const ref = this.dialog.open(CreateSiteComponent, {
       header: 'Create Site',
       width: '600px',
       height: '250px',
-      baseZIndex: 10000
+      baseZIndex: 10000,
     });
 
     ref.onClose.subscribe(() => {

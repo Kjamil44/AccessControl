@@ -4,6 +4,7 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateCardholderComponent } from '../create-cardholder/create-cardholder.component';
 import { DeleteCardholderComponent } from '../delete-cardholder/delete-cardholder.component';
 import { EditCardholderComponent } from '../edit-cardholder/edit-cardholder.component';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-cardholders-list',
@@ -19,18 +20,22 @@ export class CardholdersListComponent implements OnInit {
 
   constructor(
     private accessService: AccessControlService,
+    public spinner: SpinnerService,
     private dialog: DialogService
   ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this.accessService.getWithParams(`api/cardholders`, '').subscribe({
       next: (response) => {
         this.cardholders = response.data;
         this.cardholderIsPresent = true;
+        this.spinner.hide();
       },
       error: (err: Error) => {
         this.accessService.createErrorNotification(err.message);
         this.cardholderIsPresent = false;
+        this.spinner.hide();
       },
     });
   }

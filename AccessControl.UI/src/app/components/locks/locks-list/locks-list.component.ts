@@ -6,6 +6,7 @@ import { EditLockComponent } from '../edit-lock/edit-lock.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Router } from '@angular/router';
 import { LockUnlockComponent } from '../lock-unlock/lock-unlock.component';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-locks-list',
@@ -23,18 +24,22 @@ export class LocksListComponent implements OnInit {
   constructor(
     private accessService: AccessControlService,
     private dialog: DialogService,
+    public spinner: SpinnerService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.spinner.show();
     this.accessService.getWithParams(`api/locks`, '').subscribe({
       next: (response) => {
         this.locks = response.data;
         this.lockIsPresent = true;
+        this.spinner.hide();
       },
       error: (err: Error) => {
         this.accessService.createErrorNotification(err.message);
         this.lockIsPresent = false;
+        this.spinner.hide();
       }
     });
   }

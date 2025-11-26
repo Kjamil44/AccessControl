@@ -15,14 +15,14 @@
 
 <p-table
   #tbl
+  class="live-events-table"
   [value]="rows"
   [paginator]="true"
   [rows]="25"
   [rowsPerPageOptions]="[10, 25, 50, 100]"
   [resizableColumns]="true"
   [reorderableColumns]="false"
-  [scrollable]="true"
-  scrollHeight="calc(100vh - 280px)"
+  [responsiveLayout]="'scroll'"
   sortField="dateCreated"
   [sortOrder]="-1"
   styleClass="p-datatable-striped p-datatable-gridlines"
@@ -36,15 +36,21 @@
         Message Type <p-sortIcon field="messageType" />
       </th>
       <th pSortableColumn="type">Category <p-sortIcon field="type" /></th>
-      <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
-      <th pSortableColumn="message">Message <p-sortIcon field="message" /></th>
+      <th pResizableColumn pSortableColumn="name">
+        Name <p-sortIcon field="name" />
+      </th>
+      <th pResizableColumn pSortableColumn="message">
+        Message <p-sortIcon field="message" />
+      </th>
       <th pSortableColumn="entityType">
         Entity Type <p-sortIcon field="entityType" />
       </th>
-      <th pSortableColumn="entityId">
+      <th pResizableColumn pSortableColumn="entityId">
         Entity Id <p-sortIcon field="entityId" />
       </th>
-      <th pSortableColumn="siteId">Site Id <p-sortIcon field="siteId" /></th>
+      <th pResizableColumn pSortableColumn="siteId">
+        Site Id <p-sortIcon field="siteId" />
+      </th>
     </tr>
 
     <tr>

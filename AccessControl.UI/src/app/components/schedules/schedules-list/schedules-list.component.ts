@@ -5,6 +5,7 @@ import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateScheduleComponent } from '../create-schedule/create-schedule.component';
 import { DeleteScheduleComponent } from '../delete-schedule/delete-schedule.component';
 import { EditScheduleComponent } from '../edit-schedule/edit-schedule.component';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-schedules-list',
@@ -20,18 +21,22 @@ export class SchedulesListComponent implements OnInit {
 
   constructor(
     private accessService: AccessControlService,
+    public spinner: SpinnerService,
     private dialog: DialogService
   ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this.accessService.getWithParams(`api/schedules`, '').subscribe({
       next: (response) => {
         this.schedules = response.data;
         this.scheduleIsPresent = true;
+        this.spinner.hide();
       },
       error: (err: Error) => {
         this.accessService.createErrorNotification(err.message);
         this.scheduleIsPresent = false;
+        this.spinner.hide();
       },
     });
   }

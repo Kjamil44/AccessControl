@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { ActivatedRoute } from '@angular/router';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-allowed-users-lock',
@@ -22,6 +23,7 @@ export class AllowedUsersLockComponent implements OnInit {
   show: boolean = false;
   remove: boolean = false;
   edit: boolean = false;
+  isLoading: boolean = true;
 
   selectedValue: any;
   editCardholder: any;
@@ -31,6 +33,7 @@ export class AllowedUsersLockComponent implements OnInit {
   constructor(
     private accessService: AccessControlService,
     private route: ActivatedRoute,
+    public spinner: SpinnerService,
     private location: Location
   ) {
     this.formGroup = new FormGroup({
@@ -41,6 +44,7 @@ export class AllowedUsersLockComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
+      this.spinner.show();
       let lockId = params['id'];
 
       this.accessService.getById('api/locks', lockId).subscribe({
@@ -68,9 +72,11 @@ export class AllowedUsersLockComponent implements OnInit {
               }));
 
               this.userIsPresent = this.users.length > 0;
+              this.spinner.hide();   
             },
             error: (err: Error) => {
               this.accessService.createErrorNotification(err.message);
+              this.spinner.hide();
             },
           });
 
@@ -78,15 +84,18 @@ export class AllowedUsersLockComponent implements OnInit {
             .getWithParams(`api/cardholders`, request)
             .subscribe({
               next: (response) => {
-                this.cardholders = response.data;
+                this.cardholders = response.data;     
+                this.spinner.hide();                     
               },
               error: (err: Error) => {
                 this.accessService.createErrorNotification(err.message);
+                this.spinner.hide();
               },
             });
         },
         error: (err: Error) => {
           this.accessService.createErrorNotification(err.message);
+          this.spinner.hide();
         },
       });
     });

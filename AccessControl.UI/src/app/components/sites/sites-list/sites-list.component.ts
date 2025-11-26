@@ -4,27 +4,35 @@ import { CreateSiteComponent } from '../create-site/create-site.component';
 import { DeleteSiteComponent } from '../delete-site/delete-site.component';
 import { EditSiteComponent } from '../edit-site/edit-site.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-sites-list',
   templateUrl: './sites-list.component.html',
   styleUrls: ['./sites-list.component.css'],
-  providers: [DialogService]
+  providers: [DialogService],
 })
 export class SitesListComponent implements OnInit {
   sites: any[] = [];
 
-  constructor(private accessService: AccessControlService, private dialog: DialogService) { }
+  constructor(
+    private accessService: AccessControlService,
+    private dialog: DialogService,
+    public spinner: SpinnerService
+  ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this.accessService.get('api/sites').subscribe({
       next: (response) => {
         this.sites = response.data;
+        this.spinner.hide();
       },
       error: (err: Error) => {
         this.accessService.createErrorNotification(err.message);
-      }
-    })
+        this.spinner.hide();
+      },
+    });
   }
 
   onCreate() {
@@ -32,7 +40,7 @@ export class SitesListComponent implements OnInit {
       header: 'Create Site',
       width: '600px',
       height: '250px',
-      baseZIndex: 10000
+      baseZIndex: 10000,
     });
 
     ref.onClose.subscribe(() => {
@@ -47,8 +55,8 @@ export class SitesListComponent implements OnInit {
       height: '280px',
       baseZIndex: 10000,
       data: {
-        site: site
-      }
+        site: site,
+      },
     });
 
     ref.onClose.subscribe(() => {
@@ -63,8 +71,8 @@ export class SitesListComponent implements OnInit {
       height: '250px',
       baseZIndex: 10000,
       data: {
-        site: site
-      }
+        site: site,
+      },
     });
 
     ref.onClose.subscribe(() => {

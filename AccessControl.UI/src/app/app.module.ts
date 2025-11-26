@@ -66,6 +66,7 @@ import { LiveEventsComponent } from './components/live-events/live-events.compon
 import { CoreErrorInterceptor } from './services/core-error-interceptor';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AppSpinnerComponent } from './components/common/app-spinner/app-spinner.component';
+import { ProductOverviewComponent } from './components/product-overview/product-overview.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { AppSpinnerComponent } from './components/common/app-spinner/app-spinner
     LockUnlockComponent,
     CardUnlockAnimationComponent,
     LiveEventsComponent,
-    AppSpinnerComponent
+    AppSpinnerComponent,
+    ProductOverviewComponent
   ],
   imports: [
     BrowserModule,
