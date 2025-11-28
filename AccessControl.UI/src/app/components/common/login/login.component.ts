@@ -3,42 +3,46 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private authService: AuthService, private accessService: AccessControlService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private accessService: AccessControlService,
+    public spinner: SpinnerService,
+    private router: Router
+  ) {
     this.loginForm = new FormGroup({
       email: new FormControl(),
-      password: new FormControl()
+      password: new FormControl(),
     });
   }
 
   onLogIn() {
     const credentials = {
-      "email": this.loginForm.value.email,
-      "password": this.loginForm.value.password
-    }
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password,
+    };
 
-    this.authService.login(credentials)
-      .subscribe({
-        next: data => {
-          this.authService.storeToken(data.token);
-          this.router.navigate([`/dashboard`]);
-        },
-        error: (err: Error) => {
-          this.accessService.createErrorNotification(err.message);
-        }
-      });;
+    this.spinner.with(this.authService.login(credentials)).subscribe({
+      next: (data) => {
+        this.authService.storeToken(data.token);
+        this.router.navigate([`/dashboard`]);
+      },
+      error: (err: Error) => {
+        this.accessService.createErrorNotification(err.message);
+      },
+    });
   }
 
   navigateToRegister() {
     this.router.navigate([`/register`]);
   }
-
 }

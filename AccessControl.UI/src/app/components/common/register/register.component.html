@@ -1,25 +1,55 @@
 <div class="register-container">
-    <div class="register-card p-card">
-        <h2>Register</h2>
-        <button type="button" pButton label="Back to Login" icon="pi pi-arrow-left" class="p-button-text p-mb-3"
-            (click)="goToLogin()"></button>
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <div class="p-field">
-                <label for="email">Email</label>
-                <input id="email" type="email" formControlName="email" pInputText required />
-            </div>
-            <div class="p-field">
-                <label for="username">Username</label>
-                <input id="username" type="text" formControlName="username" pInputText required />
-            </div>
-            <div class="p-field">
-                <label for="password">Password</label>
-                <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="false"
-                    inputId="password" required>
-                </p-password>
-            </div>
-            <br>
-            <button type="submit" pButton label="Register" class="p-mt-2"></button>
-        </form>
-    </div>
+  <div class="register-card p-card">
+    <h2>Register</h2>
+    <button
+      type="button"
+      pButton
+      label="Back to Login"
+      icon="pi pi-arrow-left"
+      class="p-button-text p-mb-3"
+      (click)="goToLogin()"
+    ></button>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="p-field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          pInputText
+          required
+        />
+      </div>
+      <div class="p-field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          pInputText
+          required
+        />
+      </div>
+      <div class="p-field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [toggleMask]="true"
+          [feedback]="false"
+          inputId="password"
+          required
+        >
+        </p-password>
+      </div>
+      <br />
+      <button
+        type="submit"
+        pButton
+        label="Register"
+        class="p-mt-2"
+        [loading]="(spinner.visible$ | async) ?? false"
+      ></button>
+    </form>
+  </div>
 </div>
