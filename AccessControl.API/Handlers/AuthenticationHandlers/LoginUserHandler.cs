@@ -3,16 +3,15 @@ using AccessControl.API.Models;
 using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
-using JasperFx.Core;
 using Marten;
 using MediatR;
 
-namespace AccessControl.API.Handlers.AuthorizationHandlers
+namespace AccessControl.API.Handlers.AuthenticationHandlers
 {
-    public class RegisterUser
+    public class LoginUser
     {
-        public sealed record Request(string Username, string Email, string Password)
-         : ICommand<Response>;
+        public sealed record Request(string Email, string Password)
+            : IQuery<Response>;
 
         public sealed record Response(string Token);
 
@@ -36,20 +35,11 @@ namespace AccessControl.API.Handlers.AuthorizationHandlers
             {
                 var email = req.Email.Trim().ToLowerInvariant();
 
-                var exists = await _session.Query<User>()
-                    .AnyAsync(x => x.Email.EqualsIgnoreCase(email));
+                var user = await _session.Query<User>()
+                                       .SingleOrDefaultAsync(x => x.Email == email);
 
-                if (exists)
-                    throw new CoreException("A user with this email already exists.");
-
-                var user = new User
-                {
-                    Username = req.Username,
-                    Email = email,
-                    PasswordHash = _passwordHasher.HashPassword(req.Password),
-                };
-
-                _session.Store(user);
+                if (user is null || !_passwordHasher.VerifyHashedPassword(user.PasswordHash, req.Password))
+                    throw new CoreException("Invalid email or password.", statusCode: 401);
 
                 var token = _jwtTokenGenerator.GenerateToken(user);
 

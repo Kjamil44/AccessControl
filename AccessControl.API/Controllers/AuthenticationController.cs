@@ -1,4 +1,4 @@
-﻿using AccessControl.API.Handlers.AuthorizationHandlers;
+﻿using AccessControl.API.Handlers.AuthenticationHandlers;
 using AccessControl.API.Models.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
