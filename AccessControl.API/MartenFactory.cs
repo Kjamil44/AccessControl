@@ -14,6 +14,8 @@ namespace AccessControl.API
                 opts.Connection(connectionString);
 
                 opts.Schema.For<User>();
+                opts.Schema.For<Role>();
+                opts.Schema.For<UserRoleAssignment>();
 
                 opts.AutoCreateSchemaObjects = JasperFx.AutoCreate.CreateOrUpdate;
             });
@@ -24,8 +26,7 @@ namespace AccessControl.API
             var store = CreateDocumentStore(connectionString);
             var sessionOptions = new SessionOptions();
             sessionOptions.Tracking = DocumentTracking.IdentityOnly;
-            //options.Tracking = DocumentTracking.IdentityOnly;
-            //options.IsolationLevel = IsolationLevel.ReadCommitted;
+
             return store.OpenSession(sessionOptions);
         }
     }

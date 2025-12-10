@@ -36,8 +36,10 @@
             "schedule.delete",
 
             "live_event.read",
-            "live_event.acknowledge",
             "live_event.export",
         };
+
+        public static bool IsValid(string permission)
+            => AllPermissions.Contains(permission);
     }
 }

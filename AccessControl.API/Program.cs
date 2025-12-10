@@ -4,6 +4,7 @@ using AccessControl.API.Filters;
 using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
+using AccessControl.API.Services.Authorization;
 using AccessControl.API.Services.Infrastructure.LiveEvents;
 using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
@@ -102,6 +103,9 @@ builder.Services.AddScoped<IAccessValidator, AccessValidator>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MartenSaveChangesBehavior<,>));
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 const string FrontendCors = "FrontendCors";
 builder.Services.AddCors(opts =>

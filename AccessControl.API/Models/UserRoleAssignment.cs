@@ -6,7 +6,9 @@ namespace AccessControl.API.Models
     {
         [Identity]
         public Guid Id { get; set; }
+        [ForeignKey(typeof(User))]
         public Guid UserId { get; set; }
+        [ForeignKey(typeof(Role))]
         public Guid RoleId { get; set; }
     }
 }
