@@ -1,107 +1,172 @@
-﻿using AccessControl.API.Models;
+﻿using AccessControl.API;
+using AccessControl.API.Authorization;
+using AccessControl.API.Models;
 using Marten;
+using static AccessControl.API.Authorization.PermissionCatalog;
 using static AccessControl.API.Authorization.RoleNames;
 
-namespace AccessControl.API.Authorization
+public static class RoleSeeder
 {
-    public static class RoleSeeder
+    public static async Task SeedAsync(string connectionString)
     {
-        public static async Task SeedAsync(IDocumentStore store)
-        {
-            //TODO
-            using var session = store.OpenSession();
+        using var session = MartenFactory.CreateDocumentSession(connectionString);
 
-            // If roles already exist, don’t seed again
-            var anyRole = await session.Query<Role>().AnyAsync();
-            if (anyRole)
-                return;
+        var anyRole = await session.Query<Role>().AnyAsync();
+        if (anyRole)
+            return;
 
-            var roles = new List<Role>
+        var roles = new List<Role>
         {
+            // 1) SystemAdmin – everything
             new Role
             {
                 Name = SystemAdmin,
                 IsSystemRole = true,
-                Permissions = PermissionCatalog.AllPermissions.ToList()
+                Permissions = AllPermissions.ToList()
             },
+
+            // 2) SiteAdmin
             new Role
             {
                 Name = SiteAdmin,
                 IsSystemRole = true,
                 Permissions = new List<string>
                 {
-                    // Users
-                    "user.create", "user.read", "user.update",
+                    // USER
+                    PermissionCatalog.User.Create,
+                    PermissionCatalog.User.Read,
+                    PermissionCatalog.User.Update,
 
-                    // Site
-                    "site.read", "site.update", "site.assign_users", "site.assign_locks",
+                    // SITE
+                    PermissionCatalog.Site.Read,
+                    PermissionCatalog.Site.Update,
 
-                    // Locks
-                    "lock.create", "lock.read", "lock.update", "lock.delete",
-                    "lock.lock", "lock.unlock", "lock.assign_schedule",
+                    // LOCK
+                    PermissionCatalog.Lock.Create,
+                    PermissionCatalog.Lock.Read,
+                    PermissionCatalog.Lock.Update,
+                    PermissionCatalog.Lock.Delete,
+                    PermissionCatalog.Lock.LockAction,
+                    PermissionCatalog.Lock.UnlockAction,
+                    PermissionCatalog.Lock.AssignAllowedUser,
 
-                    // Cardholders
-                    "cardholder.create", "cardholder.read", "cardholder.update", "cardholder.delete",
-                    "cardholder.assign_schedule",
+                    // ALLOWED USER
+                    PermissionCatalog.AllowedUser.Assign,
+                    PermissionCatalog.AllowedUser.Edit,
+                    PermissionCatalog.AllowedUser.Remove,
 
-                    // Schedules
-                    "schedule.create", "schedule.read", "schedule.update", "schedule.delete",
-                    "schedule.assign_to_lock", "schedule.assign_to_cardholder",
+                    // CARDHOLDER
+                    PermissionCatalog.Cardholder.Create,
+                    PermissionCatalog.Cardholder.Read,
+                    PermissionCatalog.Cardholder.Update,
+                    PermissionCatalog.Cardholder.Delete,
 
-                    // Live events
-                    "live_event.read", "live_event.acknowledge"
+                    // SCHEDULE
+                    PermissionCatalog.Schedule.Create,
+                    PermissionCatalog.Schedule.Read,
+                    PermissionCatalog.Schedule.Update,
+                    PermissionCatalog.Schedule.Delete,
+
+                    // LIVE EVENT
+                    PermissionCatalog.LiveEvent.Read,
+                    PermissionCatalog.LiveEvent.Export
                 }
             },
+
+            // 3) SecurityOperator
             new Role
             {
                 Name = SecurityOperator,
                 IsSystemRole = true,
                 Permissions = new List<string>
                 {
-                    "site.read",
-                    "lock.read", "lock.lock", "lock.unlock",
-                    "cardholder.read",
-                    "schedule.read",
-                    "live_event.read", "live_event.acknowledge"
+                    // SITE
+                    PermissionCatalog.Site.Read,
+
+                    // LOCK – operate, not configure
+                    PermissionCatalog.Lock.Read,
+                    PermissionCatalog.Lock.LockAction,
+                    PermissionCatalog.Lock.UnlockAction,
+
+                    // CARDHOLDER
+                    PermissionCatalog.Cardholder.Read,
+
+                    // SCHEDULE
+                    PermissionCatalog.Schedule.Read,
+
+                    // LIVE EVENT
+                    PermissionCatalog.LiveEvent.Read,
                 }
             },
+
+            // 4) CardholderManager
             new Role
             {
                 Name = CardholderManager,
                 IsSystemRole = true,
                 Permissions = new List<string>
                 {
-                    "cardholder.create", "cardholder.read", "cardholder.update", "cardholder.delete",
-                    "cardholder.assign_schedule",
-                    "schedule.read",
-                    "site.read"
+                    // SITE
+                    PermissionCatalog.Site.Read,
+
+                    // CARDHOLDER
+                    PermissionCatalog.Cardholder.Create,
+                    PermissionCatalog.Cardholder.Read,
+                    PermissionCatalog.Cardholder.Update,
+                    PermissionCatalog.Cardholder.Delete,
+
+                    // SCHEDULE
+                    PermissionCatalog.Schedule.Read,
+
+                    // optional: if they manage who is allowed on locks
+                    PermissionCatalog.AllowedUser.Assign,
+                    PermissionCatalog.AllowedUser.Edit,
+                    PermissionCatalog.AllowedUser.Remove
                 }
             },
+
+            // 5) Auditor – read-only
             new Role
             {
                 Name = Auditor,
                 IsSystemRole = true,
                 Permissions = new List<string>
                 {
-                    "live_event.export",
-                    "live_event.read"
+                    // USER
+                    PermissionCatalog.User.Read,
+
+                    // SITE
+                    PermissionCatalog.Site.Read,
+
+                    // LOCK
+                    PermissionCatalog.Lock.Read,
+
+                    // CARDHOLDER
+                    PermissionCatalog.Cardholder.Read,
+
+                    // SCHEDULE
+                    PermissionCatalog.Schedule.Read,
+
+                    // LIVE EVENT
+                    PermissionCatalog.LiveEvent.Read,
+                    PermissionCatalog.LiveEvent.Export
                 }
-            },
+            }
         };
 
-            // Optional: validate against PermissionCatalog
-            foreach (var role in roles)
+        foreach (var role in roles)
+        {
+            if (role.Permissions.Any(p => !PermissionCatalog.IsValid(p)))
             {
-                if (role.Permissions.Any(p => !PermissionCatalog.IsValid(p)))
-                {
-                    throw new InvalidOperationException($"Role {role.Name} has invalid permission(s).");
-                }
-
-                session.Store(role);
+                throw new InvalidOperationException(
+                    $"Role {role.Name} has invalid permission(s): " +
+                    string.Join(", ", role.Permissions.Where(p => !PermissionCatalog.IsValid(p)))
+                );
             }
 
-            await session.SaveChangesAsync();
+            session.Store(role);
         }
-    }
 
+        await session.SaveChangesAsync();
+    }
 }

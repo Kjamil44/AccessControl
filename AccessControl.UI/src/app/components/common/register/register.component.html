@@ -1,54 +1,92 @@
 <div class="register-container">
   <div class="register-card p-card">
-    <h2>Register</h2>
-    <button
-      type="button"
-      pButton
-      label="Back to Login"
-      icon="pi pi-arrow-left"
-      class="p-button-text p-mb-3"
-      (click)="goToLogin()"
-    ></button>
+    <div class="register-header">
+      <h2>Register</h2>
+
+      <button
+        type="button"
+        pButton
+        label="Back to Login"
+        icon="pi pi-arrow-left"
+        class="p-button-text"
+        (click)="goToLogin()"
+      ></button>
+    </div>
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="p-field">
+      <!-- Email -->
+      <div class="form-row">
         <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          pInputText
-          required
-        />
+        <div class="control">
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            pInputText
+            required
+            class="w-100"
+          />
+          <small class="p-error" *ngIf="isInvalid('email')">Email is required.</small>
+        </div>
       </div>
-      <div class="p-field">
+
+      <!-- Username -->
+      <div class="form-row">
         <label for="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          formControlName="username"
-          pInputText
-          required
-        />
+        <div class="control">
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            pInputText
+            required
+            class="w-100"
+          />
+          <small class="p-error" *ngIf="isInvalid('username')">Username is required.</small>
+        </div>
       </div>
-      <div class="p-field">
+
+      <!-- Role -->
+      <div class="form-row">
+        <label for="role">Role</label>
+        <div class="control">
+          <p-dropdown
+            inputId="role"
+            formControlName="role"
+            [options]="roleOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select a role"
+            class="w-100"
+            [showClear]="true"
+          ></p-dropdown>
+          <small class="p-error" *ngIf="isInvalid('role')">Role is required.</small>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-row">
         <label for="password">Password</label>
-        <p-password
-          id="password"
-          formControlName="password"
-          [toggleMask]="true"
-          [feedback]="false"
-          inputId="password"
-          required
-        >
-        </p-password>
+        <div class="control">
+          <p-password
+            inputId="password"
+            formControlName="password"
+            [toggleMask]="true"
+            [feedback]="false"
+            required
+            styleClass="w-100"
+          ></p-password>
+          <small class="p-error" *ngIf="isInvalid('password')">Password is required.</small>
+        </div>
       </div>
-      <br />
+
       <button
         type="submit"
         pButton
         label="Register"
-        class="p-mt-2"
+        class="submit-btn"
         [loading]="(spinner.visible$ | async) ?? false"
+        [disabled]="registerForm.invalid"
       ></button>
     </form>
   </div>

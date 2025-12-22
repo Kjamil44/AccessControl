@@ -10,6 +10,7 @@ using AccessControl.API.Services.Infrastructure.LockUnlock;
 using AccessControl.API.Services.Infrastructure.Messaging;
 using AccessControl.API.SignalR;
 using AccessControl.Contracts;
+using JasperFx.MultiTenancy;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,6 +43,9 @@ builder.Services.AddSwaggerGen(c =>
 var db = builder.Configuration["ConnectionString"];
 builder.Services.AddSingleton(_ => MartenFactory.CreateDocumentStore(db))
                 .AddScoped(_ => MartenFactory.CreateDocumentSession(db));
+
+// Seed Roles and Permission on first Build
+await RoleSeeder.SeedAsync(db);
 
 // JWT
 var jwt = builder.Configuration.GetSection("JwtSettings");

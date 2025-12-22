@@ -1,0 +1,78 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 2rem;
+}
+
+.register-card {
+  width: 520px;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.register-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+/* Each row: label on left, input/dropdown on right */
+.form-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  label {
+    font-weight: 600;
+    opacity: 0.9;
+  }
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Ensure PrimeNG password & dropdown stretch fully */
+::ng-deep .p-password,
+::ng-deep .p-dropdown {
+  width: 100%;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+/* Mobile responsiveness: stack label above control */
+@media (max-width: 600px) {
+  .register-container {
+    justify-content: center;
+  }
+
+  .register-card {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    align-items: start;
+  }
+}
