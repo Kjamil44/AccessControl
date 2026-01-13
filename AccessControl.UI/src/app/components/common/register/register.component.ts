@@ -41,6 +41,7 @@ export class RegisterComponent {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       username: this.registerForm.value.username,
+      role: this.registerForm.value.role,
     };
 
     if (this.registerForm.valid) {

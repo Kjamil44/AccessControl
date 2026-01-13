@@ -17,6 +17,9 @@ namespace AccessControl.API.Services.Authorization
         public async Task<Role?> GetRoleAsync(Guid id)
             => await _session.LoadAsync<Role>(id);
 
+        public async Task<Role?> GetRoleByNameAsync(string name)
+            => await _session.Query<Role>().FirstOrDefaultAsync(x => x.Name == name);
+
         public async Task<IEnumerable<Role>> GetAllRolesAsync()
             => await _session.Query<Role>().ToListAsync();
 

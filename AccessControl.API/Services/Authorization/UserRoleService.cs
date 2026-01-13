@@ -12,7 +12,7 @@ namespace AccessControl.API.Services.Authorization
             _session = session;
         }
 
-        public async Task AssignRoleAsync(Guid userId, Guid roleId)
+        public void AssignRoleAsync(Guid userId, Guid roleId)
         {
             var assignment = new UserRoleAssignment
             {
@@ -21,7 +21,6 @@ namespace AccessControl.API.Services.Authorization
             };
 
             _session.Store(assignment);
-            await _session.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<UserRoleAssignment>> GetAssignmentsAsync(Guid userId)
@@ -38,7 +37,6 @@ namespace AccessControl.API.Services.Authorization
                 return;
 
             _session.Delete(target);
-            await _session.SaveChangesAsync();
         }
     }
 }

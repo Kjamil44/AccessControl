@@ -3,6 +3,7 @@ using AccessControl.API.Models;
 using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
+using AccessControl.API.Services.Authorization;
 using JasperFx.Core;
 using Marten;
 using MediatR;
@@ -11,7 +12,7 @@ namespace AccessControl.API.Handlers.AuthenticationHandlers
 {
     public class RegisterUser
     {
-        public sealed record Request(string Username, string Email, string Password)
+        public sealed record Request(string Username, string Email, string Password, string Role)
          : ICommand<Response>;
 
         public sealed record Response(string Token);
@@ -21,15 +22,21 @@ namespace AccessControl.API.Handlers.AuthenticationHandlers
             private readonly IDocumentSession _session;
             private readonly IPasswordHasher _passwordHasher;
             private readonly IJwtTokenGenerator _jwtTokenGenerator;
+            private readonly IRoleService _roleService;
+            private readonly IUserRoleService _userRoleService;
 
             public Handler(
                 IDocumentSession session,
                 IPasswordHasher passwordHasher,
-                IJwtTokenGenerator jwtTokenGenerator)
+                IJwtTokenGenerator jwtTokenGenerator,
+                IRoleService roleService,
+                IUserRoleService userRoleService)
             {
                 _session = session;
                 _passwordHasher = passwordHasher;
                 _jwtTokenGenerator = jwtTokenGenerator;
+                _roleService = roleService;
+                _userRoleService = userRoleService;
             }
 
             public async Task<Response> Handle(Request req, CancellationToken ct)
@@ -42,6 +49,10 @@ namespace AccessControl.API.Handlers.AuthenticationHandlers
                 if (exists)
                     throw new CoreException("A user with this email already exists.");
 
+                var role = await _roleService.GetRoleByNameAsync(req.Role);
+                if (role == null)
+                    throw new CoreException("Role does not exist.");
+
                 var user = new User
                 {
                     Username = req.Username,
@@ -50,6 +61,8 @@ namespace AccessControl.API.Handlers.AuthenticationHandlers
                 };
 
                 _session.Store(user);
+
+                _userRoleService.AssignRoleAsync(user.Id, role.Id);
 
                 var token = _jwtTokenGenerator.GenerateToken(user);
 
