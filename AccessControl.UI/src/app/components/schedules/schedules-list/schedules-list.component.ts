@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AddEvent, RemoveEvent } from '@progress/kendo-angular-grid';
 import { AccessControlService } from 'src/app/services/access-control.service';
 import { CreateScheduleComponent } from '../create-schedule/create-schedule.component';
 import { DeleteScheduleComponent } from '../delete-schedule/delete-schedule.component';

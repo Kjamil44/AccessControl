@@ -9,9 +9,6 @@ label{
 p{
     font-size:x-small;
 }
-kendo-textbox{
-  width: auto;
-}
 .form-control{
     font-weight:normal; 
     font-size: medium; 
