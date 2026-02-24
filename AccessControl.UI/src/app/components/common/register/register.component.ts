@@ -13,14 +13,6 @@ import { SpinnerService } from 'src/app/services/spinner.service';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  roleOptions = [
-    { label: 'System Admin', value: 'SystemAdmin' },
-    { label: 'Site Admin', value: 'SiteAdmin' },
-    { label: 'Security Operator', value: 'SecurityOperator' },
-    { label: 'Cardholder Manager', value: 'CardholderManager' },
-    { label: 'Auditor', value: 'Auditor' },
-  ];
-
   constructor(
     private authService: AuthService,
     private accessService: AccessControlService,
@@ -31,7 +23,6 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
-      role: [null, [Validators.required]],
       password: ['', Validators.required],
     });
   }
@@ -41,7 +32,6 @@ export class RegisterComponent {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       username: this.registerForm.value.username,
-      role: this.registerForm.value.role,
     };
 
     if (this.registerForm.valid) {

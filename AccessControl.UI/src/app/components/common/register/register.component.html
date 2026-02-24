@@ -46,24 +46,6 @@
         </div>
       </div>
 
-      <!-- Role -->
-      <div class="form-row">
-        <label for="role">Role</label>
-        <div class="control">
-          <p-dropdown
-            inputId="role"
-            formControlName="role"
-            [options]="roleOptions"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Select a role"
-            class="w-100"
-            [showClear]="true"
-          ></p-dropdown>
-          <small class="p-error" *ngIf="isInvalid('role')">Role is required.</small>
-        </div>
-      </div>
-
       <!-- Password -->
       <div class="form-row">
         <label for="password">Password</label>

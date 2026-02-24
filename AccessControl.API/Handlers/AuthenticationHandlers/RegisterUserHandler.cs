@@ -4,6 +4,7 @@ using AccessControl.API.Services.Abstractions.Mediation;
 using AccessControl.API.Services.Authentication;
 using AccessControl.API.Services.Authentication.JwtFeatures;
 using AccessControl.API.Services.Authorization;
+using AccessControl.API.Authorization;
 using JasperFx.Core;
 using Marten;
 using MediatR;
@@ -12,7 +13,7 @@ namespace AccessControl.API.Handlers.AuthenticationHandlers
 {
     public class RegisterUser
     {
-        public sealed record Request(string Username, string Email, string Password, string Role)
+        public sealed record Request(string Username, string Email, string Password)
          : ICommand<Response>;
 
         public sealed record Response(string Token);
@@ -49,9 +50,9 @@ namespace AccessControl.API.Handlers.AuthenticationHandlers
                 if (exists)
                     throw new CoreException("A user with this email already exists.");
 
-                var role = await _roleService.GetRoleByNameAsync(req.Role);
+                var role = await _roleService.GetRoleByNameAsync(RoleNames.Auditor);
                 if (role == null)
-                    throw new CoreException("Role does not exist.");
+                    throw new CoreException("Default role not found. Please seed the database.");
 
                 var user = new User
                 {

@@ -18,7 +18,7 @@ namespace AccessControl.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<RegisterUser.Response>> Register([FromBody] RegisterUserDto dto)
         {
-            var response = await _sender.Send(new RegisterUser.Request(dto.Username, dto.Email, dto.Password, dto.Role));
+            var response = await _sender.Send(new RegisterUser.Request(dto.Username, dto.Email, dto.Password));
 
             return Ok(response);
         }
