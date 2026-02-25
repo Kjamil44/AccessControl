@@ -15,6 +15,8 @@ export class TabMenuComponent implements OnInit {
   sidebarVisible: boolean = false;
   userEmail: any;
   username: any;
+  role: any;
+  permissions: any[] = [];
 
   userInitials: any;
 
@@ -27,6 +29,8 @@ export class TabMenuComponent implements OnInit {
       next: (response) => {
         this.userEmail = response.data.email;
         this.username = response.data.username;
+        this.role = response.data.role;
+        this.permissions = response.data.permissions;
         this.userInitials = this.getInitials(this.username);
       },
       error: (err: Error) => {

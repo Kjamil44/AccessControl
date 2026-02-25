@@ -28,6 +28,11 @@ namespace AccessControl.API.Services.Authorization
                        .Where(x => x.UserId == userId)
                        .ToListAsync();
 
+        public async Task<UserRoleAssignment> GetAssignmentAsync(Guid userId)
+            => await _session.Query<UserRoleAssignment>()
+                .Where(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+
         public async Task RemoveRoleAsync(Guid userId, Guid roleId)
         {
             var assignments = await GetAssignmentsAsync(userId);

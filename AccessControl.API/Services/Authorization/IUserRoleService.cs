@@ -6,6 +6,7 @@ namespace AccessControl.API.Services.Authorization
     {
         void AssignRoleAsync(Guid userId, Guid roleId);
         Task<IEnumerable<UserRoleAssignment>> GetAssignmentsAsync(Guid userId);
+        Task<UserRoleAssignment> GetAssignmentAsync(Guid userId);
         Task RemoveRoleAsync(Guid userId, Guid roleId);
     }
 }
